@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  race_result: one
+  lap_number: 1
+  lap_time_ms: 1
+  cumulative_time_ms: 1
+
+two:
+  race_result: two
+  lap_number: 1
+  lap_time_ms: 1
+  cumulative_time_ms: 1

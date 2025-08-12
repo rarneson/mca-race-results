@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  race_date: 2025-08-12
+  location: MyString
+  year: 1
+  series: MyString
+
+two:
+  name: MyString
+  race_date: 2025-08-12
+  location: MyString
+  year: 1
+  series: MyString
