@@ -1,11 +1,14 @@
+require_relative '../race_data/parser_factory'
+
 namespace :import do
   desc "Import race results from PDF files"
   task race_results: :environment do
-    pdf_directory = ENV['PDF_DIR'] || Rails.root.join('tmp', 'race_pdfs')
+    year = ENV['YEAR'] || '2024'
+    pdf_directory = ENV['PDF_DIR'] || Rails.root.join('tmp', 'race_pdfs', year)
     
     unless Dir.exist?(pdf_directory)
       puts "PDF directory not found: #{pdf_directory}"
-      puts "Set PDF_DIR environment variable or place PDFs in tmp/race_pdfs/"
+      puts "Set PDF_DIR environment variable or place PDFs in tmp/race_pdfs/#{year}/"
       exit 1
     end
 
@@ -25,8 +28,8 @@ namespace :import do
       puts "\n[#{index + 1}/#{pdf_files.count}] Processing: #{File.basename(pdf_path)}"
       
       begin
-        # Parse PDF
-        parser = RaceData::PdfParser.new(pdf_path)
+        # Parse PDF using factory
+        parser = RaceData::ParserFactory.create_parser(pdf_path)
         raw_data = parser.extract_race_data
         
         # Normalize data
@@ -74,8 +77,8 @@ namespace :import do
     puts "Processing: #{pdf_path}"
     
     begin
-      # Parse PDF
-      parser = RaceData::PdfParser.new(pdf_path)
+      # Parse PDF using factory
+      parser = RaceData::ParserFactory.create_parser(pdf_path)
       raw_data = parser.extract_race_data
       
       # Normalize data
@@ -97,6 +100,34 @@ namespace :import do
     end
   end
 
+  desc "Detect PDF format for a race file"
+  task :detect_format, [:pdf_path] => :environment do |task, args|
+    pdf_path = args[:pdf_path]
+    
+    unless pdf_path && File.exist?(pdf_path)
+      puts "Usage: rails import:detect_format[path/to/race.pdf]"
+      exit 1
+    end
+
+    puts "Analyzing format: #{pdf_path}"
+    
+    begin
+      parser = RaceData::ParserFactory.create_parser(pdf_path)
+      puts "✓ Detected format: #{parser.class.name}"
+      
+    rescue RaceData::UnsupportedFormatError => e
+      puts "✗ #{e.message}"
+      puts "\nAvailable parsers:"
+      RaceData::ParserFactory::PARSERS.each do |parser_class|
+        puts "  - #{parser_class.name}"
+      end
+      exit 1
+    rescue => e
+      puts "✗ Error detecting format: #{e.message}"
+      exit 1
+    end
+  end
+
   desc "Validate race data structure without importing"
   task :validate, [:pdf_path] => :environment do |task, args|
     pdf_path = args[:pdf_path]
@@ -109,8 +140,14 @@ namespace :import do
     puts "Validating: #{pdf_path}"
     
     begin
-      # Parse PDF
-      parser = RaceData::PdfParser.new(pdf_path)
+      # Try factory first, fallback to MCA parser for debugging
+      begin
+        parser = RaceData::ParserFactory.create_parser(pdf_path)
+      rescue RaceData::UnsupportedFormatError
+        puts "Format not recognized, using MCA parser for debugging..."
+        parser = RaceData::McaPdfParser.new(pdf_path)
+      end
+      
       raw_data = parser.extract_race_data
       
       puts "\nRaw data structure:"

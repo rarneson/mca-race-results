@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_12_211954) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_12_235432) do
   create_table "race_result_laps", force: :cascade do |t|
     t.integer "race_result_id", null: false
     t.integer "lap_number"
@@ -18,6 +18,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_12_211954) do
     t.integer "cumulative_time_ms"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "lap_time_raw"
+    t.string "cumulative_time_raw"
     t.index ["race_result_id"], name: "index_race_result_laps_on_race_result_id"
   end
 
@@ -34,6 +36,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_12_211954) do
     t.string "plate_number_snapshot"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "total_time_raw"
+    t.index ["race_id", "racer_season_id"], name: "index_race_results_on_race_id_and_racer_season_id", unique: true
     t.index ["race_id"], name: "index_race_results_on_race_id"
     t.index ["racer_season_assignment_id"], name: "index_race_results_on_racer_season_assignment_id"
     t.index ["racer_season_id"], name: "index_race_results_on_racer_season_id"
