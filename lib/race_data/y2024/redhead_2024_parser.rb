@@ -144,6 +144,34 @@ module RaceData
 
     def split_redhead_name_team(name_team_text)
       # Redhead has concatenated text like "LoganFuchsStMichael/Albertville"
+      # Handle special cases with Mc/Mac prefixes first
+      
+      # Special handling for Mc/Mac names that are being split incorrectly
+      # These patterns match the problematic cases we found
+      if name_team_text.match(/^(\w+)Mc([A-Z][a-z]+)(.+)$/)
+        # Pattern: FirstnameMcLastnameTeam (e.g., "EthanMcDonaldMoundWestonka")
+        first_name = $1
+        mc_lastname = "Mc#{$2}"
+        team_part = $3
+        
+        # Clean up team part
+        team_name = clean_redhead_team_name(team_part)
+        full_name = "#{first_name} #{mc_lastname}"
+        
+        return [full_name, team_name]
+      elsif name_team_text.match(/^(\w+)Mac([A-Z][a-z]+)(.+)$/)
+        # Pattern: FirstnameMacLastnameTeam (e.g., "RylanMacAdamsBloomington")
+        first_name = $1
+        mac_lastname = "Mac#{$2}"
+        team_part = $3
+        
+        # Clean up team part
+        team_name = clean_redhead_team_name(team_part)
+        full_name = "#{first_name} #{mac_lastname}"
+        
+        return [full_name, team_name]
+      end
+      
       # Use better patterns that match the actual concatenated format
       team_patterns = [
         # Specific team patterns (most specific first)
@@ -153,6 +181,7 @@ module RaceData
         /St\.?Paul.*Composite.*North/i,  # "StPaulComposite-North"
         /St\.?Paul.*Composite.*South/i,  # "StPaulComposite-South"
         /St\.?Paul.*Composite/i,         # "StPaulComposite"
+        /St\.?Paul.*Central/i,           # "StPaulCentral"
         /Minneapolis.*Roosevelt.*HS/i,   # "MinneapolisRooseveltHS"
         /Minneapolis.*Southwest.*HS/i,   # "MinneapolisSouthwestHS"
         /Minneapolis.*Washburn.*HS/i,    # "MinneapolisWashburnHS"
@@ -160,46 +189,51 @@ module RaceData
         /Minneapolis.*Southside/i,       # "MinneapolisSouthside"
         /Minneapolis.*\w+/i,             # Generic "MinneapolisSomething"
         /BloomingtonJefferson/i,         # "BloomingtonJefferson"
-        /Cloquet-?Esko-?Carlton/i,      # "Cloquet-Esko-Carlton"
+        /Bloomington/i,                  # "Bloomington"
+        /Cloquet-?Esko-?Carlton/i,       # "Cloquet-Esko-Carlton"
         /RochesterArea/i,                # "RochesterArea"
-        /TiogaTrailblazers/i,           # "TiogaTrailblazers"
-        /LakeAreaComposite/i,           # "LakeAreaComposite"
+        /TiogaTrailblazers/i,            # "TiogaTrailblazers"
+        /LakeAreaComposite/i,            # "LakeAreaComposite"
         /TotinoGrace-?Irondale/i,        # "TotinoGrace-Irondale"
-        /MinnesotaValley/i,             # "MinnesotaValley"
-        /NewPragueMSandHS/i,            # "NewPragueMSandHS"
-        /NewPragueMS/i,                 # "NewPragueMS"
-        /AlexandriaYouthCycling/i,      # "AlexandriaYouthCycling"
-        /ArmstrongCycle/i,              # "ArmstrongCycle"
-        /EdinaCycling/i,                # "EdinaCycling"
-        /WayzataMountainBike/i,         # "WayzataMountainBike"
-        /AppleValleyHS/i,               # "AppleValleyHS"
-        /LakevilleNorthHS/i,            # "LakevilleNorthHS"
-        /LakevilleSouthHS/i,            # "LakevilleSouthHS"
-        /MoundsViewHS/i,                # "MoundsViewHS"
-        /MinnetonkaHS/i,                # "MinnetonkaHS"
-        /BrainerdHS/i,                  # "BrainerdHS"
-        /Crosby-?IrontonHS/i,           # "Crosby-IrontonHS"
-        /PriorLakeHS/i,                 # "PriorLakeHS"
-        /WoodburyHS/i,                  # "WoodburyHS"
-        /ShakopeeHS/i,                  # "ShakopeeHS"
-        /HopkinsHS/i,                   # "HopkinsHS"
-        /EastviewHS/i,                  # "EastviewHS" 
-        /EastRidgeHS/i,                 # "EastRidgeHS"
-        /MapleGroveHS/i,                # "MapleGroveHS"
-        /EaganHS/i,                     # "EaganHS"
-        /ElkRiver/i,                    # "ElkRiver"
-        /RockRidge/i,                   # "RockRidge"
-        /StCloud/i,                     # "StCloud"
-        /Roseville/i,                   # "Roseville"
-        /Winona/i,                      # "Winona"
-        /Borealis/i,                    # "Borealis"
-        /Rockford/i,                    # "Rockford"
-        /\w+HS$/i,                      # Generic "SomethingHS"
-        /\w+MS$/i,                      # Generic "SomethingMS"
-        /MountainBike$/i,               # "MountainBike"
-        /Bike$/i,                       # "Bike"
-        /River$/i,                      # "River"
-        /Elk$/i                         # "Elk" (for ElkRiver)
+        /MinnesotaValley/i,              # "MinnesotaValley"
+        /NewPragueMSandHS/i,             # "NewPragueMSandHS"
+        /NewPragueMS/i,                  # "NewPragueMS"
+        /AlexandriaYouthCycling/i,       # "AlexandriaYouthCycling"
+        /ArmstrongCycle/i,               # "ArmstrongCycle"
+        /EdinaCycling/i,                 # "EdinaCycling"
+        /WayzataMountainBike/i,          # "WayzataMountainBike"
+        /MoundWestonka/i,                # "MoundWestonka"
+        /AppleValleyHS/i,                # "AppleValleyHS"
+        /LakevilleNorthHS/i,             # "LakevilleNorthHS"
+        /LakevilleSouthHS/i,             # "LakevilleSouthHS"
+        /MoundsViewHS/i,                 # "MoundsViewHS"
+        /MinnetonkaHS/i,                 # "MinnetonkaHS"
+        /BrainerdHS/i,                   # "BrainerdHS"
+        /Crosby-?IrontonHS/i,            # "Crosby-IrontonHS"
+        /PriorLakeHS/i,                  # "PriorLakeHS"
+        /WoodburyHS/i,                   # "WoodburyHS"
+        /ShakopeeHS/i,                   # "ShakopeeHS"
+        /HopkinsHS/i,                    # "HopkinsHS"
+        /EastviewHS/i,                   # "EastviewHS" 
+        /EastRidgeHS/i,                  # "EastRidgeHS"
+        /MapleGroveHS/i,                 # "MapleGroveHS"
+        /EaganHS/i,                      # "EaganHS"
+        /ElkRiver/i,                     # "ElkRiver"
+        /RockRidge/i,                    # "RockRidge"
+        /StCloud/i,                      # "StCloud"
+        /Roseville/i,                    # "Roseville"
+        /Winona/i,                       # "Winona"
+        /Borealis/i,                     # "Borealis"
+        /Rockford/i,                     # "Rockford"
+        /Hastings/i,                     # "Hastings"
+        /Bemidji/i,                      # "Bemidji"
+        /Kerkhoven/i,                    # "Kerkhoven"
+        /\w+HS$/i,                       # Generic "SomethingHS"
+        /\w+MS$/i,                       # Generic "SomethingMS"
+        /MountainBike$/i,                # "MountainBike"
+        /Bike$/i,                        # "Bike"
+        /River$/i,                       # "River"
+        /Elk$/i                          # "Elk" (for ElkRiver)
       ]
       
       # Find the first team pattern match
@@ -358,6 +392,16 @@ module RaceData
         "Maple Grove HS"
       when /alexandriayouthcycling/i
         "Alexandria Youth Cycling"
+      when /moundwestonka/i
+        "Mound Westonka"
+      when /bloomington/i
+        "Bloomington"
+      when /hastings/i
+        "Hastings"
+      when /bemidji/i
+        "Bemidji"
+      when /kerkhoven/i
+        "Kerkhoven"
       when /roseville/i
         "Roseville"
       when /winona/i
