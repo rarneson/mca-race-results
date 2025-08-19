@@ -1,7 +1,12 @@
+require 'set'
+require_relative 'team_name_extractor'
+
 module RaceData
   class Importer
     def initialize(normalized_data)
       @normalized_data = normalized_data
+      @unmatched_teams = Set.new
+      @orphaned_racers = []
     end
 
     def import!
@@ -11,6 +16,9 @@ module RaceData
         @normalized_data[:results].each do |result_data|
           import_result(race, result_data)
         end
+        
+        # Print summary after import
+        print_import_summary(race)
         
         race
       end
@@ -29,8 +37,14 @@ module RaceData
     end
 
     def import_result(race, result_data)
-      team = find_or_create_team(result_data[:team], result_data[:division])
+      team = find_team(result_data[:team], result_data[:division])
       racer = find_or_create_racer(result_data[:racer], team)
+      
+      # Set racer gender from category if not already set
+      if racer.gender.blank? && result_data[:result][:category_snapshot]
+        racer.update!(gender: result_data[:result][:category_snapshot].gender)
+      end
+      
       racer_season = find_or_create_racer_season(racer, race.year, result_data[:result])
       
       # Find the appropriate racer_season_assignment for the race date
@@ -44,23 +58,46 @@ module RaceData
       race_result
     end
 
-    def find_or_create_team(team_data, division)
+    def find_team(team_data, division)
       return nil if team_data[:name].blank?
       
-      Team.find_or_create_by(name: team_data[:name]) do |team|
-        # Only set division if it's explicitly provided (D1/D2 categories)
-        team.division = division if division
+      # First try exact match
+      team = Team.find_by(name: team_data[:name])
+      return team if team
+      
+      # Try using TeamNameExtractor to find a matching team
+      extracted_team_name = RaceData::TeamNameExtractor.extract_team_name(team_data[:name])
+      if extracted_team_name
+        team = Team.find_by(name: extracted_team_name)
+        return team if team
       end
+      
+      # Track unmatched team for summary
+      @unmatched_teams.add(team_data[:name])
+      
+      # Return nil - racer will be orphaned
+      nil
     end
 
     def find_or_create_racer(racer_data, team)
-      Racer.find_or_create_by(
+      racer = Racer.find_or_create_by(
         first_name: racer_data[:first_name],
         last_name: racer_data[:last_name],
         team: team
-      ) do |racer|
-        racer.number = racer_data[:number]
+      ) do |new_racer|
+        new_racer.number = racer_data[:number]
       end
+      
+      # Track orphaned racers for summary
+      if team.nil? && !@orphaned_racers.any? { |r| r[:first_name] == racer_data[:first_name] && r[:last_name] == racer_data[:last_name] }
+        @orphaned_racers << {
+          first_name: racer_data[:first_name],
+          last_name: racer_data[:last_name],
+          number: racer_data[:number]
+        }
+      end
+      
+      racer
     end
 
     def find_or_create_racer_season(racer, year, result_data)
@@ -126,6 +163,38 @@ module RaceData
           cumulative_time_raw: format_time_ms(cumulative_time)
         )
       end
+    end
+
+    def print_import_summary(race)
+      puts "\n" + "="*60
+      puts "RACE IMPORT SUMMARY"
+      puts "="*60
+      puts "Race: #{race.name} (#{race.race_date})"
+      puts "Results imported: #{race.race_results.count}"
+      
+      if @unmatched_teams.any?
+        puts "\n⚠️  UNMATCHED TEAMS FOUND (#{@unmatched_teams.size}):"
+        puts "The following team names could not be matched to existing teams:"
+        @unmatched_teams.sort.each do |team_name|
+          puts "  - '#{team_name}'"
+        end
+        puts "\nConsider adding these to db/seeds.rb if they are legitimate teams."
+      end
+      
+      if @orphaned_racers.any?
+        puts "\n👤 ORPHANED RACERS (#{@orphaned_racers.size}):"
+        puts "The following racers could not be assigned to teams:"
+        @orphaned_racers.each do |racer|
+          puts "  - #{racer[:first_name]} #{racer[:last_name]}"
+        end
+        puts "\nThese racers can be manually assigned to teams later."
+      end
+      
+      if @unmatched_teams.empty? && @orphaned_racers.empty?
+        puts "\n✅ All racers successfully matched to existing teams!"
+      end
+      
+      puts "="*60
     end
 
     private

@@ -44,7 +44,7 @@ module RaceData
           laps_completed: parse_integer(result[:laps_completed]),
           laps_expected: parse_integer(result[:laps_expected]) || 1,
           status: normalize_status(result[:status]),
-          category_snapshot: parse_integer(result[:category]),
+          category_snapshot: lookup_category(result[:category]),
           plate_number_snapshot: clean_string(result[:plate_number])
         },
         division: result[:division],
@@ -252,6 +252,16 @@ module RaceData
       else
         "finished"
       end
+    end
+
+    def lookup_category(category_text)
+      return nil if category_text.blank?
+      
+      category = Category.find_by_text(category_text)
+      if category.nil?
+        puts "⚠️  Unknown category: '#{category_text}'"
+      end
+      category
     end
   end
 end

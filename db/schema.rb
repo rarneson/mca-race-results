@@ -10,7 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_12_235432) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_18_000004) do
+  create_table "categories", force: :cascade do |t|
+    t.string "name", null: false
+    t.integer "sort_order", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_categories_on_name", unique: true
+  end
+
   create_table "race_result_laps", force: :cascade do |t|
     t.integer "race_result_id", null: false
     t.integer "lap_number"
@@ -32,11 +40,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_12_235432) do
     t.integer "laps_completed"
     t.integer "laps_expected"
     t.string "status"
-    t.integer "category_snapshot"
     t.string "plate_number_snapshot"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "total_time_raw"
+    t.integer "category_snapshot_id"
+    t.index ["category_snapshot_id"], name: "index_race_results_on_category_snapshot_id"
     t.index ["race_id", "racer_season_id"], name: "index_race_results_on_race_id_and_racer_season_id", unique: true
     t.index ["race_id"], name: "index_race_results_on_race_id"
     t.index ["racer_season_assignment_id"], name: "index_race_results_on_racer_season_assignment_id"
@@ -45,23 +54,25 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_12_235432) do
 
   create_table "racer_season_assignments", force: :cascade do |t|
     t.integer "racer_season_id", null: false
-    t.integer "category"
     t.date "start_on"
     t.date "end_on"
     t.text "reason"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "category_id"
+    t.index ["category_id"], name: "index_racer_season_assignments_on_category_id"
     t.index ["racer_season_id"], name: "index_racer_season_assignments_on_racer_season_id"
   end
 
   create_table "racer_seasons", force: :cascade do |t|
     t.integer "racer_id", null: false
     t.integer "year"
-    t.integer "category"
     t.string "plate_number"
     t.integer "penalty_ms"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "category_id"
+    t.index ["category_id"], name: "index_racer_seasons_on_category_id"
     t.index ["racer_id"], name: "index_racer_seasons_on_racer_id"
   end
 
@@ -69,9 +80,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_12_235432) do
     t.string "first_name"
     t.string "last_name"
     t.string "number"
-    t.integer "team_id", null: false
+    t.integer "team_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "gender"
     t.index ["team_id"], name: "index_racers_on_team_id"
   end
 
@@ -92,10 +104,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_12_235432) do
   end
 
   add_foreign_key "race_result_laps", "race_results"
+  add_foreign_key "race_results", "categories", column: "category_snapshot_id"
   add_foreign_key "race_results", "racer_season_assignments"
   add_foreign_key "race_results", "racer_seasons"
   add_foreign_key "race_results", "races"
+  add_foreign_key "racer_season_assignments", "categories"
   add_foreign_key "racer_season_assignments", "racer_seasons"
+  add_foreign_key "racer_seasons", "categories"
   add_foreign_key "racer_seasons", "racers"
   add_foreign_key "racers", "teams"
 end
