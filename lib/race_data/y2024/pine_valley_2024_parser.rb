@@ -1,4 +1,5 @@
 require_relative '../base_mca_parser'
+require_relative '../team_name_extractor'
 
 module RaceData
   class PineValley2024Parser < BaseMcaParser
@@ -141,15 +142,23 @@ module RaceData
           full_name = name_team_text[0...team_start_pos].strip
           team_name = name_team_text[team_start_pos..-1].strip
         else
-          # Last resort: split at approximately 2/3 point or after first 2 words
-          words = name_team_text.split(/\s+/)
-          if words.length >= 3
-            # Assume first 2 words are name, rest is team
-            full_name = words[0..1].join(" ")
-            team_name = words[2..-1].join(" ")
+          # Try TeamNameExtractor for better team extraction
+          extracted_team = TeamNameExtractor.extract_team_name(name_team_text)
+          if extracted_team && name_team_text.include?(extracted_team)
+            # Remove team name to get racer name
+            full_name = name_team_text.gsub(extracted_team, '').strip.gsub(/\s+/, ' ')
+            team_name = extracted_team
           else
-            full_name = words[0] || ""
-            team_name = words[1..-1]&.join(" ") || ""
+            # Last resort: split at approximately 2/3 point or after first 2 words
+            words = name_team_text.split(/\s+/)
+            if words.length >= 3
+              # Assume first 2 words are name, rest is team
+              full_name = words[0..1].join(" ")
+              team_name = words[2..-1].join(" ")
+            else
+              full_name = words[0] || ""
+              team_name = words[1..-1]&.join(" ") || ""
+            end
           end
         end
       end
@@ -163,13 +172,26 @@ module RaceData
       last_name = name_parts.length > 1 ? name_parts[1..-1].join(" ") : name_parts[0]
       
       # Parse times from after_laps_section
-      # Look for HH:MM:SS.s pattern times
-      time_pattern = /\d{2}:\d{2}:\d{2}\.\d+/
-      times = after_laps_section.scan(time_pattern)
+      # CRITICAL FIX: The line may contain multiple racers - stop at next rider number pattern
+      # Find the end of this racer's data by looking for the next rider number
+      next_rider_pattern = /\s+\d{9}\s+\d{4}\s+\d+/
+      next_rider_match = after_laps_section.match(next_rider_pattern)
       
-      # First time is total, rest are lap times
+      if next_rider_match
+        # Truncate to only this racer's data
+        racer_section = after_laps_section[0...next_rider_match.begin(0)]
+      else
+        racer_section = after_laps_section
+      end
+      
+      # Look for HH:MM:SS.s pattern times in this racer's section only
+      time_pattern = /\d{2}:\d{2}:\d{2}\.\d+/
+      times = racer_section.scan(time_pattern)
+      
+      # First time is total, rest are lap times (should match expected lap count)
       total_time = times.first
-      lap_times = times[1..-1] || []
+      expected_lap_times = times[1..laps] || []  # Take exactly 'laps' number of lap times
+      lap_times = expected_lap_times
       
       # Handle DNF/DNS cases where there might be no times
       if total_time.nil?

@@ -168,4 +168,131 @@ namespace :import do
       exit 1
     end
   end
+
+  desc "Clean up team names that contain racer names"
+  task clean_team_names: :environment do
+    puts "Cleaning up team names that contain racer names..."
+    
+    # Comprehensive team patterns based on all known legitimate teams
+    team_patterns = [
+      # Specific school/team patterns
+      /Alexandria\s*Youth\s*Cycling/i,
+      /Apple\s*Valley\s*HS?/i,
+      /Armstrong\s*Cycle/i,
+      /Austin\s*HS?/i,
+      /BBBikers/i,
+      /Bemidji/i,
+      /Bikers/i,
+      /Bloomington(\s*Jefferson)?/i,
+      /Borealis/i,
+      /Brainerd\s*HS?/i,
+      /Breck/i,
+      /Burnsville\s*HS?/i,
+      /Cannon\s*Valley/i,
+      /Champlin\s*Park?.*HS?/i,
+      /Chanhassen\s*HS?/i,
+      /Chaska\s*HS?/i,
+      /Cloquet-?Esko-?Carlton/i,
+      /Cook\s*County/i,
+      /Crosby-?Ironton.*HS?/i,
+      /Eagan\s*HS?/i,
+      /East\s*Ridge\s*HS?/i,
+      /Eastview\s*HS?/i,
+      /Eden\s*Prairie\s*HS?/i,
+      /Edina\s*Cycling/i,
+      /Elk\s*River/i,
+      /Falls\s*HS?/i,
+      /Grove\s*HS?/i,
+      /Hastings/i,
+      /Hermantown-?\s*Proctor/i,
+      /Hopkins\s*HS?/i,
+      /Hudson\s*HS?/i,
+      /Hutchinson\s*T[ige]+rs?/i,
+      /Kerkhoven/i,
+      /Lake\s*Area\s*Composite/i,
+      /Lake\s*HS?/i,
+      /Lakeville\s*(North|Nhr).*HS?/i,
+      /Lakeville\s*(South|Soh).*HS?/i,
+      /Mahtomedi\s*HS?/i,
+      /Mankato(\s*West)?\s*HS?/i,
+      /Maple\s*Grove.*HS?/i,
+      /Minneapolis(\s*(Northside|Nrthside|orthside|Roosevelt|South|Southside|Southwest|Washburn))?(\s*HS)?/i,
+      /Minnesota\s*Valley/i,
+      /Minnetonka\s*HS?/i,
+      /Mound\s*Westo?n?ka/i,
+      /Mounds\s*View\s*HS?/i,
+      /New\s*Prague\s*(MS\s*and\s*)?HS?/i,
+      /North\s*Dakota/i,
+      /Northwest/i,
+      /Northwoods\s*Cycling/i,
+      /Orono\s*HS?/i,
+      /Osseo\s*(Composite|HS?)/i,
+      /Park\s*HS?/i,
+      /Prairie\s*HS?/i,
+      /Prior\s*Lake\s*HS?/i,
+      /Ridge\s*HS?/i,
+      /River(\s*Falls\s*HS?)?/i,
+      /Rochester\s*(Area|Century|Mayo)/i,
+      /Rock\s*Ridge/i,
+      /Rockford/i,
+      /Rogers\s*HS?/i,
+      /Rosemount\s*HS?/i,
+      /Roseville/i,
+      /Shakopee\s*HS?/i,
+      /St\.?\s*Cloud/i,
+      /St\.?\s*Croix/i,
+      /St\.?\s*Louis\s*Park\s*HS?/i,
+      /St\.?\s*Michael\s*\/?\s*[Aa]lbertville/i,
+      /St\.?\s*Paul\s*(Central|Composite\s*-?\s*(North|South)|Highland\s*Park)/i,
+      /Stillwater\s*M[ou]+ntain\s*Bike/i,
+      /Tioga\s*Trailblazers/i,
+      /Totino\s*Grace-?\s*Irondale/i,
+      /Valley\s*HS?/i,
+      /View\s*HS?/i,
+      /Waconia\s*HS?/i,
+      /Wayzata\s*Mountain\s*Bike/i,
+      /West\s*HS?/i,
+      /White\s*Bear\s*Lake?.*HS?/i,
+      /Winona/i,
+      /Woodbury\s*HS?/i
+    ]
+    
+    fixed_count = 0
+    
+    Team.all.each do |team|
+      original_name = team.name
+      
+      # Skip if team name looks normal (doesn't contain obvious racer name patterns)
+      next unless original_name.match?(/^[A-Z]{2,}\s+[A-Z]+.*\s{5,}/)
+      
+      # Try to extract the real team name from the corrupted string
+      team_patterns.each do |pattern|
+        if match = original_name.match(pattern)
+          # Extract the team name part
+          extracted_team = match[0].strip
+          
+          # Clean up spacing and formatting
+          clean_team_name = extracted_team.gsub(/\s+/, ' ').strip
+          
+          # Update if we found a reasonable team name
+          if clean_team_name.length > 3 && clean_team_name != original_name
+            puts "Fixing: '#{original_name}' -> '#{clean_team_name}'"
+            team.update!(name: clean_team_name)
+            fixed_count += 1
+            break
+          end
+        end
+      end
+    end
+    
+    puts "\n✓ Fixed #{fixed_count} team names"
+    puts "Remaining teams with potential issues:"
+    
+    # Show teams that still might have issues
+    Team.all.each do |team|
+      if team.name.match?(/^[A-Z]{2,}\s+[A-Z]+.*\s{5,}/)
+        puts "  - #{team.name}"
+      end
+    end
+  end
 end

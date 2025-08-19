@@ -1,4 +1,5 @@
 require_relative '../base_mca_parser'
+require_relative '../team_name_extractor'
 
 module RaceData
   class BrophyPark2024Parser < BaseMcaParser
@@ -59,7 +60,8 @@ module RaceData
       
       place = match[1].to_i
       full_name = match[2].strip
-      team_name = match[3].strip
+      name_and_team_text = match[2].strip + ' ' + match[3].strip
+      team_name = TeamNameExtractor.extract_team_name(name_and_team_text) || match[3].strip
       rider_number = match[4]
       plate_number = match[5]
       laps = match[6].to_i

@@ -1,4 +1,5 @@
 require_relative '../base_mca_parser'
+require_relative '../team_name_extractor'
 
 module RaceData
   class Whitetail2024Parser < BaseMcaParser
@@ -51,7 +52,9 @@ module RaceData
         
         # Parse result lines (start with place number and have racer data)
         if in_results_section && current_division && line.match?(/^\s*\d+\s+/)
-          result = parse_whitetail_result_line(line, current_division)
+          # Extract proper division from category using base class method
+          division = extract_division_from_category(current_division)
+          result = parse_whitetail_result_line(line, division)
           results << result if result
         end
       end
@@ -66,22 +69,103 @@ module RaceData
       # Single lap: Place Name Team Rider# Plate Laps Adjust Comment Total Lap1
       # Multi lap: Place Name Team Rider# Plate Laps Total Lap1 Lap2 [Lap3] [Lap4]
       
-      # Try single lap format first (most common)
-      # Pattern accounts for Adjust and Comment columns between Laps and Total
-      single_lap_match = line.match(/^\s*(\d+)\s+([A-Za-z\s\-\.]+?)\s{2,}([A-Za-z\s\-\.]+?)\s+(\d{8,9})\s+(\d{4})\s+(\d+)\s+([^\s]*)\s+([^\s]*)\s+(00:\d+:\d+\.\d+)\s+(00:\d+:\d+\.\d+)\s*$/)
+      # Use improved parsing approach - find rider number first
+      rider_match = line.match(/(\d{8,9})\s+(\d{4})\s+(\d+)\s+(.*?)$/)
+      return nil unless rider_match
       
-      if single_lap_match
-        return parse_single_lap_result(single_lap_match, division, line)
+      rider_number = rider_match[1]
+      plate_number = rider_match[2]
+      laps = rider_match[3].to_i
+      remaining_text = rider_match[4].strip
+      
+      # Extract place and name/team before rider number
+      prefix_match = line.match(/^\s*(\d+)\s+(.+?)\s+#{Regexp.escape(rider_number)}/)
+      return nil unless prefix_match
+      
+      place = prefix_match[1].to_i
+      name_and_team_text = prefix_match[2].strip
+      
+      # Use TeamNameExtractor for better team extraction
+      team_name = TeamNameExtractor.extract_team_name(name_and_team_text)
+      
+      # Extract name by removing team from the original text
+      if team_name && name_and_team_text.include?(team_name)
+        name_text = name_and_team_text.gsub(team_name, '').strip.gsub(/\s+/, ' ')
+        full_name = name_text
+      else
+        # Fallback
+        parts = name_and_team_text.split(/\s{2,}/)
+        full_name = parts.first || name_and_team_text
+        team_name ||= parts.last || "Unknown Team"
       end
       
-      # Try multi-lap format (no Adjust/Comment columns)
-      multi_lap_match = line.match(/^\s*(\d+)\s+([A-Za-z\s\-\.]+?)\s{2,}([A-Za-z\s\-\.]+?)\s+(\d{8,9})\s+(\d{4})\s+(\d+)\s+(00:\d+:\d+\.\d+)(.*)$/)
-      
-      if multi_lap_match
-        return parse_multi_lap_result(multi_lap_match, division, line)
+      # Determine format based on remaining text structure
+      if remaining_text.match?(/^\s*[^\s]*\s+[^\s]*\s+(00:\d+:\d+\.\d+)\s+(00:\d+:\d+\.\d+)\s*$/)
+        # Single lap format
+        return parse_single_lap_result_improved(place, full_name, team_name, rider_number, plate_number, laps, remaining_text, division, line)
+      else
+        # Multi-lap format  
+        return parse_multi_lap_result_improved(place, full_name, team_name, rider_number, plate_number, laps, remaining_text, division, line)
       end
       
       nil
+    end
+
+    def parse_single_lap_result_improved(place, full_name, team_name, rider_number, plate_number, laps, remaining_text, division, line)
+      # Extract times from remaining text for single lap format
+      times_match = remaining_text.match(/^\s*([^\s]*)\s+([^\s]*)\s+(00:\d+:\d+\.\d+)\s+(00:\d+:\d+\.\d+)\s*$/)
+      return nil unless times_match
+      
+      adjust = times_match[1]
+      comment = times_match[2] 
+      total_time = times_match[3]
+      lap1_time = times_match[4]
+      
+      build_result_hash(place, full_name, team_name, rider_number, plate_number, laps, total_time, [lap1_time], division, line)
+    end
+
+    def parse_multi_lap_result_improved(place, full_name, team_name, rider_number, plate_number, laps, remaining_text, division, line)
+      # Extract times for multi-lap format
+      times_match = remaining_text.match(/^\s*(00:\d+:\d+\.\d+)(.*)$/)
+      return nil unless times_match
+      
+      total_time = times_match[1]
+      lap_times_text = times_match[2].strip
+      
+      # Extract individual lap times
+      lap_times = lap_times_text.scan(/00:\d+:\d+\.\d+/)
+      
+      build_result_hash(place, full_name, team_name, rider_number, plate_number, laps, total_time, lap_times, division, line)
+    end
+
+    def build_result_hash(place, full_name, team_name, rider_number, plate_number, laps, total_time, lap_times, division, line)
+      # Split name into first/last
+      name_parts = full_name.split(/\s+/)
+      first_name = name_parts[0]
+      last_name = name_parts.length > 1 ? name_parts[1..-1].join(" ") : name_parts[0]
+      
+      status = determine_status(line, laps)
+      
+      {
+        place: place,
+        first_name: first_name,
+        last_name: last_name,
+        team_name: team_name,
+        rider_number: rider_number,
+        plate_number: plate_number,
+        total_time_raw: total_time,
+        total_time_ms: parse_time_to_ms(total_time),
+        laps_completed: laps,
+        status: status,
+        division: division,
+        lap_times: lap_times.map.with_index(1) do |lap_time, lap_num|
+          {
+            lap_number: lap_num,
+            lap_time_raw: lap_time,
+            lap_time_ms: parse_time_to_ms(lap_time)
+          }
+        end
+      }
     end
 
     def parse_single_lap_result(match, division, line)

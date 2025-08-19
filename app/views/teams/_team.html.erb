@@ -1,0 +1,38 @@
+<div id="<%= dom_id team %>" class="card bg-base-100 mb-6">
+  <div class="card-body">
+    <div class="flex justify-between items-start mb-4">
+      <h2 class="card-title text-3xl font-bold"><%= team.name %></h2>
+      <% if team.division == 'division_1' %>
+        <span class="badge badge-primary badge-lg">
+          <%= team.division&.humanize || 'No Division' %>
+        </span>
+      <% elsif team.division == 'division_2' %>
+        <span class="badge badge-warning badge-lg">
+          <%= team.division&.humanize || 'No Division' %>
+        </span>
+      <% else %>
+        <span class="badge badge-neutral badge-lg">
+          <%= team.division&.humanize || 'No Division' %>
+        </span>
+      <% end %>
+    </div>
+    
+    <p class="text-lg text-base-content/70">
+      This team has <strong><%= pluralize(team.racers.count, 'racer') %></strong>
+      <% if team.division %>
+        competing in <%= team.division.humanize %>.
+      <% else %>
+        with no assigned division.
+      <% end %>
+    </p>
+
+    <div class="flex gap-4 mt-8 pt-6 border-t">
+      <%= link_to "Edit Team", edit_team_path(@team), class: "btn btn-primary" %>
+      <%= link_to "Back to Teams", teams_path, class: "btn btn-outline" %>
+      <%#= button_to "Delete Team", @team, method: :delete, 
+                    class: "btn btn-error", 
+                    confirm: "Are you sure you want to delete #{@team.name}? This will also remove all associated racers.",
+                    form: { style: "display: inline;" } %>
+    </div>
+  </div>
+</div>

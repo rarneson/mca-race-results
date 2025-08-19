@@ -1,0 +1,40 @@
+<%= form_with(model: team, local: true, class: "max-w-lg mx-auto") do |form| %>
+  <% if team.errors.any? %>
+    <div class="alert alert-error mb-6">
+      <div>
+        <h3 class="font-bold"><%= pluralize(team.errors.count, "error") %> prohibited this team from being saved:</h3>
+        <ul class="list-disc list-inside mt-2">
+          <% team.errors.each do |error| %>
+            <li><%= error.full_message %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="form-control mb-6">
+    <%= form.label :name, class: "label" do %>
+      <span class="label-text font-semibold">Name</span>
+    <% end %>
+    <%= form.text_field :name, class: "input input-bordered w-full", placeholder: "Enter team name" %>
+  </div>
+
+  <div class="form-control mb-6">
+    <%= form.label :division, class: "label" do %>
+      <span class="label-text font-semibold">Division</span>
+    <% end %>
+    <%= form.select :division, 
+                    options_for_select([
+                      ['Division 1', 'division_1'],
+                      ['Division 2', 'division_2']
+                    ], team.division), 
+                    { prompt: 'Select a division' }, 
+                    { class: "select select-bordered w-full" } %>
+  </div>
+
+  <div class="flex gap-4 mt-8">
+    <%= form.submit team.persisted? ? "Update Team" : "Create Team", class: "btn btn-primary flex-1" %>
+    <%= link_to "Cancel", team.persisted? ? team_path(team) : teams_path, class: "btn btn-outline flex-1" %>
+  </div>
+<% end %>
+

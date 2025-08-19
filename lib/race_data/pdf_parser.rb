@@ -1,5 +1,6 @@
 require 'pdf/reader'
 require_relative 'base_parser'
+require_relative 'team_name_extractor'
 
 module RaceData
   class McaPdfParser < BaseParser
@@ -140,21 +141,38 @@ module RaceData
       
       return nil if line.strip.empty?
       
-      # More precise parsing using regex to extract the structured data
-      # Match: Place(1-3 digits) + spaces + Name + spaces + Team + spaces + Rider# + space + Plate + space + Laps + spaces + times...
-      # Handle both MM:SS.s and H:MM:SS.s time formats, and capture everything after total time for lap times
-      match = line.match(/^\s*(\d+)\s+([A-Z\s\-]+?)\s{2,}([A-Za-z\s\-\.]+?)\s+(\d{8,9})\s+(\d{4})\s+(\d+)\s.*?(\d+:\d+:\d+\.\d+|\d+:\d+\.\d+)(.*)$/)
+      # More robust parsing - extract rider number and work backwards to find name/team boundary
+      # Look for rider number pattern first as it's most reliable
+      rider_match = line.match(/(\d{8,9})\s+(\d{4})\s+(\d+)\s.*?(\d+:\d+:\d+\.\d+|\d+:\d+\.\d+)(.*)$/)
+      return nil unless rider_match
       
-      return nil unless match
+      rider_number = rider_match[1]
+      plate_number = rider_match[2]
+      laps = rider_match[3].to_i
+      total_time = rider_match[4]
+      lap_times_text = rider_match[5]&.strip
       
-      place = match[1].to_i
-      full_name = match[2].strip
-      team_name = match[3].strip
-      rider_number = match[4]
-      plate_number = match[5]
-      laps = match[6].to_i
-      total_time = match[7]
-      lap_times_text = match[8]&.strip
+      # Extract place and everything before rider number
+      prefix_match = line.match(/^\s*(\d+)\s+(.+?)\s+#{Regexp.escape(rider_number)}/)
+      return nil unless prefix_match
+      
+      place = prefix_match[1].to_i
+      name_and_team_text = prefix_match[2].strip
+      
+      # Use TeamNameExtractor to separate name from team
+      team_name = TeamNameExtractor.extract_team_name(name_and_team_text)
+      
+      # Extract name by removing team from the original text
+      if team_name && name_and_team_text.include?(team_name)
+        # Remove team name and extra spaces to get the racer name
+        name_text = name_and_team_text.gsub(team_name, '').strip.gsub(/\s+/, ' ')
+        full_name = name_text
+      else
+        # Fallback: assume first part is name
+        parts = name_and_team_text.split(/\s{2,}/)
+        full_name = parts.first || name_and_team_text
+        team_name ||= parts.last || "Unknown Team"
+      end
       
       # Split name into first/last
       name_parts = full_name.split(/\s+/)

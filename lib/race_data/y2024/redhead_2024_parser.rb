@@ -1,4 +1,5 @@
 require_relative '../base_mca_parser'
+require_relative '../team_name_extractor'
 
 module RaceData
   class Redhead2024Parser < BaseMcaParser
@@ -38,7 +39,8 @@ module RaceData
       lines.each_with_index do |line, index|
         # Check for new division
         if line.start_with?("Division:")
-          current_division = line.sub("Division:", "").strip
+          raw_division = line.sub("Division:", "").strip
+          current_division = convert_concatenated_division_to_category(raw_division)
           in_results_section = false
           next
         end
@@ -96,13 +98,26 @@ module RaceData
       last_name = name_parts.length > 1 ? name_parts[1..-1].join(" ") : name_parts[0]
       
       # Parse times from after_laps_section
-      # Look for MM:SS.S pattern times
-      time_pattern = /\d{2}:\d{2}:\d+\.\d+/
-      times = after_laps_section.scan(time_pattern)
+      # CRITICAL FIX: The line may contain multiple racers - stop at next rider number pattern
+      # Find the end of this racer's data by looking for the next rider number
+      next_rider_pattern = /\s+\d{9}\s+\d{4}\s+\d+/
+      next_rider_match = after_laps_section.match(next_rider_pattern)
       
-      # First time is total, rest are lap times
+      if next_rider_match
+        # Truncate to only this racer's data
+        racer_section = after_laps_section[0...next_rider_match.begin(0)]
+      else
+        racer_section = after_laps_section
+      end
+      
+      # Look for MM:SS.S pattern times in this racer's section only
+      time_pattern = /\d{2}:\d{2}:\d+\.\d+/
+      times = racer_section.scan(time_pattern)
+      
+      # First time is total, rest are lap times (should match expected lap count)
       total_time = times.first
-      lap_times = times[1..-1] || []
+      expected_lap_times = times[1..laps] || []  # Take exactly 'laps' number of lap times
+      lap_times = expected_lap_times
       
       # Handle DNF/DNS cases where there might be no times
       if total_time.nil?
@@ -291,7 +306,67 @@ module RaceData
         end
       end
       
+      # Use TeamNameExtractor as final validation/fallback
+      if team_name.present? && team_name.length <= 10 && !team_name.match(/HS$|Bike$|Cycling$|Composite$/)
+        # Team name looks suspicious (too short, no common endings)
+        # Try TeamNameExtractor on the full text
+        extracted_team = TeamNameExtractor.extract_team_name(name_team_text)
+        if extracted_team && extracted_team != team_name
+          # TeamNameExtractor found a better match
+          team_name = extracted_team
+          # Recalculate name by removing the extracted team
+          full_name = name_team_text.gsub(extracted_team, '').strip.gsub(/\s+/, ' ')
+        end
+      end
+      
       [full_name || "", team_name || ""]
+    end
+
+    def convert_concatenated_division_to_category(raw_division)
+      # Convert concatenated division names like "6thGradeGirls" to "6th Grade Girls"
+      case raw_division
+      when "6thGradeGirls"
+        "6th Grade Girls"
+      when "6thGradeBoysD1"
+        "6th Grade Boys D1"
+      when "6thGradeBoysD2"
+        "6th Grade Boys D2"
+      when "7thGradeGirls"
+        "7th Grade Girls"
+      when "7thGradeBoysD1"
+        "7th Grade Boys D1"
+      when "7thGradeBoysD2"
+        "7th Grade Boys D2"
+      when "8thGradeGirls"
+        "8th Grade Girls"
+      when "8thGradeBoysD1"
+        "8th Grade Boys D1"
+      when "8thGradeBoysD2"
+        "8th Grade Boys D2"
+      when "FreshmanGirls"
+        "Freshman Girls"
+      when "FreshmanBoysD1"
+        "Freshman Boys D1"
+      when "FreshmanBoysD2"
+        "Freshman Boys D2"
+      when "JV2Girls"
+        "JV2 Girls"
+      when "JV2BoysD1"
+        "JV2 Boys D1"
+      when "JV2BoysD2"
+        "JV2 Boys D2"
+      when "JV3Girls"
+        "JV3 Girls"
+      when "JV3Boys"
+        "JV3 Boys"
+      when "VarsityGirls"
+        "Varsity Girls"
+      when "VarsityBoys"
+        "Varsity Boys"
+      else
+        # Fallback: try to add spaces between camelCase words
+        raw_division.gsub(/([a-z])([A-Z])/, '\1 \2')
+      end
     end
 
     def clean_redhead_name(name)

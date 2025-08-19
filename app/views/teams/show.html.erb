@@ -1,0 +1,145 @@
+<% if notice %>
+  <div class="alert alert-success mb-6">
+    <%= notice %>
+  </div>
+<% end %>
+
+<div class="container mx-auto max-w-6xl p-6">
+  <%= render @team %>
+
+  <div class="mt-8">
+    <div class="flex justify-between items-center mb-6 pb-4 border-b">
+      <h3 class="text-2xl font-bold">Racers</h3>
+      <span class="badge badge-lg badge-neutral"><%= pluralize(@team.racers.count, 'racer') %></span>
+    </div>
+    
+    <% if @team.racers.any? %>
+      <div id="racers-list">
+        <div class="mb-4">
+          <input class="search input input-bordered w-full max-w-xs" placeholder="Search racers..." />
+        </div>
+        
+        <div class="overflow-x-auto">
+          <table class="table table-zebra w-full">
+            <thead>
+              <tr>
+                <th class="sort cursor-pointer hover:bg-base-200" data-sort="name">
+                  Name ↕️
+                </th>
+                <th class="sort cursor-pointer hover:bg-base-200" data-sort="results">
+                  Race Results ↕️
+                </th>
+                <th class="sort cursor-pointer hover:bg-base-200" data-sort="place">
+                  Best Place ↕️
+                </th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody class="list">
+              <% @team.racers.includes(racer_seasons: :race_results).each do |racer| %>
+                <% all_results = racer.racer_seasons.map(&:race_results).flatten %>
+                <% best_place = all_results.any? ? all_results.map(&:place).min : 999 %>
+                <tr>
+                  <td>
+                    <span class="name"><%= racer.first_name.titleize %> <%= racer.last_name.titleize %></span>
+                  </td>
+                  <td>
+                    <span class="badge badge-neutral">
+                      <span class="results"><%= all_results.count %></span>
+                    </span>
+                  </td>
+                  <td>
+                    <span class="badge <%= best_place <= 5 ? 'badge-success' : 'badge-neutral' %>">
+                      <span class="place">
+                        <% if all_results.any? %>
+                          <%= best_place %>
+                        <% else %>
+                          999
+                        <% end %>
+                      </span>
+                    </span>
+                  </td>
+                  <td>
+                    <%= link_to "View", racer, class: "btn btn-sm btn-outline" if racer.present? %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <% else %>
+      <div class="hero bg-base-200 rounded-lg">
+        <div class="hero-content text-center">
+          <div class="max-w-md">
+            <p class="text-lg">No racers are currently assigned to this team.</p>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/list.js@2.3.1/dist/list.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, checking for List.js...');
+    console.log('List available:', typeof List !== 'undefined');
+    
+    // Wait for List.js to load
+    if (typeof List !== 'undefined') {
+      initializeRacersTable();
+    } else {
+      console.log('Waiting for List.js to load...');
+      // Poll for List.js to be available
+      let attempts = 0;
+      const checkList = setInterval(() => {
+        attempts++;
+        console.log(`Attempt ${attempts}: List available:`, typeof List !== 'undefined');
+        
+        if (typeof List !== 'undefined') {
+          clearInterval(checkList);
+          initializeRacersTable();
+        }
+        
+        if (attempts > 100) { // Stop after 5 seconds
+          clearInterval(checkList);
+          console.error('List.js failed to load after 5 seconds');
+        }
+      }, 50);
+    }
+    
+    function initializeRacersTable() {
+      console.log('Initializing racers table...');
+      const racersList = document.getElementById('racers-list');
+      console.log('Found racers-list element:', !!racersList);
+      
+      if (racersList) {
+        // Check if we have any racers before initializing
+        const listContainer = racersList.querySelector('.list');
+        const items = listContainer ? listContainer.children.length : 0;
+        console.log('Found', items, 'racer rows');
+        
+        if (items === 0) {
+          console.log('No racers to sort - skipping List.js initialization');
+          return;
+        }
+        
+        const options = {
+          valueNames: ['name', 'results', 'place']
+        };
+        
+        console.log('Creating List with options:', options);
+        
+        try {
+          const racersTable = new List('racers-list', options);
+          console.log('List created successfully:', racersTable);
+          console.log('Number of items found:', racersTable.items.length);
+        } catch (error) {
+          console.error('Error creating List:', error);
+        }
+      }
+    }
+  });
+</script>
+
