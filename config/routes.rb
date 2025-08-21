@@ -1,6 +1,10 @@
 Rails.application.routes.draw do
   resources :racer_seasons
-  resources :race_results
+  resources :race_results do
+    member do
+      get :lap_data
+    end
+  end
   resources :racers
   resources :teams
   resources :races, only: [:index, :show]

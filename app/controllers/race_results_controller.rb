@@ -1,5 +1,5 @@
 class RaceResultsController < ApplicationController
-  before_action :set_race_result, only: %i[ show edit update destroy ]
+  before_action :set_race_result, only: %i[ show edit update destroy lap_data ]
 
   # GET /race_results or /race_results.json
   def index
@@ -55,6 +55,22 @@ class RaceResultsController < ApplicationController
       format.html { redirect_to race_results_path, notice: "Race result was successfully destroyed.", status: :see_other }
       format.json { head :no_content }
     end
+  end
+
+  # GET /race_results/1/lap_data.json
+  def lap_data
+    laps = @race_result.race_result_laps.order(:lap_number)
+    
+    render json: {
+      laps: laps.map do |lap|
+        {
+          lap_number: lap.lap_number,
+          lap_time_ms: lap.lap_time_ms,
+          cumulative_time_ms: lap.cumulative_time_ms
+        }
+      end,
+      total_time: @race_result.total_time_ms
+    }
   end
 
   private
