@@ -13,14 +13,28 @@ class RacesController < ApplicationController
                             .includes(racer_season: [racer: :team], category_snapshot: [], race_result_laps: [])
                             .order(:place)
     
-    # Filter by category if specified
+    # Filter by category if specified, otherwise show first category with results
     @selected_category = params[:category]
-    if @selected_category.present? && @selected_category != 'all'
+    if @selected_category.present?
       @race_results = all_race_results.joins(:category_snapshot)
                                       .where(categories: { name: @selected_category })
     else
-      @race_results = all_race_results
-      @selected_category = 'all'
+      # Default to first category with results
+      first_category = all_race_results.joins(:category_snapshot)
+                                      .group('categories.name')
+                                      .order('categories.name')
+                                      .limit(1)
+                                      .pluck('categories.name')
+                                      .first
+      
+      if first_category
+        @selected_category = first_category
+        @race_results = all_race_results.joins(:category_snapshot)
+                                        .where(categories: { name: @selected_category })
+      else
+        @race_results = all_race_results
+        @selected_category = 'Unknown'
+      end
     end
     
     @overall_winner = all_race_results.first
@@ -31,6 +45,10 @@ class RacesController < ApplicationController
     @dnf_dns_count = @participants_count - @finished_count
     
     @category_stats = calculate_category_stats(all_race_results)
+    
+    # Calculate maximum number of laps for dynamic lap columns based on filtered results
+    @max_laps = @race_results.joins(:race_result_laps)
+                             .maximum('race_result_laps.lap_number') || 0
   end
 
   private
