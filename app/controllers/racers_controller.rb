@@ -10,6 +10,9 @@ class RacersController < ApplicationController
   def show
     @selected_race = params[:race_id] ? @racer.race_results.find(params[:race_id]) : @racer.race_results.first
     
+    # Get current category from the most recent race result or current season
+    @current_category = get_current_category
+    
     # Determine the back path based on referer
     @back_path, @back_text = determine_back_path
   end
@@ -70,6 +73,21 @@ class RacersController < ApplicationController
     # Only allow a list of trusted parameters through.
     def racer_params
       params.fetch(:racer, {})
+    end
+
+    def get_current_category
+      # Get most recent category assignment from racer_season_assignments
+      # Since all assignments might be from past seasons, get the most recent one
+      current_assignment = RacerSeasonAssignment
+                            .joins(racer_season: :racer)
+                            .includes(:category)
+                            .where(racer_seasons: { racer: @racer })
+                            .order(:start_on => :desc)
+                            .first
+      
+      # If no season assignment found, fallback to racer_season category
+      # Every racer should have a category
+      current_assignment&.category || @racer.racer_seasons.includes(:category).order(created_at: :desc).first&.category
     end
 
     def determine_back_path
