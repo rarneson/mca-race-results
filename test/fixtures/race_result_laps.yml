@@ -1,13 +1,25 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  race_result: one
+alex_lap_1:
+  race_result: alex_first_place
   lap_number: 1
-  lap_time_ms: 1
-  cumulative_time_ms: 1
+  lap_time_ms: 1980000 # 33:00
+  cumulative_time_ms: 1980000
 
-two:
-  race_result: two
+alex_lap_2:
+  race_result: alex_first_place
+  lap_number: 2
+  lap_time_ms: 1980000 # 33:00
+  cumulative_time_ms: 3960000
+
+alex_lap_3:
+  race_result: alex_first_place
+  lap_number: 3
+  lap_time_ms: 1475000 # 24:35 - fastest lap
+  cumulative_time_ms: 5940000
+
+sarah_lap_1:
+  race_result: sarah_second_place
   lap_number: 1
-  lap_time_ms: 1
-  cumulative_time_ms: 1
+  lap_time_ms: 2040000 # 34:00
+  cumulative_time_ms: 2040000

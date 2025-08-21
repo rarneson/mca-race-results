@@ -1,15 +1,13 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  name: MyString
-  race_date: 2025-08-12
-  location: MyString
-  year: 1
-  series: MyString
+cascade_mountain_challenge:
+  name: Cascade Mountain Challenge
+  race_date: 2024-01-14
+  location: Mount Rainier, WA
+  year: 2024
 
-two:
-  name: MyString
-  race_date: 2025-08-12
-  location: MyString
-  year: 1
-  series: MyString
+pine_valley_race:
+  name: Pine Valley Challenge
+  race_date: 2024-02-18
+  location: Pine Valley, OR
+  year: 2024

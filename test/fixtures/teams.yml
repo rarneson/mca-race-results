@@ -1,9 +1,9 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  name: MyString
+mountain_velocity:
+  name: Mountain Velocity
   division: 1
 
-two:
-  name: MyString
+trail_blazers:
+  name: Trail Blazers
   division: 1

@@ -1,13 +1,15 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  first_name: MyString
-  last_name: MyString
-  number: MyString
-  team: one
+alex_rodriguez:
+  first_name: Alex
+  last_name: Rodriguez
+  number: "28"
+  team: mountain_velocity
+  gender: M
 
-two:
-  first_name: MyString
-  last_name: MyString
-  number: MyString
-  team: two
+sarah_chen:
+  first_name: Sarah
+  last_name: Chen
+  number: "15"
+  team: trail_blazers
+  gender: F

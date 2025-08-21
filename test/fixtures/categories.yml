@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+varsity:
+  name: Varsity
+  sort_order: 1
+
+jv3:
+  name: JV3
+  sort_order: 2
+
+jv2:
+  name: JV2
+  sort_order: 3
+
+freshman:
+  name: Freshman
+  sort_order: 4
