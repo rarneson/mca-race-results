@@ -67,29 +67,22 @@
         </svg>
         <span class="text-sm font-medium text-gray-700">Filter by Category</span>
       </div>
-      <div class="flex flex-wrap gap-2">
-        <%= link_to race_path(@race, category: 'all'), class: "inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium #{@selected_category == 'all' ? 'bg-emerald-600 text-white' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'}" do %>
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M17,7H22V17H17V19A1,1 0 0,0 18,20H20V22H17.5C16.95,22 16,21.55 16,21C16,21.55 15.05,22 14.5,22H12V20H14A1,1 0 0,0 15,19V5A1,1 0 0,0 14,4H12V2H14.5C15.05,2 16,2.45 16,3C16,2.45 16.95,2 17.5,2H20V4H18A1,1 0 0,0 17,5V7Z"/>
-          </svg>
-          All Categories
-          <span class="<%= @selected_category == 'all' ? 'bg-emerald-500 text-white' : 'bg-gray-200 text-gray-700' %> px-2 py-0.5 rounded-full text-xs"><%= @participants_count %></span>
-        <% end %>
-        <% @category_stats.each do |category_name, stats| %>
-          <% is_selected = @selected_category == category_name %>
-          <% category_class = case category_name
-                               when 'Varsity' then is_selected ? 'bg-orange-500 text-white' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
-                               when 'JV3' then is_selected ? 'bg-orange-500 text-white' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
-                               when 'JV2' then is_selected ? 'bg-blue-500 text-white' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
-                               when 'Freshman' then is_selected ? 'bg-green-500 text-white' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
-                               else is_selected ? 'bg-gray-500 text-white' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
-                               end %>
-          <% badge_class = is_selected ? 'bg-white bg-opacity-20 text-white' : 'bg-gray-200 text-gray-700' %>
-          <%= link_to race_path(@race, category: category_name), class: "inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium #{category_class}" do %>
-            <%= category_name %>
-            <span class="<%= badge_class %> px-2 py-0.5 rounded-full text-xs"><%= stats[:count] %></span>
+      <div class="relative inline-block w-64">
+        <select onchange="window.location.href=this.value" class="block w-full px-4 py-2 pr-8 bg-white border border-gray-300 rounded-lg text-gray-700 hover:border-gray-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 focus:outline-none appearance-none">
+          <option value="<%= race_path(@race, category: 'all') %>" <%= 'selected' if @selected_category == 'all' %>>
+            All Categories (<%= @participants_count %>)
+          </option>
+          <% @category_stats.each do |category_name, stats| %>
+            <option value="<%= race_path(@race, category: category_name) %>" <%= 'selected' if @selected_category == category_name %>>
+              <%= category_name %> (<%= stats[:count] %>)
+            </option>
           <% end %>
-        <% end %>
+        </select>
+        <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+          <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M7 10l5 5 5-5z"/>
+          </svg>
+        </div>
       </div>
     </div>
 
