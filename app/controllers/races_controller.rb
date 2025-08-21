@@ -62,14 +62,24 @@ class RacesController < ApplicationController
   def calculate_category_stats(race_results)
     stats = {}
     
+    # Initialize all categories with zero counts, respecting sort_order
+    Category.by_sort_order.each do |category|
+      stats[category.name] = { count: 0, winner: nil, winner_time: Float::INFINITY }
+    end
+    
+    # Count race results for each category
     race_results.each do |result|
       category_name = result.category_snapshot&.name || 'Unknown'
-      stats[category_name] ||= { count: 0, winner: nil, winner_time: Float::INFINITY }
-      stats[category_name][:count] += 1
-      
-      if result.total_time_ms && result.total_time_ms < stats[category_name][:winner_time]
-        stats[category_name][:winner] = result
-        stats[category_name][:winner_time] = result.total_time_ms
+      if stats[category_name]
+        stats[category_name][:count] += 1
+        
+        if result.total_time_ms && result.total_time_ms < stats[category_name][:winner_time]
+          stats[category_name][:winner] = result
+          stats[category_name][:winner_time] = result.total_time_ms
+        end
+      else
+        # Handle unknown categories (categories not in the Category table)
+        stats[category_name] = { count: 1, winner: result, winner_time: result.total_time_ms || Float::INFINITY }
       end
     end
     
