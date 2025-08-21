@@ -52,12 +52,56 @@ module RaceData
         
         # Parse result lines (start with place number and have racer data)
         if in_results_section && current_division && line.match?(/^\s*\d+\s+/)
-          result = parse_wirth_result_line(line, current_division)
-          results << result if result
+          # Handle lines that may contain multiple racers due to PDF extraction issues
+          parsed_results = parse_wirth_result_line_with_splits(line, current_division)
+          results.concat(parsed_results) if parsed_results.any?
         end
       end
       
       results
+    end
+
+    def parse_wirth_result_line_with_splits(line, division)
+      # Check if line contains multiple rider numbers (indicating multiple racers on one line)
+      rider_numbers = line.scan(/\d{8,9}/)
+      
+      if rider_numbers.length <= 1
+        # Single racer line - use original parsing
+        result = parse_wirth_result_line(line, division)
+        return result ? [result] : []
+      else
+        # Multiple racers on one line - split them
+        results = []
+        
+        # Split the line at each rider number boundary
+        rider_numbers.each_with_index do |rider_number, idx|
+          # Find the start position of this rider's data
+          start_pos = line.index(rider_number)
+          next unless start_pos
+          
+          # Find the end position (start of next rider or end of line)
+          if idx < rider_numbers.length - 1
+            next_rider_start = line.index(rider_numbers[idx + 1])
+            racer_line = line[0...next_rider_start].strip
+          else
+            racer_line = line.strip
+          end
+          
+          # Extract just this racer's data by finding place number before the rider number
+          place_match = racer_line.match(/(\d+)\s+.*?#{Regexp.escape(rider_number)}/)
+          if place_match
+            # Reconstruct a clean line for this racer starting from the place number
+            place_start = racer_line.rindex(place_match[1], start_pos)
+            if place_start
+              clean_racer_line = racer_line[place_start..-1]
+              result = parse_wirth_result_line(clean_racer_line, division)
+              results << result if result
+            end
+          end
+        end
+        
+        return results
+      end
     end
 
     def parse_wirth_result_line(line, division)
