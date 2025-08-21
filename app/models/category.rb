@@ -37,9 +37,6 @@ class Category < ApplicationRecord
     nil
   end
 
-  def gender
-    name.include?('Girls') ? 'Girls' : 'Boys'
-  end
 
   private
 

@@ -130,14 +130,12 @@
                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Plate #</th>
                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Team</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gender</th>
                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
                   <% racers.each_with_index do |racer, index| %>
                     <% plate_number = racer.race_results.first&.plate_number_snapshot || racer.racer_seasons.first&.plate_number || "##{index + 1}" %>
-                    <% gender = racer.gender || (category_name.include?('Girls') ? 'F' : 'M') %>
                     <tr class="hover:bg-gray-50">
                       <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                         <%= plate_number %>
@@ -147,9 +145,6 @@
                       </td>
                       <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                         <%= @team.name %>
-                      </td>
-                      <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
-                        <%= gender %>
                       </td>
                       <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                         <%= link_to "View Profile", racer, class: "text-blue-600 hover:text-blue-900" %>
@@ -178,14 +173,12 @@
                   <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Plate #</th>
                   <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                   <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Team</th>
-                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gender</th>
                   <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-gray-200">
                 <% @team.racers.each_with_index do |racer, index| %>
                   <% plate_number = racer.race_results.first&.plate_number_snapshot || racer.racer_seasons.first&.plate_number || "V#{sprintf('%02d', index + 1)}" %>
-                  <% gender = racer.gender || "—" %>
                   <tr class="hover:bg-gray-50">
                     <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                       <%= plate_number %>
@@ -195,9 +188,6 @@
                     </td>
                     <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                       <%= @team.name %>
-                    </td>
-                    <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
-                      <%= gender %>
                     </td>
                     <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                       <%= link_to "View Profile", racer, class: "text-blue-600 hover:text-blue-900" %>

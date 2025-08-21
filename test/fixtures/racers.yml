@@ -5,11 +5,9 @@ alex_rodriguez:
   last_name: Rodriguez
   number: "28"
   team: mountain_velocity
-  gender: M
 
 sarah_chen:
   first_name: Sarah
   last_name: Chen
   number: "15"
   team: trail_blazers
-  gender: F
