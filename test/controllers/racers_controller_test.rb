@@ -34,6 +34,24 @@ class RacersControllerTest < ActionDispatch::IntegrationTest
     assert_select 'span', text: /Varsity/  # Check that category is displayed in header
   end
 
+  test "should show racer with team link in header" do
+    get racer_url(@racer)
+    assert_response :success
+    # Check that team name is a link to team show page
+    assert_select "a[href='#{team_path(@racer.team)}']", text: @racer.team_name
+  end
+
+  test "should show racer without team link when no team assigned" do
+    # Create a racer without a team
+    teamless_racer = Racer.create!(first_name: "Solo", last_name: "Rider")
+    
+    get racer_url(teamless_racer)
+    assert_response :success
+    # Should show "No Team" as plain text, not a link
+    assert_select 'span', text: "No Team"
+    assert_select "a", text: "No Team", count: 0  # Should not be a link
+  end
+
   test "get_current_category returns most recent assignment" do
     racer = racers(:alex_rodriguez)
     controller = RacersController.new

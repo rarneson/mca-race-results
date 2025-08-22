@@ -33,7 +33,11 @@
           </div>
           
           <div class="flex items-center gap-4">
-            <span class="text-gray-600"><%= @racer.team_name %></span>
+            <% if @racer.team %>
+              <%= link_to @racer.team_name, team_path(@racer.team), class: "text-gray-600 hover:text-gray-800 hover:underline" %>
+            <% else %>
+              <span class="text-gray-600"><%= @racer.team_name %></span>
+            <% end %>
             <% if @current_category %>
               <% 
                 # Color code categories based on grade level and gender
