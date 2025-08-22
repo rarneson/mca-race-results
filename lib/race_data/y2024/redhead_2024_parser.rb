@@ -110,7 +110,7 @@ module RaceData
       
       # Redhead format has concatenated text like "HazelWoeste HopkinsHS"
       # Use rider number and plate as anchors to work backwards
-      rider_match = line.match(/(\d{9})\s+(\d{4})\s+(\d+)/)
+      rider_match = line.match(/(\d{9})\s+(\d{1,4})\s+(\d+)/)
       return nil unless rider_match
       
       rider_number = rider_match[1]
@@ -144,7 +144,7 @@ module RaceData
       # Parse times from after_laps_section
       # CRITICAL FIX: The line may contain multiple racers - stop at next rider number pattern
       # Find the end of this racer's data by looking for the next rider number
-      next_rider_pattern = /\s+\d{9}\s+\d{4}\s+\d+/
+      next_rider_pattern = /\s+\d{9}\s+\d{1,4}\s+\d+/
       next_rider_match = after_laps_section.match(next_rider_pattern)
       
       if next_rider_match

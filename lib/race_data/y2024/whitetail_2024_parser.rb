@@ -112,7 +112,7 @@ module RaceData
       # Multi lap: Place Name Team Rider# Plate Laps Total Lap1 Lap2 [Lap3] [Lap4]
       
       # Use improved parsing approach - find rider number first
-      rider_match = line.match(/(\d{8,9})\s+(\d{4})\s+(\d+)\s+(.*?)$/)
+      rider_match = line.match(/(\d{8,9})\s+(\d{1,4})\s+(\d+)\s+(.*?)$/)
       return nil unless rider_match
       
       rider_number = rider_match[1]
@@ -304,12 +304,24 @@ module RaceData
     def parse_whitetail_lap_times(lap_times_text)
       return [] if lap_times_text.blank?
       
-      # Extract time patterns for 00:MM:SS.s format
-      time_pattern = /00:\d+:\d+\.\d+/
-      lap_times = lap_times_text.scan(time_pattern)
+      # Extract only consecutive time patterns from the beginning of the text
+      # This prevents picking up times from page headers or other content that might be concatenated
+      consecutive_times = []
+      remaining_text = lap_times_text.strip
+      
+      # Keep extracting time patterns as long as they appear at the start of remaining text
+      while remaining_text.match(/^\s*00:\d+:\d+\.\d+/)
+        match = remaining_text.match(/^\s*(00:\d+:\d+\.\d+)(.*)/)
+        if match
+          consecutive_times << match[1]
+          remaining_text = match[2].strip
+        else
+          break
+        end
+      end
       
       # Clean up times (remove 00: prefix) and return
-      lap_times.map { |time| time.sub(/^00:/, "") }
+      consecutive_times.map { |time| time.sub(/^00:/, "") }
     end
   end
 end

@@ -99,7 +99,7 @@ module RaceData
       
       # Gamehaven format: Place Name Team Rider# Plate Laps Penalty Comment Total Lap1...
       # Very similar to Brophy Park format
-      match = line.match(/^\s*(\d+)\s+([A-Z\s\-]+?)\s{2,}([A-Za-z\s\-\.]+?)\s+(\d{8,9})\s+(\d{4})\s+(\d+)\s.*?(\d+:\d+:\d+\.\d+|\d+:\d+\.\d+)(.*)$/)
+      match = line.match(/^\s*(\d+)\s+([A-Z\s\-]+?)\s{2,}([A-Za-z\s\-\.]+?)\s+(\d{8,9})\s+(\d{1,4})\s+(\d+)\s.*?(\d+:\d+:\d+\.\d+|\d+:\d+\.\d+)(.*)$/)
       
       return nil unless match
       

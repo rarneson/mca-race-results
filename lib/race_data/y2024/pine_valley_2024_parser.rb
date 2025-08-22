@@ -112,7 +112,7 @@ module RaceData
       # Pattern: Place + Name + Team + RiderNumber + Plate + Laps + [Penalty] + [Comment] + Times...
       
       # First, try to find the rider number and plate number to establish boundaries
-      rider_match = line.match(/(\d{9})\s+(\d{4})\s+(\d+)/)
+      rider_match = line.match(/(\d{9})\s+(\d{1,4})\s+(\d+)/)
       return nil unless rider_match
       
       rider_number = rider_match[1]

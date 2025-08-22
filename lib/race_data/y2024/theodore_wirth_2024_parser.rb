@@ -1,5 +1,6 @@
 require_relative '../base_mca_parser'
 require_relative '../team_name_extractor'
+require 'date'
 
 module RaceData
   class TheodoreWirth2024Parser < BaseMcaParser
@@ -37,9 +38,29 @@ module RaceData
       in_results_section = false
       
       lines.each_with_index do |line, index|
-        # Check for new division
-        if line.start_with?("Division:")
-          current_division = line.sub("Division:", "").strip
+        # Check for new division - handle cases where division header is concatenated with race result
+        if line.start_with?("Division:") || line.include?("Division:")
+          # Extract division name - could be at start or middle of line
+          if line.start_with?("Division:")
+            current_division = line.sub("Division:", "").strip
+          else
+            # Division header is concatenated with race result - extract the division part
+            division_match = line.match(/.*Division:\s*(.+)$/)
+            if division_match
+              new_division = division_match[1].strip
+              
+              # Process the race result part before the division header if it exists
+              result_part = line.split("Division:").first.strip
+              if in_results_section && current_division && result_part.match?(/^\s*\d+\s+/)
+                # Parse the race result from the previous division before switching
+                parsed_results = parse_wirth_result_line_with_splits(result_part, current_division)
+                results.concat(parsed_results) if parsed_results.any?
+              end
+              
+              # Now update to the new division
+              current_division = new_division
+            end
+          end
           in_results_section = false
           next
         end
@@ -109,7 +130,7 @@ module RaceData
       
       # Theodore Wirth format: Place Name Team Rider# Plate Laps Penalty Comment Total Lap1...
       # Same as Mt Kato: Proper case names, 00:MM:SS.s time format
-      match = line.match(/^\s*(\d+)\s+([A-Za-z\s\-\.]+?)\s{2,}([A-Za-z\s\-\.]+?)\s+(\d{8,9})\s+(\d{4})\s+(\d+)\s.*?(00:\d+:\d+\.\d+|\d+:\d+\.\d+)(.*)$/)
+      match = line.match(/^\s*(\d+)\s+([A-Za-z\s\-\.]+?)\s{2,}([A-Za-z\s\-\.]+?)\s+(\d{8,9})\s+(\d{1,4})\s+(\d+)\s.*?(00:\d+:\d+\.\d+|\d+:\d+\.\d+)(.*)$/)
       
       return nil unless match
       
@@ -162,12 +183,24 @@ module RaceData
     def parse_wirth_lap_times(lap_times_text)
       return [] if lap_times_text.blank?
       
-      # Extract time patterns, handling both 00:MM:SS.s and MM:SS.s formats
-      time_pattern = /(00:\d+:\d+\.\d+|\d+:\d+\.\d+)/
-      lap_times = lap_times_text.scan(time_pattern).flatten
+      # Extract only consecutive time patterns from the beginning of the text
+      # This prevents picking up times from page headers or other content that might be concatenated
+      consecutive_times = []
+      remaining_text = lap_times_text.strip
+      
+      # Keep extracting time patterns as long as they appear at the start of remaining text
+      while remaining_text.match(/^\s*(00:\d+:\d+\.\d+|\d+:\d+\.\d+)/)
+        match = remaining_text.match(/^\s*(00:\d+:\d+\.\d+|\d+:\d+\.\d+)(.*)/)
+        if match
+          consecutive_times << match[1]
+          remaining_text = match[2].strip
+        else
+          break
+        end
+      end
       
       # Clean up times (remove 00: prefix) and return
-      lap_times.uniq.map { |time| time.sub(/^00:/, "") }
+      consecutive_times.map { |time| time.sub(/^00:/, "") }
     end
   end
 end

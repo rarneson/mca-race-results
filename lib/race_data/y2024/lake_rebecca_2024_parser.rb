@@ -27,11 +27,19 @@ module RaceData
       in_results_section = false
       
       lines.each_with_index do |line, index|
-        # Check for new division (handle typos)
+        # Check for new division (handle typos and inline divisions)
         if line.start_with?("Division:") || line.start_with?("Divsion:")
           current_division = line.sub(/Divs?ion:\s*/, "").strip
           in_results_section = false
           next
+        elsif line.include?("Division:") || line.include?("Divsion:")
+          # Handle case where Division: appears at the end of a result line
+          division_match = line.match(/.*Divs?ion:\s*(.+)$/)
+          if division_match
+            current_division = division_match[1].strip
+            in_results_section = false
+            next
+          end
         end
         
         # Skip header line after division (handle "Pace Nam e" artifact)
@@ -108,7 +116,7 @@ module RaceData
       remaining_line = line[place_match.end(0)..-1]
       
       # Find rider number (9 digits) as our main anchor point
-      rider_match = remaining_line.match(/(\d{9})\s+(\d{4})\s+(\d+)/)
+      rider_match = remaining_line.match(/(\d{9})\s+(\d{1,4})\s+(\d+)/)
       return nil unless rider_match
       
       rider_number = rider_match[1]
@@ -136,7 +144,7 @@ module RaceData
       # Parse times from times section
       # CRITICAL FIX: The line may contain multiple racers - stop at next rider number pattern
       # Find the end of this racer's data by looking for the next rider number
-      next_rider_pattern = /\s+\d{9}\s+\d{4}\s+\d+/
+      next_rider_pattern = /\s+\d{9}\s+\d{1,4}\s+\d+/
       next_rider_match = times_section.match(next_rider_pattern)
       
       if next_rider_match

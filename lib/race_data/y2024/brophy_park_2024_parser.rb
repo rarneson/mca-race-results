@@ -27,11 +27,19 @@ module RaceData
       in_results_section = false
       
       lines.each_with_index do |line, index|
-        # Check for new division
+        # Check for new division (handle cases where Division: appears at end of line due to PDF extraction)
         if line.start_with?("Division:")
           current_division = line.sub("Division:", "").strip
           in_results_section = false
           next
+        elsif line.include?("Division:")
+          # Handle case where Division: appears at the end of a result line
+          division_match = line.match(/.*Division:\s*(.+)$/)
+          if division_match
+            current_division = division_match[1].strip
+            in_results_section = false
+            next
+          end
         end
         
         # Skip header line after division (Place Name Team Name etc.)
@@ -98,7 +106,8 @@ module RaceData
       return nil if line.strip.empty?
       
       # Brophy Park format: Place Name Team Rider# Plate Laps Penalty Comment Total Lap1 Lap2...
-      match = line.match(/^\s*(\d+)\s+([A-Z\s\-]+?)\s{2,}([A-Za-z\s\-\.]+?)\s+(\d{8,9})\s+(\d{4})\s+(\d+)\s.*?(\d+:\d+:\d+\.\d+|\d+:\d+\.\d+)(.*)$/)
+      # Handle plate numbers from 1-4 digits
+      match = line.match(/^\s*(\d+)\s+([A-Z\s\-]+?)\s{2,}([A-Za-z\s\-\.]+?)\s+(\d{8,9})\s+(\d{1,4})\s+(\d+)\s.*?(\d+:\d+:\d+\.\d+|\d+:\d+\.\d+)(.*)$/)
       
       return nil unless match
       

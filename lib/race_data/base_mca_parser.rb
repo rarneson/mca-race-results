@@ -100,14 +100,23 @@ module RaceData
     def parse_lap_times(lap_times_text)
       return [] if lap_times_text.blank?
       
-      # Extract time patterns from the remaining text after total time
-      # Look for patterns like "19:05.6" or "1:23:45.6"
-      time_pattern = /(\d+:\d+:\d+\.\d+|\d+:\d+\.\d+)/
-      lap_times = lap_times_text.scan(time_pattern).flatten
+      # Extract only consecutive time patterns from the beginning of the text
+      # This prevents picking up times from page headers or other content that might be concatenated
+      consecutive_times = []
+      remaining_text = lap_times_text.strip
       
-      # Filter out times that might be duplicates of the total time
-      # and return as array of time strings
-      lap_times.uniq
+      # Keep extracting time patterns as long as they appear at the start of remaining text
+      while remaining_text.match(/^\s*(\d+:\d+:\d+\.\d+|\d+:\d+\.\d+)/)
+        match = remaining_text.match(/^\s*(\d+:\d+:\d+\.\d+|\d+:\d+\.\d+)(.*)/)
+        if match
+          consecutive_times << match[1]
+          remaining_text = match[2].strip
+        else
+          break
+        end
+      end
+      
+      consecutive_times
     end
 
     def extract_division_from_category(category)
