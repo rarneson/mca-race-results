@@ -4,11 +4,11 @@ namespace :import do
   desc "Import race results from PDF files"
   task race_results: :environment do
     year = ENV['YEAR'] || '2024'
-    pdf_directory = ENV['PDF_DIR'] || Rails.root.join('tmp', 'race_pdfs', year)
+    pdf_directory = ENV['PDF_DIR'] || Rails.root.join('lib', 'race_data', "y#{year}_race_results")
     
     unless Dir.exist?(pdf_directory)
       puts "PDF directory not found: #{pdf_directory}"
-      puts "Set PDF_DIR environment variable or place PDFs in tmp/race_pdfs/#{year}/"
+      puts "Set PDF_DIR environment variable or place PDFs in lib/race_data/y#{year}_race_results/"
       exit 1
     end
 
