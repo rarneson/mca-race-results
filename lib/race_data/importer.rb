@@ -43,10 +43,7 @@ module RaceData
       
       racer_season = find_or_create_racer_season(racer, race.year, result_data[:result])
       
-      # Find the appropriate racer_season_assignment for the race date
-      assignment = find_assignment_for_date(racer_season, race.race_date)
-      
-      race_result = create_race_result(race, racer_season, assignment, result_data[:result])
+      race_result = create_race_result(race, racer_season, result_data[:result])
       
       # Import lap times if available
       create_lap_times(race_result, result_data[:lap_times])
@@ -101,43 +98,22 @@ module RaceData
         racer: racer,
         year: year
       ) do |season|
-        season.category = result_data[:category_snapshot]
         season.plate_number = result_data[:plate_number_snapshot]
       end
     end
 
-    def find_assignment_for_date(racer_season, race_date)
-      # Find the assignment that was active on the race date
-      assignment = racer_season.racer_season_assignments
-        .where("start_on <= ? AND (end_on IS NULL OR end_on >= ?)", race_date, race_date)
-        .first
-      
-      # If no assignment exists, create a default one
-      if assignment.nil?
-        assignment = racer_season.racer_season_assignments.create!(
-          category: racer_season.category,
-          start_on: Date.new(racer_season.year, 1, 1),
-          end_on: Date.new(racer_season.year, 12, 31),
-          reason: "Default season assignment"
-        )
-      end
-      
-      assignment
-    end
-
-    def create_race_result(race, racer_season, assignment, result_data)
+    def create_race_result(race, racer_season, result_data)
       RaceResult.find_or_create_by(
         race: race,
         racer_season: racer_season
       ) do |race_result|
-        race_result.racer_season_assignment = assignment
         race_result.place = result_data[:place]
         race_result.total_time_ms = result_data[:total_time_ms]
         race_result.total_time_raw = result_data[:total_time_raw]
         race_result.laps_completed = result_data[:laps_completed]
         race_result.laps_expected = result_data[:laps_expected]
         race_result.status = result_data[:status]
-        race_result.category_snapshot = result_data[:category_snapshot]
+        race_result.category = result_data[:category]
         race_result.plate_number_snapshot = result_data[:plate_number_snapshot]
       end
     end

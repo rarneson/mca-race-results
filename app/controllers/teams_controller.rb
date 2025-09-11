@@ -18,8 +18,7 @@ class TeamsController < ApplicationController
   def show
     # Load team and eager-load associations to avoid N+1 queries
     @team = Team.includes(racers: [
-      { race_results: [:category_snapshot, :race] },
-      { racer_seasons: :category }
+      { race_results: [:category, :race] }
     ]).find(params[:id])
     
     # Calculate team statistics
@@ -106,17 +105,13 @@ class TeamsController < ApplicationController
       
       racers.each do |racer|
         # Get race results and their categories
-        race_results = racer.race_results.includes(:category_snapshot)
-        categories = race_results.map(&:category_snapshot).compact.uniq(&:id)
+        race_results = racer.race_results.includes(:category)
+        categories = race_results.map(&:category).compact.uniq(&:id)
         
         
-        # If no categories found in race results, check racer_seasons
+        # If no categories found in race results, racer is uncategorized
         if categories.empty?
-          racer_season_categories = racer.racer_seasons.includes(:category).map(&:category).compact.uniq(&:id)
-          if racer_season_categories.any?
-            categories = racer_season_categories
-          else
-            # Just add directly to uncategorized instead of creating an object
+          # Just add directly to uncategorized instead of creating an object
             racers_with_categories["Uncategorized"] ||= []
             unless racers_with_categories["Uncategorized"].any? { |existing_racer| existing_racer.id == racer.id }
               racers_with_categories["Uncategorized"] << racer

@@ -266,10 +266,10 @@
                 <span>📅 <%= result.race&.race_date&.strftime('%m/%d/%Y') || 'Unknown Date' %></span>
                 <span>📍 <%= result.race&.location || 'Unknown Location' %></span>
                 <span>📏 <%= "32.5 km" %></span>
-                <% if result.category_snapshot %>
+                <% if result.category %>
                   <% 
                     # Color code categories based on grade level and gender
-                    category_class = case result.category_snapshot.name
+                    category_class = case result.category.name
                       when /6th Grade/
                         "bg-green-100 text-green-700"
                       when /7th Grade/
@@ -289,7 +289,7 @@
                     end
                   %>
                   <span class="<%= category_class %> px-2 py-1 rounded text-xs font-medium">
-                    <%= result.category_snapshot.name %>
+                    <%= result.category.name %>
                   </span>
                 <% end %>
               </div>

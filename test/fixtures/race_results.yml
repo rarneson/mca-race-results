@@ -1,25 +1,45 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-alex_first_place:
+one:
   race: cascade_mountain_challenge
-  racer_season: alex_2024
-  racer_season_assignment: alex_varsity_assignment
+  racer_season: one
   place: 1
   total_time_ms: 5940000 # 99:00
   laps_completed: 3
   laps_expected: 3
   status: FINISHED
-  category_snapshot: varsity
+  category: varsity
   plate_number_snapshot: "1"
 
-sarah_second_place:
+two:
   race: cascade_mountain_challenge
-  racer_season: sarah_2024
-  racer_season_assignment: sarah_varsity_assignment
+  racer_season: two
   place: 2
   total_time_ms: 6120000 # 102:00
   laps_completed: 3
   laps_expected: 3
   status: FINISHED
-  category_snapshot: varsity
+  category: varsity
+  plate_number_snapshot: "12"
+
+alex_first_place:
+  race: cascade_mountain_challenge
+  racer_season: alex_2024
+  place: 1
+  total_time_ms: 5940000 # 99:00
+  laps_completed: 3
+  laps_expected: 3
+  status: FINISHED
+  category: varsity
+  plate_number_snapshot: "1"
+
+sarah_second_place:
+  race: cascade_mountain_challenge
+  racer_season: sarah_2024
+  place: 2
+  total_time_ms: 6120000 # 102:00
+  laps_completed: 3
+  laps_expected: 3
+  status: FINISHED
+  category: varsity
   plate_number_snapshot: "12"

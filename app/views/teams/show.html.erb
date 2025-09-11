@@ -214,7 +214,7 @@
       <h2 class="text-xl font-bold text-gray-900 mb-6">Race Results (2024 Season)</h2>
       
       <% if @team.racers.any? && @team.racers.map(&:race_results).flatten.any? %>
-        <% all_results = @team.racers.map(&:race_results).flatten.sort_by { |r| [r.race.race_date, r.category_snapshot&.name || '', r.place || 999] } %>
+        <% all_results = @team.racers.map(&:race_results).flatten.sort_by { |r| [r.race.race_date, r.category&.name || '', r.place || 999] } %>
         <div class="overflow-x-auto">
           <table class="min-w-full">
             <thead>
@@ -234,7 +234,7 @@
                     <%= result.race.name %>
                   </td>
                   <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <%= result.category_snapshot&.name || "—" %>
+                    <%= result.category&.name || "—" %>
                   </td>
                   <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
                     <%= result.racer_season.racer.name %>

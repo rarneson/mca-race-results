@@ -4,23 +4,23 @@ class RacesController < ApplicationController
   end
 
   def show
-    @race = Race.includes(race_results: [racer_season: [racer: :team], category_snapshot: [], race_result_laps: []])
+    @race = Race.includes(race_results: [racer_season: [racer: :team], category: [], race_result_laps: []])
                 .find(params[:id])
     
     # Get all race results for stats calculation
     all_race_results = @race.race_results
                             .joins(racer_season: :racer)
-                            .includes(racer_season: [racer: :team], category_snapshot: [], race_result_laps: [])
+                            .includes(racer_season: [racer: :team], category: [], race_result_laps: [])
                             .order(:place)
     
     # Filter by category if specified, otherwise show first category with results
     @selected_category = params[:category]
     if @selected_category.present?
-      @race_results = all_race_results.joins(:category_snapshot)
+      @race_results = all_race_results.joins(:category)
                                       .where(categories: { name: @selected_category })
     else
       # Default to first category with results
-      first_category = all_race_results.joins(:category_snapshot)
+      first_category = all_race_results.joins(:category)
                                       .group('categories.name')
                                       .order('categories.name')
                                       .limit(1)
@@ -29,7 +29,7 @@ class RacesController < ApplicationController
       
       if first_category
         @selected_category = first_category
-        @race_results = all_race_results.joins(:category_snapshot)
+        @race_results = all_race_results.joins(:category)
                                         .where(categories: { name: @selected_category })
       else
         @race_results = all_race_results
@@ -87,7 +87,7 @@ class RacesController < ApplicationController
     
     # Count race results for each category
     race_results.each do |result|
-      category_name = result.category_snapshot&.name || 'Unknown'
+      category_name = result.category&.name || 'Unknown'
       if stats[category_name]
         stats[category_name][:count] += 1
         

@@ -37,9 +37,29 @@ module RaceData
       in_results_section = false
       
       lines.each_with_index do |line, index|
-        # Check for new division
-        if line.start_with?("Division:")
-          current_division = line.sub("Division:", "").strip
+        # Check for new division - handle cases where division header is concatenated with race result
+        if line.start_with?("Division:") || line.include?("Division:")
+          # Extract division name - could be at start or middle of line
+          if line.start_with?("Division:")
+            current_division = line.sub("Division:", "").strip
+          else
+            # Division header is concatenated with race result - extract the division part
+            division_match = line.match(/.*Division:\s*(.+)$/)
+            if division_match
+              new_division = division_match[1].strip
+              
+              # Process the race result part before the division header if it exists
+              result_part = line.split("Division:").first.strip
+              if in_results_section && current_division && result_part.match?(/^\s*\d+\s+/)
+                # Parse the race result from the previous division before switching
+                parsed_results = parse_kato_result_line_with_splits(result_part, current_division)
+                results.concat(parsed_results) if parsed_results.any?
+              end
+              
+              # Now update to the new division
+              current_division = new_division
+            end
+          end
           in_results_section = false
           next
         end
@@ -109,7 +129,7 @@ module RaceData
       
       # Mt Kato format: Place Name Team Rider# Plate Laps Penalty Comment Total Lap1...
       # Key differences: Proper case names, 00:MM:SS.s time format
-      match = line.match(/^\s*(\d+)\s+([A-Za-z\s\-\.]+?)\s{2,}([A-Za-z\s\-\.]+?)\s+(\d{8,9})\s+(\d{1,4})\s+(\d+)\s.*?(00:\d+:\d+\.\d+|\d+:\d+\.\d+)(.*)$/)
+      match = line.match(/^\s*(\d+)\s+([A-Za-z\s\-\.\\']+?)\s{2,}([A-Za-z\s\-\.\\']+?)\s+(\d{8,9})\s+(\d{1,4})\s+(\d+)\s.*?(00:\d+:\d+\.\d+|\d+:\d+\.\d+)(.*)$/)
       
       return nil unless match
       

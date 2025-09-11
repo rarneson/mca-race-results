@@ -16,10 +16,10 @@ This is a Ruby on Rails 8.0 application for managing Minnesota Cycling Associati
 - `Race`: Individual race events with metadata (name, date, location)
 - `Racer`: Individual cyclists with personal info
 - `Team`: Cycling teams that racers belong to
-- `RaceResult`: Performance results linking racers to races
+- `RaceResult`: Performance results linking racers to races and storing the racers category at any given point in the year. A racer may be promoted to a new category mid-year
 - `RaceResultLap`: Individual lap times within a race
 - `Category`: Race categories (age groups, skill levels)
-- `RacerSeason`: Tracks racer participation across seasons and, most importantly, the racers category at any given point in the year. A racer may be promoted to a new category mid-year.
+- `RacerSeason`: Tracks racer participation across seasons.
 
 ### Data Import System
 Located in `lib/race_data/`, this system:
@@ -105,6 +105,7 @@ Each race venue has its own PDF format, requiring venue-specific parsers that in
 - Converted from pills to dropdown for filtering UI
 - Updated to use Category model instead of embedded category strings
 - Theme updated to "emerald"
+- Removed racer_season_assignments table in favor of storing category_id on the race_results for tracking a racer's category
 
 ## When Working on This Project
 1. Always check existing patterns before implementing new features

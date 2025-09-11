@@ -76,18 +76,11 @@ class RacersController < ApplicationController
     end
 
     def get_current_category
-      # Get most recent category assignment from racer_season_assignments
-      # Since all assignments might be from past seasons, get the most recent one
-      current_assignment = RacerSeasonAssignment
-                            .joins(racer_season: :racer)
-                            .includes(:category)
-                            .where(racer_seasons: { racer: @racer })
-                            .order(:start_on => :desc)
-                            .first
-      
-      # If no season assignment found, fallback to racer_season category
-      # Every racer should have a category
-      current_assignment&.category || @racer.racer_seasons.includes(:category).order(created_at: :desc).first&.category
+      # Get most recent category from race results
+      @racer.racer_seasons
+            .joins(race_results: [:race, :category])
+            .order('races.race_date DESC')
+            .first&.race_results&.first&.category
     end
 
     def determine_back_path

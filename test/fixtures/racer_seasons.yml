@@ -1,15 +1,25 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
+one:
+  racer: alex_rodriguez
+  year: 2024
+  plate_number: "1"
+  penalty_ms: 0
+
+two:
+  racer: sarah_chen
+  year: 2024
+  plate_number: "12"
+  penalty_ms: 0
+
 alex_2024:
   racer: alex_rodriguez
   year: 2024
-  category: varsity
   plate_number: "1"
   penalty_ms: 0
 
 sarah_2024:
   racer: sarah_chen
   year: 2024
-  category: varsity
   plate_number: "12"
   penalty_ms: 0

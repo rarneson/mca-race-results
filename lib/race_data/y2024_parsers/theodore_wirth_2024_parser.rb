@@ -42,12 +42,20 @@ module RaceData
         if line.start_with?("Division:") || line.include?("Division:")
           # Extract division name - could be at start or middle of line
           if line.start_with?("Division:")
-            current_division = line.sub("Division:", "").strip
+            full_text_after_division = line.sub("Division:", "").strip
+            # Extract just the division name - look for the pattern where division name ends and header starts
+            # Common pattern: "JV2 Boys D2Place   Name" - division name ends before "Place"
+            division_name_match = full_text_after_division.match(/^(.+?)(?:Place\s+Name|$)/)
+            current_division = division_name_match ? division_name_match[1].strip : full_text_after_division
           else
             # Division header is concatenated with race result - extract the division part
             division_match = line.match(/.*Division:\s*(.+)$/)
             if division_match
-              new_division = division_match[1].strip
+              full_text_after_division = division_match[1].strip
+              # Extract just the division name - look for the pattern where division name ends and header starts
+              # Common pattern: "JV2 Boys D2Place   Name" - division name ends before "Place"
+              division_name_match = full_text_after_division.match(/^(.+?)(?:Place\s+Name|$)/)
+              new_division = division_name_match ? division_name_match[1].strip : full_text_after_division
               
               # Process the race result part before the division header if it exists
               result_part = line.split("Division:").first.strip
@@ -72,7 +80,11 @@ module RaceData
         end
         
         # Parse result lines (start with place number and have racer data)
-        if in_results_section && current_division && line.match?(/^\s*\d+\s+/)
+        # Some divisions may not have header lines, so start processing immediately if we see a result line
+        if current_division && line.match?(/^\s*\d+\s+/)
+          # If we haven't set in_results_section yet but found a result line, set it now
+          in_results_section = true unless in_results_section
+          
           # Handle lines that may contain multiple racers due to PDF extraction issues
           parsed_results = parse_wirth_result_line_with_splits(line, current_division)
           results.concat(parsed_results) if parsed_results.any?

@@ -14,9 +14,6 @@ namespace :db do
         puts '  Deleting races...'
         Race.delete_all
         
-        puts '  Deleting racer season assignments...'
-        RacerSeasonAssignment.delete_all
-        
         puts '  Deleting racer seasons...'
         RacerSeason.delete_all
         

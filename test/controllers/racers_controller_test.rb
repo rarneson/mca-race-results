@@ -62,39 +62,30 @@ class RacersControllerTest < ActionDispatch::IntegrationTest
     assert_equal 'Varsity', category.name
   end
 
-  test "get_current_category handles racer with multiple assignments" do
+  test "get_current_category returns category from most recent race result" do
     racer = racers(:alex_rodriguez)
-    
-    # Create a newer assignment
-    newer_assignment = RacerSeasonAssignment.create!(
-      racer_season: racer_seasons(:alex_2024),
-      category: categories(:jv3),
-      start_on: Date.new(2024, 6, 1),
-      end_on: Date.new(2024, 12, 31),
-      reason: "Mid-season promotion"
-    )
     
     controller = RacersController.new
     controller.instance_variable_set(:@racer, racer)
     
     category = controller.send(:get_current_category)
     assert_not_nil category
-    assert_equal 'JV3', category.name  # Should return the newer assignment
+    assert_equal 'Varsity', category.name  # Should return category from race result
   end
 
-  test "get_current_category handles racer with only season assignment" do
-    # Test fallback to racer_season category when no season assignments exist
+  test "get_current_category handles racer with no race results" do
+    # Test racer with no race results
     racer = racers(:sarah_chen)
     
-    # Remove all season assignments to test fallback
-    RacerSeasonAssignment.where(racer_season: racer.racer_seasons).destroy_all
+    # Remove all race results to test fallback
+    racer.racer_seasons.each { |season| season.race_results.destroy_all }
     
     controller = RacersController.new
     controller.instance_variable_set(:@racer, racer)
     
     category = controller.send(:get_current_category)
-    # Should still return a category from the racer_season itself
-    assert_not_nil category, "Racer should always have a category"
+    # Should return nil when no race results exist
+    assert_nil category, "Racer with no race results should have no category"
   end
 
   test "should get edit" do

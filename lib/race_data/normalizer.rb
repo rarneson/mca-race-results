@@ -44,7 +44,7 @@ module RaceData
           laps_completed: parse_integer(result[:laps_completed]),
           laps_expected: parse_integer(result[:laps_expected]) || 1,
           status: normalize_status(result[:status]),
-          category_snapshot: lookup_category(result[:category]),
+          category: lookup_category(result[:category]),
           plate_number_snapshot: clean_string(result[:plate_number])
         },
         division: result[:division],

@@ -60,5 +60,5 @@
   puts "Total Results: #{race.race_results.count}"
   puts "Total Lap Times: #{race.race_results.joins(:race_result_laps).count}"
   puts "Unique Teams: #{race.race_results.joins(racer_season: {racer: :team}).distinct.count('teams.id')}"
-  puts "Categories: #{race.race_results.distinct.pluck(:category_snapshot).compact.sort}"
+  puts "Categories: #{race.race_results.joins(:category).distinct.pluck('categories.name').compact.sort}"
   puts "DNF Count: #{race.race_results.where(status: 'DNF').count}"
