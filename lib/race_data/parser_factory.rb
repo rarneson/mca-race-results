@@ -3,7 +3,6 @@ require_relative 'y2024_parsers/lake_rebecca_2024_parser'
 require_relative 'y2024_parsers/gamehaven_2024_parser'
 require_relative 'y2024_parsers/mt_kato_2024_parser'
 require_relative 'y2024_parsers/theodore_wirth_2024_parser'
-require_relative 'y2024_parsers/whitetail_2024_parser'
 require_relative 'y2024_parsers/pine_valley_2024_parser'
 require_relative 'y2024_parsers/redhead_2024_parser'
 
@@ -15,7 +14,6 @@ module RaceData
       Gamehaven2024Parser,
       MtKato2024Parser,
       TheodoreWirth2024Parser,
-      Whitetail2024Parser,
       PineValley2024Parser,
       Redhead2024Parser
     ].freeze

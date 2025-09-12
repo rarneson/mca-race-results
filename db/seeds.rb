@@ -129,3 +129,23 @@ TEAM_NAMES.each do |team_name|
 end
 
 puts "#{Team.count} teams created/verified."
+
+# ===============================================================================
+# RACE DATA - Load all individual race seed files
+# ===============================================================================
+
+puts "\nLoading race data from seed files..."
+
+# Load all seed files from db/seeds/ directory
+Dir[Rails.root.join('db', 'seeds', '*.rb')].sort.each do |file|
+  puts "Loading #{File.basename(file)}..."
+  require file
+end
+
+puts "\n" + "="*60
+puts "FINAL DATABASE SUMMARY"
+puts "="*60
+puts "#{Race.count} races in database"
+puts "#{RaceResult.count} race results in database" 
+puts "#{RaceResultLap.count} lap times in database"
+puts "="*60
