@@ -35,7 +35,7 @@ TEAM_NAMES = [
   "Hopkins HS",
   "Hudson HS",
   "Hutchinson Tigers",
-  "Independant HS",
+  "Independent HS",
   "Kerkhoven",
   "Lake Area Composite",
   "Lakeville North HS",

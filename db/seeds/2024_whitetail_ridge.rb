@@ -1,48 +1,16 @@
-# Helper methods for time processing
-def parse_time_to_ms(time_str)
-  return nil if time_str.blank?
-  
-  time_str = time_str.to_s.strip
-  
-  # Extract hours, minutes, seconds, milliseconds
-  if time_str.match(/(\d+):(\d+):(\d+)\.?(\d+)?/) # H:M:S.ms
-    hours, minutes, seconds, ms = $1.to_i, $2.to_i, $3.to_i, ($4 || "0").ljust(3, '0')[0..2].to_i
-    (hours * 3600 + minutes * 60 + seconds) * 1000 + ms
-  elsif time_str.match(/(\d+):(\d+)\.?(\d+)?/) # M:S.ms
-    minutes, seconds, ms = $1.to_i, $2.to_i, ($3 || "0").ljust(3, '0')[0..2].to_i
-    (minutes * 60 + seconds) * 1000 + ms
-  elsif time_str.match(/(\d+)\.?(\d+)?/) # S.ms
-    seconds, ms = $1.to_i, ($2 || "0").ljust(3, '0')[0..2].to_i
-    seconds * 1000 + ms
-  else
-    nil
-  end
-end
+require_relative '../../lib/race_data/race_seed_helpers'
 
-def format_time_ms(time_ms)
-  return nil if time_ms.nil? || time_ms == 0
-  
-  total_seconds = time_ms / 1000.0
-  minutes = (total_seconds / 60).to_i
-  seconds = total_seconds % 60
-  
-  if minutes >= 60
-    hours = minutes / 60
-    minutes = minutes % 60
-    sprintf("%d:%02d:%04.1f", hours, minutes, seconds)
-  else
-    sprintf("%d:%04.1f", minutes, seconds)
-  end
-end
+# Include the shared helpers
+include RaceData::RaceSeedHelpers
 
 # ===============================================================================
-# RACE DATA - Whitetail Ridge Race 5N (September 28, 2024)
+# RACE DATA - Race 5N - Whitetail Ridge Official Results (September 28, 2024)
 # ===============================================================================
 
-puts "Creating Whitetail Ridge race and results..."
+puts "Creating Race 5N - Whitetail Ridge Official Results and results..."
 
 # Create the race
-whitetail_race = Race.find_or_create_by!(
+race = Race.find_or_create_by!(
   name: "Race 5N - Whitetail Ridge Official Results",
   race_date: Date.parse("September 28, 2024")
 ) do |race|
@@ -50,141 +18,13 @@ whitetail_race = Race.find_or_create_by!(
   race.year = 2024
 end
 
-puts "✓ Race: #{whitetail_race.name} (#{whitetail_race.race_date})"
-
-# JV2 Girls category
-jv2_girls_category = Category.find_by!(name: "JV2 Girls")
-
-# JV2 Girls Race Results - Complete data with lap times
-# Format: [place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, lap2_time, status]
-whitetail_jv2_girls_results = [
-  [1, "Hayden", "Kohn", "Hudson HS", "100391241", "2642", 2, "00:39:42.3", "00:19:17.6", "00:20:24.6", "finished"],
-  [2, "Evelyn", "Bruns", "St Croix", "100407663", "2696", 2, "00:41:19.6", "00:20:12.4", "00:21:07.1", "finished"],
-  [3, "Alexa", "Dobesh", "Lakeville South HS", "100474286", "2650", 2, "00:42:05.7", "00:20:21.5", "00:21:44.1", "finished"],
-  [4, "Lexi", "Helgeson", "Austin HS", "100390801", "2604", 2, "00:43:29.9", "00:20:56.3", "00:22:33.6", "finished"],
-  [5, "Kate", "Nowak", "Hastings", "100391954", "2640", 2, "00:43:31.9", "00:20:38.6", "00:22:53.3", "finished"],
-  [6, "Lily", "Kohn", "Hudson HS", "100391242", "2643", 2, "00:43:35.3", "00:21:02.9", "00:22:32.3", "finished"],
-  [7, "Aliza", "Jacobson", "Crosby-Ironton HS", "100486165", "2625", 2, "00:44:28.9", "00:21:46.3", "00:22:42.5", "finished"],
-  [8, "Beatrice", "Toftey", "Edina Cycling", "100392887", "2637", 2, "00:45:01.8", "00:22:35.6", "00:22:26.1", "finished"],
-  [9, "Stephanie", "Galvan-Ortiz", "Shakopee HS", "100390492", "2691", 2, "00:45:24.9", "00:21:47.5", "00:23:37.4", "finished"],
-  [10, "Vivian", "Hoppe", "Edina Cycling", "100411923", "2635", 2, "00:45:40.9", "00:21:47.0", "00:23:53.9", "finished"],
-  [11, "Maddison", "Lydon", "White Bear Lake HS", "100478581", "2715", 2, "00:45:43.6", "00:22:37.1", "00:23:06.5", "finished"],
-  [12, "Mialynn", "Metsa", "Rock Ridge", "100391717", "2683", 2, "00:45:43.9", "00:22:22.7", "00:23:21.2", "finished"],
-  [13, "Alison", "Foster", "Minnetonka HS", "100524796", "2661", 2, "00:46:01.5", "00:22:25.1", "00:23:36.4", "finished"],
-  [14, "Lilly", "Hansen", "Winona", "100405739", "2718", 2, "00:46:02.5", "00:22:34.8", "00:23:27.6", "finished"],
-  [15, "Adeline", "Barmann", "Edina Cycling", "100532841", "2629", 2, "00:46:31.6", "00:22:37.0", "00:23:54.5", "finished"],
-  [16, "River", "Galloway", "Rock Ridge", "100390489", "2681", 2, "00:46:44.7", "00:22:22.7", "00:24:21.9", "finished"],
-  [17, "Emma", "Padley", "Burnsville HS", "100392058", "2620", 2, "00:47:07.1", "00:22:35.0", "00:24:32.0", "finished"],
-  [18, "Ava", "Kaufmann", "Lakeville North HS", "100391144", "2648", 2, "00:47:36.0", "00:22:40.7", "00:24:55.2", "finished"],
-  [19, "Erika", "Dwyer", "Rosemount HS", "100483997", "2684", 2, "00:48:00.6", "00:23:16.1", "00:24:44.4", "finished"],
-  [20, "Ada", "Stangl", "Winona", "100429355", "2721", 2, "00:48:05.0", "00:23:13.7", "00:24:51.3", "finished"],
-  [21, "Morgan", "Matheson", "River Falls HS", "100391621", "2677", 2, "00:48:06.2", "00:22:44.5", "00:25:21.6", "finished"],
-  [22, "Eva", "Grotenhuis", "Lakeville South HS", "100390619", "2651", 2, "00:48:10.3", "00:22:56.4", "00:25:13.9", "finished"],
-  [23, "Mya", "Weckman", "New Prague MS and HS", "100425915", "2670", 2, "00:48:36.2", "00:23:17.7", "00:25:18.5", "finished"],
-  [24, "Caroline", "Shoemaker", "Rosemount HS", "100392601", "2685", 2, "00:48:38.8", "00:23:14.7", "00:25:24.1", "finished"],
-  [25, "Sophia", "Bevis", "Minnetonka HS", "100528817", "2660", 2, "00:48:47.0", "00:23:27.3", "00:25:19.7", "finished"],
-  [26, "Piper", "Schmidt", "Minnetonka HS", "100482685", "2664", 2, "00:48:51.0", "00:23:34.2", "00:25:16.7", "finished"],
-  [27, "Scarlett", "Erlandson", "Edina Cycling", "100513340", "2632", 2, "00:48:56.0", "00:23:31.4", "00:25:24.6", "finished"],
-  [28, "Milca", "Galvan-Ortiz", "Shakopee HS", "100462929", "2690", 2, "00:50:23.8", "00:24:20.2", "00:26:03.6", "finished"],
-  [29, "Chloe", "Hardtke", "Rochester Area", "100390716", "2678", 2, "00:50:26.8", "00:23:50.3", "00:26:36.4", "finished"],
-  [30, "Noelle", "Kubala", "Burnsville HS", "100491630", "2618", 2, "00:50:30.8", "00:23:45.5", "00:26:45.2", "finished"],
-  [31, "Peyton", "Moidl", "Wayzata Mountain Bike", "100512292", "2711", 2, "00:50:35.2", "00:24:28.4", "00:26:06.7", "finished"],
-  [32, "Luz", "Willaert", "Rochester Mayo", "100533519", "2680", 2, "00:51:16.7", "00:23:33.9", "00:27:42.7", "finished"],
-  [33, "Hazel", "Goodpaster", "River Falls HS", "100470414", "2676", 2, "00:51:26.8", "00:24:27.4", "00:26:59.4", "finished"],
-  [34, "Olivia", "Ostrander", "Wayzata Mountain Bike", "100521902", "2712", 2, "00:53:12.1", "00:23:59.3", "00:29:12.8", "finished"],
-  [35, "Charlotte", "Cannon", "White Bear Lake HS", "100478878", "2714", 2, "00:53:46.9", "00:25:35.2", "00:28:11.7", "finished"],
-  [36, "Elliot", "Gauster", "St Croix", "100512136", "2697", 2, "00:53:49.0", "00:25:14.0", "00:28:35.0", "finished"],
-  [37, "Cora", "Martensen", "Brainerd HS", "100391599", "2615", 2, "00:54:18.7", "00:25:42.0", "00:28:36.6", "finished"],
-  [38, "Rebecca", "Miller", "Wayzata Mountain Bike", "100391749", "2710", 2, "00:54:20.4", "00:24:40.6", "00:29:39.7", "finished"],
-  [39, "Eve", "Aspengren", "Alexandria Youth Cycling", "100532420", "2601", 2, "00:54:20.7", "00:26:00.3", "00:28:20.3", "finished"],
-  [40, "Ariella", "Rosenwald", "Wayzata Mountain Bike", "100431384", "2713", 2, "00:55:27.3", "00:26:09.9", "00:29:17.4", "finished"],
-  [41, "Rahee", "Kim", "Mounds View HS", "100391190", "2667", 2, "00:55:33.5", "00:26:21.6", "00:29:11.8", "finished"],
-  [42, "Nora", "Leger", "Winona", "100391416", "2719", 2, "01:01:44.5", "00:29:52.3", "00:31:52.1", "finished"],
-  [43, "Katelyn", "Bucholz", "Minnesota Valley", "100530248", "2659", 2, "01:01:46.2", "00:31:07.7", "00:30:38.4", "finished"],
-  [44, "Grace", "Kubala", "Burnsville HS", "100493107", "2617", 2, "01:02:15.2", "00:29:20.9", "00:32:54.2", "finished"],
-  [45, "Lillian", "Kainz", "Rock Ridge", "100427192", "2682", 2, "01:07:07.4", "00:29:52.5", "00:37:14.9", "finished"],
-  [46, "Rylee", "Lund", "New Prague MS and HS", "100533767", "2669", 2, "01:08:55.3", "00:31:00.4", "00:37:54.9", "finished"],
-  [47, "Dylan", "Schmidt", "Hudson HS", "100392505", "2646", 1, "00:34:27.0", "00:34:27.0", nil, "pulled"],
-  [48, "Camila", "Galvan-Ortiz", "Shakopee HS", "100462928", "2689", 1, "00:22:36.6", "00:22:36.6", nil, "DNF"]
-]
-
-# Create racers, seasons, and race results
-whitetail_jv2_girls_results.each do |place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, lap2_time, status|
-  # Find team
-  team = Team.find_by(name: team_name)
-  if team.nil?
-    puts "⚠️  Warning: Team '#{team_name}' not found for #{first_name} #{last_name}"
-    next
-  end
-  
-  # Create or find racer
-  racer = Racer.find_or_create_by!(
-    first_name: first_name,
-    last_name: last_name,
-    team: team
-  ) do |r|
-    r.number = rider_number
-  end
-  
-  # Create or find racer season (use the race's year)
-  racer_season = RacerSeason.find_or_create_by!(
-    racer: racer,
-    year: whitetail_race.year
-  ) do |season|
-    season.plate_number = plate
-  end
-  
-  # Create race result
-  race_result = RaceResult.find_or_create_by!(
-    race: whitetail_race,
-    racer_season: racer_season
-  ) do |result|
-    result.place = place
-    result.total_time_ms = parse_time_to_ms(total_time)
-    result.total_time_raw = total_time
-    result.laps_completed = laps
-    result.laps_expected = 2
-    result.status = status
-    result.category = jv2_girls_category
-    result.plate_number_snapshot = plate
-  end
-  
-  # Create lap times
-  cumulative_time = 0
-  lap_times = [lap1_time, lap2_time].compact
-  
-  lap_times.each_with_index do |lap_time, index|
-    lap_number = index + 1
-    lap_time_ms = parse_time_to_ms(lap_time)
-    cumulative_time += lap_time_ms if lap_time_ms
-    
-    RaceResultLap.find_or_create_by!(
-      race_result: race_result,
-      lap_number: lap_number
-    ) do |lap|
-      lap.lap_time_ms = lap_time_ms
-      lap.lap_time_raw = lap_time
-      lap.cumulative_time_ms = cumulative_time
-      lap.cumulative_time_raw = format_time_ms(cumulative_time)
-    end
-  end
-  
-  print "."
-end
-
-puts "\n✓ Whitetail JV2 Girls results: #{whitetail_jv2_girls_results.count} racers imported"
+puts "✓ Race: #{race.name} (#{race.race_date})"
 
 # ===============================================================================
-# 6th Grade Girls
+# RACE RESULTS DATA
 # ===============================================================================
 
-puts "Creating Whitetail Ridge 6th Grade Girls results..."
-
-# 6th Grade Girls category
-sixth_grade_girls_category = Category.find_by!(name: "6th Grade Girls")
-
-# 6th Grade Girls Race Results - Complete data with lap times
-# Format: [place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, status]
+# Whitetail 6th Grade Girls Results
 whitetail_6th_grade_girls_results = [
   [1, "Megan", "Pierson", "Armstrong Cycle", "100521906", "6505", 1, "00:21:28.9", "00:21:28.9", "finished"],
   [2, "Juniper", "Szczodroski", "Elk River", "100522929", "6528", 1, "00:21:49.6", "00:21:49.6", "finished"],
@@ -210,76 +50,7 @@ whitetail_6th_grade_girls_results = [
   [22, "Evelyn", "Eigen", "Alexandria Youth Cycling", "100532348", "6501", 1, "00:30:51.7", "00:30:51.7", "finished"]
 ]
 
-# Create racers, seasons, and race results for 6th Grade Girls
-whitetail_6th_grade_girls_results.each do |place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, status|
-  # Find team
-  team = Team.find_by(name: team_name)
-  if team.nil?
-    puts "⚠️  Warning: Team '#{team_name}' not found for #{first_name} #{last_name}"
-    next
-  end
-  
-  # Create or find racer
-  racer = Racer.find_or_create_by!(
-    first_name: first_name,
-    last_name: last_name,
-    team: team
-  ) do |r|
-    r.number = rider_number
-  end
-  
-  # Create or find racer season (use the race's year)
-  racer_season = RacerSeason.find_or_create_by!(
-    racer: racer,
-    year: whitetail_race.year
-  ) do |season|
-    season.plate_number = plate
-  end
-  
-  # Create race result
-  race_result = RaceResult.find_or_create_by!(
-    race: whitetail_race,
-    racer_season: racer_season
-  ) do |result|
-    result.place = place
-    result.total_time_ms = parse_time_to_ms(total_time)
-    result.total_time_raw = total_time
-    result.laps_completed = laps
-    result.laps_expected = 1
-    result.status = status
-    result.category = sixth_grade_girls_category
-    result.plate_number_snapshot = plate
-  end
-  
-  # Create lap times (only one lap for 6th grade girls)
-  lap_time_ms = parse_time_to_ms(lap1_time)
-  
-  RaceResultLap.find_or_create_by!(
-    race_result: race_result,
-    lap_number: 1
-  ) do |lap|
-    lap.lap_time_ms = lap_time_ms
-    lap.lap_time_raw = lap1_time
-    lap.cumulative_time_ms = lap_time_ms
-    lap.cumulative_time_raw = format_time_ms(lap_time_ms)
-  end
-  
-  print "."
-end
-
-puts "\n✓ Whitetail 6th Grade Girls results: #{whitetail_6th_grade_girls_results.count} racers imported"
-
-# ===============================================================================
-# 6th Grade Boys D2
-# ===============================================================================
-
-puts "Creating Whitetail Ridge 6th Grade Boys D2 results..."
-
-# 6th Grade Boys D2 category
-sixth_grade_boys_d2_category = Category.find_by!(name: "6th Grade Boys D2")
-
-# 6th Grade Boys D2 Race Results - Complete data with lap times
-# Format: [place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, status]
+# Whitetail 6th Grade Boys D2 Results
 whitetail_6th_grade_boys_d2_results = [
   [1, "Axton", "Zick", "River Falls HS", "100510472", "6178", 1, "00:19:59.1", "00:19:59.1", "finished"],
   [2, "Rhone", "Urban", "Rosemount HS", "100526006", "6197", 1, "00:20:01.2", "00:20:01.2", "finished"],
@@ -315,76 +86,7 @@ whitetail_6th_grade_boys_d2_results = [
   [32, "Fritz", "Frey", "Rosemount HS", "100528778", "6196", 1, "00:32:11.9", "00:32:11.9", "finished"]
 ]
 
-# Create racers, seasons, and race results for 6th Grade Boys D2
-whitetail_6th_grade_boys_d2_results.each do |place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, status|
-  # Find team
-  team = Team.find_by(name: team_name)
-  if team.nil?
-    puts "⚠️  Warning: Team '#{team_name}' not found for #{first_name} #{last_name}"
-    next
-  end
-  
-  # Create or find racer
-  racer = Racer.find_or_create_by!(
-    first_name: first_name,
-    last_name: last_name,
-    team: team
-  ) do |r|
-    r.number = rider_number
-  end
-  
-  # Create or find racer season (use the race's year)
-  racer_season = RacerSeason.find_or_create_by!(
-    racer: racer,
-    year: whitetail_race.year
-  ) do |season|
-    season.plate_number = plate
-  end
-  
-  # Create race result
-  race_result = RaceResult.find_or_create_by!(
-    race: whitetail_race,
-    racer_season: racer_season
-  ) do |result|
-    result.place = place
-    result.total_time_ms = parse_time_to_ms(total_time)
-    result.total_time_raw = total_time
-    result.laps_completed = laps
-    result.laps_expected = 1
-    result.status = status
-    result.category = sixth_grade_boys_d2_category
-    result.plate_number_snapshot = plate
-  end
-  
-  # Create lap times (only one lap for 6th grade boys D2)
-  lap_time_ms = parse_time_to_ms(lap1_time)
-  
-  RaceResultLap.find_or_create_by!(
-    race_result: race_result,
-    lap_number: 1
-  ) do |lap|
-    lap.lap_time_ms = lap_time_ms
-    lap.lap_time_raw = lap1_time
-    lap.cumulative_time_ms = lap_time_ms
-    lap.cumulative_time_raw = format_time_ms(lap_time_ms)
-  end
-  
-  print "."
-end
-
-puts "\n✓ Whitetail 6th Grade Boys D2 results: #{whitetail_6th_grade_boys_d2_results.count} racers imported"
-
-# ===============================================================================
-# 6th Grade Boys D1
-# ===============================================================================
-
-puts "Creating Whitetail Ridge 6th Grade Boys D1 results..."
-
-# 6th Grade Boys D1 category
-sixth_grade_boys_d1_category = Category.find_by!(name: "6th Grade Boys D1")
-
-# 6th Grade Boys D1 Race Results - Complete data with lap times
-# Format: [place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, status]
+# Whitetail 6th Grade Boys D1 Results
 whitetail_6th_grade_boys_d1_results = [
   [1, "Quincy", "Grotenhuis", "Lakeville South HS", "100521373", "6105", 1, "00:19:36.4", "00:19:36.4", "finished"],
   [2, "RIVDEN", "CUMMINGS", "Edina Cycling", "100521087", "6068", 1, "00:20:03.6", "00:20:03.6", "finished"],
@@ -432,76 +134,7 @@ whitetail_6th_grade_boys_d1_results = [
   [44, "John", "Snider", "Minnetonka HS", "100530042", "6148", 1, "00:37:43.2", "00:37:43.2", "finished"]
 ]
 
-# Create racers, seasons, and race results for 6th Grade Boys D1
-whitetail_6th_grade_boys_d1_results.each do |place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, status|
-  # Find team
-  team = Team.find_by(name: team_name)
-  if team.nil?
-    puts "⚠️  Warning: Team '#{team_name}' not found for #{first_name} #{last_name}"
-    next
-  end
-  
-  # Create or find racer
-  racer = Racer.find_or_create_by!(
-    first_name: first_name,
-    last_name: last_name,
-    team: team
-  ) do |r|
-    r.number = rider_number
-  end
-  
-  # Create or find racer season (use the race's year)
-  racer_season = RacerSeason.find_or_create_by!(
-    racer: racer,
-    year: whitetail_race.year
-  ) do |season|
-    season.plate_number = plate
-  end
-  
-  # Create race result
-  race_result = RaceResult.find_or_create_by!(
-    race: whitetail_race,
-    racer_season: racer_season
-  ) do |result|
-    result.place = place
-    result.total_time_ms = parse_time_to_ms(total_time)
-    result.total_time_raw = total_time
-    result.laps_completed = laps
-    result.laps_expected = 1
-    result.status = status
-    result.category = sixth_grade_boys_d1_category
-    result.plate_number_snapshot = plate
-  end
-  
-  # Create lap times (only one lap for 6th grade boys D1)
-  lap_time_ms = parse_time_to_ms(lap1_time)
-  
-  RaceResultLap.find_or_create_by!(
-    race_result: race_result,
-    lap_number: 1
-  ) do |lap|
-    lap.lap_time_ms = lap_time_ms
-    lap.lap_time_raw = lap1_time
-    lap.cumulative_time_ms = lap_time_ms
-    lap.cumulative_time_raw = format_time_ms(lap_time_ms)
-  end
-  
-  print "."
-end
-
-puts "\n✓ Whitetail 6th Grade Boys D1 results: #{whitetail_6th_grade_boys_d1_results.count} racers imported"
-
-# ===============================================================================
-# 7th Grade Girls
-# ===============================================================================
-
-puts "Creating Whitetail Ridge 7th Grade Girls results..."
-
-# 7th Grade Girls category
-seventh_grade_girls_category = Category.find_by!(name: "7th Grade Girls")
-
-# 7th Grade Girls Race Results - Complete data with lap times
-# Format: [place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, status]
+# Whitetail 7th Grade Girls Results
 whitetail_7th_grade_girls_results = [
   [1, "Kinsley", "Oberding", "Eastview HS", "100483262", "5536", 1, "00:19:07.1", "00:19:07.1", "finished"],
   [2, "Vivian", "Wood", "Minnetonka HS", "100478891", "5568", 1, "00:19:45.0", "00:19:45.0", "finished"],
@@ -543,76 +176,7 @@ whitetail_7th_grade_girls_results = [
   [38, "Emily", "McMillan", "Lakeville South HS", "100518450", "5551", 1, "00:32:34.9", "00:32:34.9", "finished"]
 ]
 
-# Create racers, seasons, and race results for 7th Grade Girls
-whitetail_7th_grade_girls_results.each do |place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, status|
-  # Find team
-  team = Team.find_by(name: team_name)
-  if team.nil?
-    puts "⚠️  Warning: Team '#{team_name}' not found for #{first_name} #{last_name}"
-    next
-  end
-  
-  # Create or find racer
-  racer = Racer.find_or_create_by!(
-    first_name: first_name,
-    last_name: last_name,
-    team: team
-  ) do |r|
-    r.number = rider_number
-  end
-  
-  # Create or find racer season (use the race's year)
-  racer_season = RacerSeason.find_or_create_by!(
-    racer: racer,
-    year: whitetail_race.year
-  ) do |season|
-    season.plate_number = plate
-  end
-  
-  # Create race result
-  race_result = RaceResult.find_or_create_by!(
-    race: whitetail_race,
-    racer_season: racer_season
-  ) do |result|
-    result.place = place
-    result.total_time_ms = parse_time_to_ms(total_time)
-    result.total_time_raw = total_time
-    result.laps_completed = laps
-    result.laps_expected = 1
-    result.status = status
-    result.category = seventh_grade_girls_category
-    result.plate_number_snapshot = plate
-  end
-  
-  # Create lap times (only one lap for 7th grade girls)
-  lap_time_ms = parse_time_to_ms(lap1_time)
-  
-  RaceResultLap.find_or_create_by!(
-    race_result: race_result,
-    lap_number: 1
-  ) do |lap|
-    lap.lap_time_ms = lap_time_ms
-    lap.lap_time_raw = lap1_time
-    lap.cumulative_time_ms = lap_time_ms
-    lap.cumulative_time_raw = format_time_ms(lap_time_ms)
-  end
-  
-  print "."
-end
-
-puts "\n✓ Whitetail 7th Grade Girls results: #{whitetail_7th_grade_girls_results.count} racers imported"
-
-# ===============================================================================
-# 7th Grade Boys D2
-# ===============================================================================
-
-puts "Creating Whitetail Ridge 7th Grade Boys D2 results..."
-
-# 7th Grade Boys D2 category
-seventh_grade_boys_d2_category = Category.find_by!(name: "7th Grade Boys D2")
-
-# 7th Grade Boys D2 Race Results - Complete data with lap times
-# Format: [place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, status]
+# Whitetail 7th Grade Boys D2 Results
 whitetail_7th_grade_boys_d2_results = [
   [1, "Garrett", "Blaha", "Northwest", "100485466", "5213", 1, "00:18:41.5", "00:18:41.5", "finished"],
   [2, "Dylan", "Jenner", "Elk River", "100482706", "5116", 1, "00:19:06.4", "00:19:06.4", "finished"],
@@ -677,94 +241,7 @@ whitetail_7th_grade_boys_d2_results = [
   [61, "Caleb", "Scheff", "Elk River", "100476767", "5117", 0, "DNF", "DNF", "DNF"]
 ]
 
-# Create racers, seasons, and race results for 7th Grade Boys D2
-whitetail_7th_grade_boys_d2_results.each do |place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, status|
-  # Find team
-  team = Team.find_by(name: team_name)
-  if team.nil?
-    puts "⚠️  Warning: Team '#{team_name}' not found for #{first_name} #{last_name}"
-    next
-  end
-  
-  # Create or find racer
-  racer = Racer.find_or_create_by!(
-    first_name: first_name,
-    last_name: last_name,
-    team: team
-  ) do |r|
-    r.number = rider_number
-  end
-  
-  # Create or find racer season (use the race's year)
-  racer_season = RacerSeason.find_or_create_by!(
-    racer: racer,
-    year: whitetail_race.year
-  ) do |season|
-    season.plate_number = plate
-  end
-  
-  # Handle DNF case
-  if status == "DNF"
-    # Create race result for DNF
-    race_result = RaceResult.find_or_create_by!(
-      race: whitetail_race,
-      racer_season: racer_season
-    ) do |result|
-      result.place = place
-      result.total_time_ms = nil
-      result.total_time_raw = nil
-      result.laps_completed = laps
-      result.laps_expected = 1
-      result.status = status
-      result.category = seventh_grade_boys_d2_category
-      result.plate_number_snapshot = plate
-    end
-  else
-    # Create race result
-    race_result = RaceResult.find_or_create_by!(
-      race: whitetail_race,
-      racer_season: racer_season
-    ) do |result|
-      result.place = place
-      result.total_time_ms = parse_time_to_ms(total_time)
-      result.total_time_raw = total_time
-      result.laps_completed = laps
-      result.laps_expected = 1
-      result.status = status
-      result.category = seventh_grade_boys_d2_category
-      result.plate_number_snapshot = plate
-    end
-    
-    # Create lap times (only one lap for 7th grade boys D2)
-    lap_time_ms = parse_time_to_ms(lap1_time)
-    
-    RaceResultLap.find_or_create_by!(
-      race_result: race_result,
-      lap_number: 1
-    ) do |lap|
-      lap.lap_time_ms = lap_time_ms
-      lap.lap_time_raw = lap1_time
-      lap.cumulative_time_ms = lap_time_ms
-      lap.cumulative_time_raw = format_time_ms(lap_time_ms)
-    end
-  end
-  
-  print "."
-end
-
-puts "\n✓ Whitetail 7th Grade Boys D2 results: #{whitetail_7th_grade_boys_d2_results.count} racers imported"
-
-# ===============================================================================
-# 7th Grade Boys D1
-# ===============================================================================
-
-puts "Creating Whitetail Ridge 7th Grade Boys D1 results..."
-
-# 7th Grade Boys D1 category
-seventh_grade_boys_d1_category = Category.find_by!(name: "7th Grade Boys D1")
-
-# 7th Grade Boys D1 Race Results - Complete data with lap times
-# Format: [place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, status]
+# Whitetail 7th Grade Boys D1 Results
 whitetail_7th_grade_boys_d1_results = [
   [1, "Isaac", "Stokman", "Crosby-Ironton HS", "100515143", "5073", 1, "00:18:19.2", "00:18:19.2", "finished"],
   [2, "Jack", "Mueller", "Lakeville South HS", "100513750", "5148", 1, "00:18:46.2", "00:18:46.2", "finished"],
@@ -826,76 +303,7 @@ whitetail_7th_grade_boys_d1_results = [
   [58, "Arlo", "Sutton", "Wayzata Mountain Bike", "100521163", "5324", 1, "00:38:13.5", "00:38:13.5", "finished"]
 ]
 
-# Create racers, seasons, and race results for 7th Grade Boys D1
-whitetail_7th_grade_boys_d1_results.each do |place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, status|
-  # Find team
-  team = Team.find_by(name: team_name)
-  if team.nil?
-    puts "⚠️  Warning: Team '#{team_name}' not found for #{first_name} #{last_name}"
-    next
-  end
-  
-  # Create or find racer
-  racer = Racer.find_or_create_by!(
-    first_name: first_name,
-    last_name: last_name,
-    team: team
-  ) do |r|
-    r.number = rider_number
-  end
-  
-  # Create or find racer season (use the race's year)
-  racer_season = RacerSeason.find_or_create_by!(
-    racer: racer,
-    year: whitetail_race.year
-  ) do |season|
-    season.plate_number = plate
-  end
-  
-  # Create race result
-  race_result = RaceResult.find_or_create_by!(
-    race: whitetail_race,
-    racer_season: racer_season
-  ) do |result|
-    result.place = place
-    result.total_time_ms = parse_time_to_ms(total_time)
-    result.total_time_raw = total_time
-    result.laps_completed = laps
-    result.laps_expected = 1
-    result.status = status
-    result.category = seventh_grade_boys_d1_category
-    result.plate_number_snapshot = plate
-  end
-  
-  # Create lap times (only one lap for 7th grade boys D1)
-  lap_time_ms = parse_time_to_ms(lap1_time)
-  
-  RaceResultLap.find_or_create_by!(
-    race_result: race_result,
-    lap_number: 1
-  ) do |lap|
-    lap.lap_time_ms = lap_time_ms
-    lap.lap_time_raw = lap1_time
-    lap.cumulative_time_ms = lap_time_ms
-    lap.cumulative_time_raw = format_time_ms(lap_time_ms)
-  end
-  
-  print "."
-end
-
-puts "\n✓ Whitetail 7th Grade Boys D1 results: #{whitetail_7th_grade_boys_d1_results.count} racers imported"
-
-# ===============================================================================
-# 8th Grade Girls
-# ===============================================================================
-
-puts "Creating Whitetail Ridge 8th Grade Girls results..."
-
-# 8th Grade Girls category
-eighth_grade_girls_category = Category.find_by!(name: "8th Grade Girls")
-
-# 8th Grade Girls Race Results - Complete data with lap times
-# Format: [place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, status]
+# Whitetail 8th Grade Girls Results
 whitetail_8th_grade_girls_results = [
   [1, "Quinn", "Miller", "Minnetonka HS", "100427613", "4564", 1, "00:19:40.9", "00:19:40.9", "finished"],
   [2, "Evelyn", "Hoppe", "Edina Cycling", "100411928", "4534", 1, "00:19:52.2", "00:19:52.2", "finished"],
@@ -932,76 +340,7 @@ whitetail_8th_grade_girls_results = [
   [33, "Amelia", "Stojan", "Hudson HS", "100427699", "4545", 1, "00:30:49.8", "00:30:49.8", "finished"]
 ]
 
-# Create racers, seasons, and race results for 8th Grade Girls
-whitetail_8th_grade_girls_results.each do |place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, status|
-  # Find team
-  team = Team.find_by(name: team_name)
-  if team.nil?
-    puts "⚠️  Warning: Team '#{team_name}' not found for #{first_name} #{last_name}"
-    next
-  end
-  
-  # Create or find racer
-  racer = Racer.find_or_create_by!(
-    first_name: first_name,
-    last_name: last_name,
-    team: team
-  ) do |r|
-    r.number = rider_number
-  end
-  
-  # Create or find racer season (use the race's year)
-  racer_season = RacerSeason.find_or_create_by!(
-    racer: racer,
-    year: whitetail_race.year
-  ) do |season|
-    season.plate_number = plate
-  end
-  
-  # Create race result
-  race_result = RaceResult.find_or_create_by!(
-    race: whitetail_race,
-    racer_season: racer_season
-  ) do |result|
-    result.place = place
-    result.total_time_ms = parse_time_to_ms(total_time)
-    result.total_time_raw = total_time
-    result.laps_completed = laps
-    result.laps_expected = 1
-    result.status = status
-    result.category = eighth_grade_girls_category
-    result.plate_number_snapshot = plate
-  end
-  
-  # Create lap times (only one lap for 8th grade girls)
-  lap_time_ms = parse_time_to_ms(lap1_time)
-  
-  RaceResultLap.find_or_create_by!(
-    race_result: race_result,
-    lap_number: 1
-  ) do |lap|
-    lap.lap_time_ms = lap_time_ms
-    lap.lap_time_raw = lap1_time
-    lap.cumulative_time_ms = lap_time_ms
-    lap.cumulative_time_raw = format_time_ms(lap_time_ms)
-  end
-  
-  print "."
-end
-
-puts "\n✓ Whitetail 8th Grade Girls results: #{whitetail_8th_grade_girls_results.count} racers imported"
-
-# ===============================================================================
-# 8th Grade Boys D2
-# ===============================================================================
-
-puts "Creating Whitetail Ridge 8th Grade Boys D2 results..."
-
-# 8th Grade Boys D2 category
-eighth_grade_boys_d2_category = Category.find_by!(name: "8th Grade Boys D2")
-
-# 8th Grade Boys D2 Race Results - Complete data with lap times
-# Format: [place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, status]
+# Whitetail 8th Grade Boys D2 Results
 whitetail_8th_grade_boys_d2_results = [
   [1, "Simon", "Brand", "Austin HS", "100412347", "4017", 1, "00:17:35.3", "00:17:35.3", "finished"],
   [2, "Gus", "Layman", "Rock Ridge", "100405726", "4230", 1, "00:17:35.6", "00:17:35.6", "finished"],
@@ -1061,94 +400,7 @@ whitetail_8th_grade_boys_d2_results = [
   [56, "Isaac", "Pettey", "Hudson HS", "100462733", "4108", 0, "DNF", "DNF", "DNF"]
 ]
 
-# Create racers, seasons, and race results for 8th Grade Boys D2
-whitetail_8th_grade_boys_d2_results.each do |place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, status|
-  # Find team
-  team = Team.find_by(name: team_name)
-  if team.nil?
-    puts "⚠️  Warning: Team '#{team_name}' not found for #{first_name} #{last_name}"
-    next
-  end
-  
-  # Create or find racer
-  racer = Racer.find_or_create_by!(
-    first_name: first_name,
-    last_name: last_name,
-    team: team
-  ) do |r|
-    r.number = rider_number
-  end
-  
-  # Create or find racer season (use the race's year)
-  racer_season = RacerSeason.find_or_create_by!(
-    racer: racer,
-    year: whitetail_race.year
-  ) do |season|
-    season.plate_number = plate
-  end
-  
-  # Handle DNF case
-  if status == "DNF"
-    # Create race result for DNF
-    race_result = RaceResult.find_or_create_by!(
-      race: whitetail_race,
-      racer_season: racer_season
-    ) do |result|
-      result.place = place
-      result.total_time_ms = nil
-      result.total_time_raw = nil
-      result.laps_completed = laps
-      result.laps_expected = 1
-      result.status = status
-      result.category = eighth_grade_boys_d2_category
-      result.plate_number_snapshot = plate
-    end
-  else
-    # Create race result
-    race_result = RaceResult.find_or_create_by!(
-      race: whitetail_race,
-      racer_season: racer_season
-    ) do |result|
-      result.place = place
-      result.total_time_ms = parse_time_to_ms(total_time)
-      result.total_time_raw = total_time
-      result.laps_completed = laps
-      result.laps_expected = 1
-      result.status = status
-      result.category = eighth_grade_boys_d2_category
-      result.plate_number_snapshot = plate
-    end
-    
-    # Create lap times (only one lap for 8th grade boys D2)
-    lap_time_ms = parse_time_to_ms(lap1_time)
-    
-    RaceResultLap.find_or_create_by!(
-      race_result: race_result,
-      lap_number: 1
-    ) do |lap|
-      lap.lap_time_ms = lap_time_ms
-      lap.lap_time_raw = lap1_time
-      lap.cumulative_time_ms = lap_time_ms
-      lap.cumulative_time_raw = format_time_ms(lap_time_ms)
-    end
-  end
-  
-  print "."
-end
-
-puts "\n✓ Whitetail 8th Grade Boys D2 results: #{whitetail_8th_grade_boys_d2_results.count} racers imported"
-
-# ===============================================================================
-# 8th Grade Boys D1
-# ===============================================================================
-
-puts "Creating Whitetail Ridge 8th Grade Boys D1 results..."
-
-# 8th Grade Boys D1 category
-eighth_grade_boys_d1_category = Category.find_by!(name: "8th Grade Boys D1")
-
-# 8th Grade Boys D1 Race Results - Complete data with lap times
-# Format: [place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, status]
+# Whitetail 8th Grade Boys D1 Results
 whitetail_8th_grade_boys_d1_results = [
   [1, "Bennett", "Schmidt", "Minnetonka HS", "100406494", "4172", 1, "00:17:54.4", "00:17:54.4", "finished"],
   [2, "Charlie", "Wurdell", "Minnetonka HS", "100520900", "4177", 1, "00:17:55.6", "00:17:55.6", "finished"],
@@ -1207,76 +459,7 @@ whitetail_8th_grade_boys_d1_results = [
   [55, "Brock", "Barlage", "New Prague MS and HS", "100427535", "4193", 1, "00:58:09.0", "00:53:09.0", "finished"]
 ]
 
-# Create racers, seasons, and race results for 8th Grade Boys D1
-whitetail_8th_grade_boys_d1_results.each do |place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, status|
-  # Find team
-  team = Team.find_by(name: team_name)
-  if team.nil?
-    puts "⚠️  Warning: Team '#{team_name}' not found for #{first_name} #{last_name}"
-    next
-  end
-  
-  # Create or find racer
-  racer = Racer.find_or_create_by!(
-    first_name: first_name,
-    last_name: last_name,
-    team: team
-  ) do |r|
-    r.number = rider_number
-  end
-  
-  # Create or find racer season (use the race's year)
-  racer_season = RacerSeason.find_or_create_by!(
-    racer: racer,
-    year: whitetail_race.year
-  ) do |season|
-    season.plate_number = plate
-  end
-  
-  # Create race result
-  race_result = RaceResult.find_or_create_by!(
-    race: whitetail_race,
-    racer_season: racer_season
-  ) do |result|
-    result.place = place
-    result.total_time_ms = parse_time_to_ms(total_time)
-    result.total_time_raw = total_time
-    result.laps_completed = laps
-    result.laps_expected = 1
-    result.status = status
-    result.category = eighth_grade_boys_d1_category
-    result.plate_number_snapshot = plate
-  end
-  
-  # Create lap times (only one lap for 8th grade boys D1)
-  lap_time_ms = parse_time_to_ms(lap1_time)
-  
-  RaceResultLap.find_or_create_by!(
-    race_result: race_result,
-    lap_number: 1
-  ) do |lap|
-    lap.lap_time_ms = lap_time_ms
-    lap.lap_time_raw = lap1_time
-    lap.cumulative_time_ms = lap_time_ms
-    lap.cumulative_time_raw = format_time_ms(lap_time_ms)
-  end
-  
-  print "."
-end
-
-puts "\n✓ Whitetail 8th Grade Boys D1 results: #{whitetail_8th_grade_boys_d1_results.count} racers imported"
-
-# ===============================================================================
-# Freshman Boys D2
-# ===============================================================================
-
-puts "Creating Whitetail Ridge Freshman Boys D2 results..."
-
-# Freshman Boys D2 category
-freshman_boys_d2_category = Category.find_by!(name: "Freshman Boys D2")
-
-# Freshman Boys D2 Race Results - Complete data with lap times
-# Format: [place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, lap2_time, status]
+# Whitetail Freshman Boys D2 Results
 whitetail_freshman_boys_d2_results = [
   [1, "Jackson", "Tank", "Rochester Area", "100392817", "3226", 2, "00:36:11.0", "00:17:27.2", "00:18:43.8", "finished"],
   [2, "Reid", "Hamlin", "Lake Area Composite", "100428699", "3060", 2, "00:36:11.3", "00:17:19.2", "00:18:52.0", "finished"],
@@ -1319,269 +502,7 @@ whitetail_freshman_boys_d2_results = [
   [39, "Jackson", "Leger", "Winona", "100391415", "3345", 2, "01:05:03.8", "00:31:37.7", "00:33:26.0", "finished"]
 ]
 
-# Create racers, seasons, and race results for Freshman Boys D2
-whitetail_freshman_boys_d2_results.each do |place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, lap2_time, status|
-  # Find team
-  team = Team.find_by(name: team_name)
-  if team.nil?
-    puts "⚠️  Warning: Team '#{team_name}' not found for #{first_name} #{last_name}"
-    next
-  end
-  
-  # Create or find racer
-  racer = Racer.find_or_create_by!(
-    first_name: first_name,
-    last_name: last_name,
-    team: team
-  ) do |r|
-    r.number = rider_number
-  end
-  
-  # Create or find racer season (use the race's year)
-  racer_season = RacerSeason.find_or_create_by!(
-    racer: racer,
-    year: whitetail_race.year
-  ) do |season|
-    season.plate_number = plate
-  end
-  
-  # Create race result
-  race_result = RaceResult.find_or_create_by!(
-    race: whitetail_race,
-    racer_season: racer_season
-  ) do |result|
-    result.place = place
-    result.total_time_ms = parse_time_to_ms(total_time)
-    result.total_time_raw = total_time
-    result.laps_completed = laps
-    result.laps_expected = 2
-    result.status = status
-    result.category = freshman_boys_d2_category
-    result.plate_number_snapshot = plate
-  end
-  
-  # Create lap times
-  cumulative_time = 0
-  lap_times = [lap1_time, lap2_time].compact
-  
-  lap_times.each_with_index do |lap_time, index|
-    lap_number = index + 1
-    lap_time_ms = parse_time_to_ms(lap_time)
-    cumulative_time += lap_time_ms if lap_time_ms
-    
-    RaceResultLap.find_or_create_by!(
-      race_result: race_result,
-      lap_number: lap_number
-    ) do |lap|
-      lap.lap_time_ms = lap_time_ms
-      lap.lap_time_raw = lap_time
-      lap.cumulative_time_ms = cumulative_time
-      lap.cumulative_time_raw = format_time_ms(cumulative_time)
-    end
-  end
-  
-  print "."
-end
-
-puts "\n✓ Whitetail Freshman Boys D2 results: #{whitetail_freshman_boys_d2_results.count} racers imported"
-
-# ===============================================================================
-# JV2 Boys D2  
-# ===============================================================================
-
-puts "Creating Whitetail Ridge JV2 Boys D2 results..."
-
-# JV2 Boys D2 category
-jv2_boys_d2_category = Category.find_by!(name: "JV2 Boys D2")
-
-# JV2 Boys D2 Race Results - Complete data with lap times
-# Format: [place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, lap2_time, status]
-whitetail_jv2_boys_d2_results = [
-  [1, "Noah", "Kaufmann", "Lakeville North HS", "100391145", "2176", 2, "00:37:11.6", "00:18:04.3", "00:19:07.3", "finished"],
-  [2, "Brayden", "Krejce", "Lakeville North HS", "100391267", "2177", 2, "00:37:12.8", "00:18:04.9", "00:19:07.8", "finished"],
-  [3, "Breck", "Swanson", "Armstrong Cycle", "100427609", "2026", 2, "00:37:23.5", "00:18:03.4", "00:19:20.0", "finished"],
-  [4, "Alex", "Friedle", "Rochester Century HS", "100390451", "2343", 2, "00:37:36.1", "00:18:31.1", "00:19:05.0", "finished"],
-  [5, "Colton", "Ellenbecker", "Rochester Mayo", "100390266", "2350", 2, "00:37:39.3", "00:18:32.6", "00:19:06.7", "finished"],
-  [6, "Aiden", "Nelson", "Rogers HS", "100391875", "2370", 2, "00:37:41.0", "00:18:20.3", "00:19:20.6", "finished"],
-  [7, "Joe", "Stephenson", "Hudson HS", "100407377", "2160", 2, "00:37:41.9", "00:18:04.0", "00:19:37.8", "finished"],
-  [8, "Alexander", "Podoll", "Rogers HS", "100484606", "2371", 2, "00:38:28.9", "00:18:42.6", "00:19:46.3", "finished"],
-  [9, "Hunter", "Peters", "Austin HS", "100392141", "2029", 2, "00:38:36.9", "00:18:33.3", "00:20:03.5", "finished"],
-  [10, "Corben", "Asuma", "Rock Ridge", "100389501", "2354", 2, "00:38:38.0", "00:18:41.5", "00:19:56.4", "finished"],
-  [11, "Taylor", "Calkins", "River Falls HS", "100463664", "2333", 2, "00:38:59.4", "00:18:44.6", "00:20:14.7", "finished"],
-  [12, "Ian", "Horeck", "Winona", "100390921", "2522", 2, "00:38:59.6", "00:19:04.0", "00:19:55.5", "finished"],
-  [13, "Cole", "Shoultz", "Elk River", "100429434", "2141", 2, "00:39:02.3", "00:18:38.9", "00:20:23.4", "finished"],
-  [14, "Dylan", "Klevann", "St Michael / Albertville", "100391222", "2419", 2, "00:39:05.2", "00:18:40.5", "00:20:24.6", "finished"],
-  [15, "Kaden", "King", "Apple Valley HS", "100520641", "2015", 2, "00:39:09.4", "00:18:59.8", "00:20:09.6", "finished"],
-  [16, "Ben", "Allington", "Winona", "100389416", "2521", 2, "00:39:13.5", "00:18:50.3", "00:20:23.1", "finished"],
-  [17, "Henry", "Diaz", "Armstrong Cycle", "100390153", "2019", 2, "00:39:18.7", "00:18:33.1", "00:20:45.6", "finished"],
-  [18, "Brayden", "Andrews", "Austin HS", "100389464", "2028", 2, "00:39:31.3", "00:18:56.5", "00:20:34.7", "finished"],
-  [19, "Owen", "Plantenberg", "St Croix", "100414230", "2416", 2, "00:39:32.6", "00:19:02.5", "00:20:30.0", "finished"],
-  [20, "Jackson", "Tripp", "Elk River", "100429358", "2142", 2, "00:39:36.4", "00:18:39.3", "00:20:57.0", "finished"],
-  [21, "Ari", "Greenberg", "North Dakota", "100532015", "2291", 2, "00:39:38.0", "00:19:13.5", "00:20:24.4", "finished"],
-  [22, "Hayden", "Hoff", "Apple Valley HS", "100427718", "2014", 2, "00:39:39.1", "00:19:09.1", "00:20:30.0", "finished"],
-  [23, "Harrison", "Adam", "Rosemount HS", "100426761", "2372", 2, "00:39:45.0", "00:19:14.6", "00:20:30.4", "finished"],
-  [24, "Nolan", "Blaha", "Northwest", "100389685", "2294", 2, "00:39:59.8", "00:18:54.5", "00:21:05.3", "finished"],
-  [25, "Danny", "Schwartz", "St Croix", "100520545", "2417", 2, "00:40:11.5", "00:19:13.2", "00:20:58.3", "finished"],
-  [26, "Aydan", "Dark", "Minneapolis Northside", "100535602", "2209", 2, "00:40:13.2", "00:19:39.8", "00:20:33.4", "finished"],
-  [27, "Vincent", "Humpal", "Mahtomedi HS", "100390952", "2196", 2, "00:40:13.4", "00:19:06.6", "00:21:06.7", "finished"],
-  [28, "Ezekiel", "Buettner", "Elk River", "100487574", "2135", 2, "00:40:33.8", "00:19:28.9", "00:21:04.9", "finished"],
-  [29, "Takeo", "Haertel-Strehlow", "Burnsville HS", "100390653", "2066", 2, "00:40:52.5", "00:19:38.3", "00:21:14.1", "finished"],
-  [30, "Micah", "Bolduc", "Burnsville HS", "100461721", "2064", 2, "00:40:59.5", "00:19:46.5", "00:21:12.9", "finished"],
-  [31, "Marshall", "Friese", "River Falls HS", "100390458", "2334", 2, "00:41:15.6", "00:19:59.0", "00:21:16.6", "finished"],
-  [32, "Brody", "Reiter", "River Falls HS", "100421884", "2336", 2, "00:41:54.4", "00:20:16.4", "00:21:38.0", "finished"],
-  [33, "Hayden", "Allen", "Lakeville North HS", "100389412", "2169", 2, "00:42:03.8", "00:20:08.4", "00:21:55.3", "finished"],
-  [34, "Frankie", "Roque", "Minneapolis Northside", "100392379", "2211", 2, "00:42:13.1", "00:20:11.5", "00:22:01.6", "finished"],
-  [35, "Cerwyn", "Dobbelmann", "Mahtomedi HS", "100483668", "2194", 2, "00:42:19.1", "00:20:16.5", "00:22:02.6", "finished"],
-  [36, "Drew", "Wood", "Lakeville North HS", "100393196", "2180", 2, "00:42:19.8", "00:20:20.4", "00:21:59.4", "finished"],
-  [37, "Jacob", "Rank", "Mahtomedi HS", "100420905", "2197", 2, "00:42:25.2", "00:20:16.8", "00:22:08.3", "finished"],
-  [38, "James", "Morrell", "Minnesota Valley", "100391822", "2245", 2, "00:42:53.3", "00:20:12.2", "00:22:41.1", "finished"],
-  [39, "Jonah", "Leonardson", "Armstrong Cycle", "100391438", "2024", 2, "00:42:54.2", "00:20:06.2", "00:22:48.0", "finished"],
-  [40, "Leo", "Fallgatter", "Lakeville North HS", "100390343", "2172", 2, "00:43:13.0", "00:20:27.4", "00:22:45.5", "finished"],
-  [41, "Kai", "Hill", "Rochester Century HS", "100390858", "2344", 2, "00:43:38.4", "00:20:47.7", "00:22:50.6", "finished"],
-  [42, "Ethan", "Mueller", "Totino Grace-Irondale", "100407939", "2481", 2, "00:44:24.6", "00:21:12.2", "00:23:12.4", "finished"],
-  [43, "John", "Durry", "Burnsville HS", "100464468", "2065", 2, "00:44:24.9", "00:21:28.9", "00:22:56.0", "finished"],
-  [44, "Jonathan", "Mccormack", "Elk River", "100391652", "2139", 2, "00:44:35.8", "00:22:01.9", "00:22:33.8", "finished"],
-  [45, "Trevor", "Burleigh", "Elk River", "100389842", "2136", 2, "00:44:40.6", "00:21:09.0", "00:23:31.5", "finished"],
-  [46, "Jude", "Boden", "St Croix", "100389702", "2415", 2, "00:44:41.6", "00:22:02.9", "00:22:38.6", "finished"],
-  [47, "Andrew", "Lovelace", "Eastview HS", "100485148", "2111", 2, "00:44:54.4", "00:21:49.2", "00:23:05.1", "finished"],
-  [48, "Jeffrey", "Brown", "Hastings", "100389805", "2145", 2, "00:44:59.0", "00:22:01.1", "00:22:57.9", "finished"],
-  [49, "Christian", "Loga", "River Falls HS", "100388685", "2335", 2, "00:45:01.8", "00:21:15.8", "00:23:45.9", "finished"],
-  [50, "Reginald", "DeBruin", "Mahtomedi HS", "100388187", "2193", 2, "00:45:02.2", "00:21:50.7", "00:23:11.4", "finished"],
-  [51, "Cruz", "Dilly", "Lakeville North HS", "100483701", "2170", 2, "00:45:07.0", "00:22:00.4", "00:23:06.6", "finished"],
-  [52, "Chris", "Schefelbein", "Totino Grace-Irondale", "100471323", "2482", 2, "00:45:08.0", "00:21:44.8", "00:23:23.2", "finished"],
-  [53, "Owen", "St. Denis", "Hastings", "100483096", "2148", 2, "00:45:13.0", "00:22:05.1", "00:23:07.9", "finished"],
-  [54, "Donovan", "Baskett", "Rochester Century HS", "100411798", "2342", 2, "00:45:23.5", "00:21:18.2", "00:24:05.2", "finished"],
-  [55, "Gage", "Soucek", "Austin HS", "100392687", "2030", 2, "00:45:35.3", "00:21:28.2", "00:24:07.0", "finished"],
-  [56, "Isaiah", "Bucholz", "Minnesota Valley", "100483237", "2243", 2, "00:45:54.7", "00:21:51.9", "00:24:02.8", "finished"],
-  [57, "Connor", "Ehn", "Armstrong Cycle", "100427933", "2020", 2, "00:46:09.2", "00:21:53.1", "00:24:16.1", "finished"],
-  [58, "Alix", "Hardtke", "Rochester Area", "100390715", "2341", 2, "00:46:19.1", "00:22:18.0", "00:24:01.0", "finished"],
-  [59, "Timothy", "Zwiefel", "Rosemount HS", "100393238", "2375", 2, "00:46:46.9", "00:21:58.8", "00:24:48.0", "finished"],
-  [60, "Brock", "Magruder", "Elk River", "100391545", "2138", 2, "00:46:56.3", "00:22:54.7", "00:24:01.6", "finished"],
-  [61, "Ethan", "Fogal", "Roseville", "100533672", "2379", 2, "00:46:58.5", "00:21:57.8", "00:25:00.7", "finished"],
-  [62, "Patrick", "Bliss", "Rochester Mayo", "100483996", "2347", 2, "00:47:02.0", "00:22:01.3", "00:25:00.6", "finished"],
-  [63, "Logan", "Gaver", "Lakeville North HS", "100390519", "2173", 2, "00:48:20.3", "00:23:05.5", "00:25:14.7", "finished"],
-  [64, "Bodhi", "Ziemann", "Mahtomedi HS", "100427078", "2199", 2, "00:48:21.0", "00:23:02.0", "00:25:18.9", "finished"],
-  [65, "Xander", "Vail", "Minnesota Valley", "100473718", "2246", 2, "00:48:24.3", "00:23:10.8", "00:25:13.5", "finished"],
-  [66, "Carson", "Abel", "Rochester Area", "100467726", "2337", 2, "00:48:26.4", "00:23:25.2", "00:25:01.2", "finished"],
-  [67, "Nathan", "Hermanson", "Elk River", "100488910", "2137", 2, "00:48:53.8", "00:22:08.9", "00:26:44.9", "finished"],
-  [68, "Corbet", "Hainey", "Rock Ridge", "100484378", "2356", 2, "00:49:06.7", "00:23:46.7", "00:25:19.9", "finished"],
-  [69, "Lukas", "Skinner", "Roseville", "100392629", "2385", 2, "00:49:14.9", "00:23:25.0", "00:25:49.8", "finished"],
-  [70, "Edwin", "Smith", "St Michael / Albertville", "100535532", "2420", 2, "00:49:43.6", "00:23:23.9", "00:26:19.7", "finished"],
-  [71, "David", "Yurk", "Lake Area Composite", "100393223", "2093", 2, "00:50:02.8", "00:23:23.6", "00:26:39.1", "finished"],
-  [72, "Oliver", "Plautz", "Minneapolis Northside", "100429289", "2210", 2, "00:50:07.0", "00:23:46.1", "00:26:20.9", "finished"],
-  [73, "Jacob", "Hammerstrom", "Armstrong Cycle", "100390682", "2022", 2, "00:50:22.0", "00:23:53.8", "00:26:28.1", "finished"],
-  [74, "Ian", "Mcconn", "Roseville", "100391651", "2382", 2, "00:50:41.1", "00:24:32.5", "00:26:08.6", "finished"],
-  [75, "James", "Unger", "Mahtomedi HS", "100392951", "2198", 2, "00:50:56.5", "00:23:54.7", "00:27:01.7", "finished"],
-  [76, "Wyatt", "Kapala", "Burnsville HS", "100533455", "2067", 2, "00:52:14.2", "00:24:20.4", "00:27:53.8", "finished"],
-  [77, "Carson", "Stipe", "Lake Area Composite", "100432840", "2092", 2, "00:53:20.3", "00:28:33.9", "00:24:46.4", "finished"],
-  [78, "Jonathan", "Gallager", "Armstrong Cycle", "100488789", "2021", 2, "00:57:12.9", "00:27:27.6", "00:29:45.2", "finished"],
-  [79, "Hudson", "Siebenaler", "Hastings", "100468636", "2147", 1, "00:32:08.8", "00:32:08.8", nil, "DNF"],
-  [80, "Dylan", "Cover", "Armstrong Cycle", "100390040", "2018", 1, "00:51:11.8", "00:46:11.8", nil, "DNF"]
-]
-
-# Create racers, seasons, and race results for JV2 Boys D2
-whitetail_jv2_boys_d2_results.each do |place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, lap2_time, status|
-  # Find team
-  team = Team.find_by(name: team_name)
-  if team.nil?
-    puts "⚠️  Warning: Team '#{team_name}' not found for #{first_name} #{last_name}"
-    next
-  end
-  
-  # Create or find racer
-  racer = Racer.find_or_create_by!(
-    first_name: first_name,
-    last_name: last_name,
-    team: team
-  ) do |r|
-    r.number = rider_number
-  end
-  
-  # Create or find racer season (use the race's year)
-  racer_season = RacerSeason.find_or_create_by!(
-    racer: racer,
-    year: whitetail_race.year
-  ) do |season|
-    season.plate_number = plate
-  end
-  
-  # Handle DNF case
-  if status == "DNF"
-    # Create race result for DNF
-    race_result = RaceResult.find_or_create_by!(
-      race: whitetail_race,
-      racer_season: racer_season
-    ) do |result|
-      result.place = place
-      result.total_time_ms = parse_time_to_ms(total_time) if total_time != "DNF"
-      result.total_time_raw = total_time == "DNF" ? nil : total_time
-      result.laps_completed = laps
-      result.laps_expected = 2
-      result.status = status
-      result.category = jv2_boys_d2_category
-      result.plate_number_snapshot = plate
-    end
-    
-    # Create lap times for completed laps
-    if lap1_time && lap1_time != "DNF"
-      lap_time_ms = parse_time_to_ms(lap1_time)
-      RaceResultLap.find_or_create_by!(
-        race_result: race_result,
-        lap_number: 1
-      ) do |lap|
-        lap.lap_time_ms = lap_time_ms
-        lap.lap_time_raw = lap1_time
-        lap.cumulative_time_ms = lap_time_ms
-        lap.cumulative_time_raw = format_time_ms(lap_time_ms)
-      end
-    end
-  else
-    # Create race result
-    race_result = RaceResult.find_or_create_by!(
-      race: whitetail_race,
-      racer_season: racer_season
-    ) do |result|
-      result.place = place
-      result.total_time_ms = parse_time_to_ms(total_time)
-      result.total_time_raw = total_time
-      result.laps_completed = laps
-      result.laps_expected = 2
-      result.status = status
-      result.category = jv2_boys_d2_category
-      result.plate_number_snapshot = plate
-    end
-    
-    # Create lap times
-    cumulative_time = 0
-    lap_times = [lap1_time, lap2_time].compact
-    
-    lap_times.each_with_index do |lap_time, index|
-      lap_number = index + 1
-      lap_time_ms = parse_time_to_ms(lap_time)
-      cumulative_time += lap_time_ms if lap_time_ms
-      
-      RaceResultLap.find_or_create_by!(
-        race_result: race_result,
-        lap_number: lap_number
-      ) do |lap|
-        lap.lap_time_ms = lap_time_ms
-        lap.lap_time_raw = lap_time
-        lap.cumulative_time_ms = cumulative_time
-        lap.cumulative_time_raw = format_time_ms(cumulative_time)
-      end
-    end
-  end
-  
-  print "."
-end
-
-puts "\n✓ Whitetail JV2 Boys D2 results: #{whitetail_jv2_boys_d2_results.count} racers imported"
-
-# Freshman Boys D1 category
-freshman_boys_d1_category = Category.find_by!(name: "Freshman Boys D1")
-
-# Freshman Boys D1 Race Results - Complete data with lap times
-# Format: [place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, lap2_time, status]
+# Whitetail Freshman Boys D1 Results
 whitetail_freshman_boys_d1_results = [
   [1, "Caleb", "Lyon", "Eagan HS", "100391529", "3079", 2, "00:35:06.0", "00:17:15.7", "00:17:50.3", "finished"],
   [2, "Patrick", "Ryan", "Brainerd HS", "100392417", "3038", 2, "00:35:09.5", "00:17:14.7", "00:17:54.7", "finished"],
@@ -1661,77 +582,7 @@ whitetail_freshman_boys_d1_results = [
   [76, "Owen", "Higgins", "Minnetonka HS", "100424393", "3163", 2, "00:58:55.7", "00:27:36.9", "00:31:18.7", "finished"]
 ]
 
-# Create racers, seasons, and race results for Freshman Boys D1
-whitetail_freshman_boys_d1_results.each do |place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, lap2_time, status|
-  # Find team
-  team = Team.find_by(name: team_name)
-  if team.nil?
-    puts "⚠️  Warning: Team '#{team_name}' not found for #{first_name} #{last_name}"
-    next
-  end
-  
-  # Create or find racer
-  racer = Racer.find_or_create_by!(
-    first_name: first_name,
-    last_name: last_name,
-    team: team
-  ) do |r|
-    r.number = rider_number
-  end
-  
-  # Create or find racer season (use the race's year)
-  racer_season = RacerSeason.find_or_create_by!(
-    racer: racer,
-    year: whitetail_race.year
-  ) do |season|
-    season.plate_number = plate
-  end
-  
-  # Create race result
-  race_result = RaceResult.find_or_create_by!(
-    race: whitetail_race,
-    racer_season: racer_season
-  ) do |result|
-    result.place = place
-    result.total_time_ms = parse_time_to_ms(total_time)
-    result.total_time_raw = total_time
-    result.laps_completed = laps
-    result.laps_expected = 2
-    result.status = status
-    result.category = freshman_boys_d1_category
-    result.plate_number_snapshot = plate
-  end
-  
-  # Create lap times
-  cumulative_time = 0
-  lap_times = [lap1_time, lap2_time].compact
-  
-  lap_times.each_with_index do |lap_time, index|
-    lap_number = index + 1
-    lap_time_ms = parse_time_to_ms(lap_time)
-    cumulative_time += lap_time_ms if lap_time_ms
-    
-    RaceResultLap.find_or_create_by!(
-      race_result: race_result,
-      lap_number: lap_number
-    ) do |lap|
-      lap.lap_time_ms = lap_time_ms
-      lap.lap_time_raw = lap_time
-      lap.cumulative_time_ms = cumulative_time
-      lap.cumulative_time_raw = format_time_ms(cumulative_time)
-    end
-  end
-  
-  print "."
-end
-
-puts "\n✓ Whitetail Freshman Boys D1 results: #{whitetail_freshman_boys_d1_results.count} racers imported"
-
-# Freshman Girls category
-freshman_girls_category = Category.find_by!(name: "Freshman Girls")
-
-# Freshman Girls Race Results - Complete data with lap times
-# Format: [place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, lap2_time, status]
+# Whitetail Freshman Girls Results
 whitetail_freshman_girls_results = [
   [1, "Penelope", "Rients", "Shakopee HS", "100407308", "3578", 2, "00:39:26.8", "00:19:05.3", "00:20:21.5", "finished"],
   [2, "Sofia", "Horstmann", "Lakeville North HS", "100418804", "3536", 2, "00:39:41.6", "00:19:14.2", "00:20:27.4", "finished"],
@@ -1766,77 +617,59 @@ whitetail_freshman_girls_results = [
   [31, "Sylvia", "Klein", "Shakopee HS", "100391219", "3577", 1, "00:38:04.7", "00:38:04.7", nil, "Pulled by Ref -1"]
 ]
 
-# Create racers, seasons, and race results for Freshman Girls
-whitetail_freshman_girls_results.each do |place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, lap2_time, status|
-  # Find team
-  team = Team.find_by(name: team_name)
-  if team.nil?
-    puts "⚠️  Warning: Team '#{team_name}' not found for #{first_name} #{last_name}"
-    next
-  end
-  
-  # Create or find racer
-  racer = Racer.find_or_create_by!(
-    first_name: first_name,
-    last_name: last_name,
-    team: team
-  ) do |r|
-    r.number = rider_number
-  end
-  
-  # Create or find racer season (use the race's year)
-  racer_season = RacerSeason.find_or_create_by!(
-    racer: racer,
-    year: whitetail_race.year
-  ) do |season|
-    season.plate_number = plate
-  end
-  
-  # Create race result
-  race_result = RaceResult.find_or_create_by!(
-    race: whitetail_race,
-    racer_season: racer_season
-  ) do |result|
-    result.place = place
-    result.total_time_ms = parse_time_to_ms(total_time)
-    result.total_time_raw = total_time
-    result.laps_completed = laps
-    result.laps_expected = 2
-    result.status = status
-    result.category = freshman_girls_category
-    result.plate_number_snapshot = plate
-  end
-  
-  # Create lap times
-  cumulative_time = 0
-  lap_times = [lap1_time, lap2_time].compact
-  
-  lap_times.each_with_index do |lap_time, index|
-    lap_number = index + 1
-    lap_time_ms = parse_time_to_ms(lap_time)
-    cumulative_time += lap_time_ms if lap_time_ms
-    
-    RaceResultLap.find_or_create_by!(
-      race_result: race_result,
-      lap_number: lap_number
-    ) do |lap|
-      lap.lap_time_ms = lap_time_ms
-      lap.lap_time_raw = lap_time
-      lap.cumulative_time_ms = cumulative_time
-      lap.cumulative_time_raw = format_time_ms(cumulative_time)
-    end
-  end
-  
-  print "."
-end
+# Whitetail Jv2 Girls Results
+whitetail_jv2_girls_results = [
+  [1, "Hayden", "Kohn", "Hudson HS", "100391241", "2642", 2, "00:39:42.3", "00:19:17.6", "00:20:24.6", "finished"],
+  [2, "Evelyn", "Bruns", "St Croix", "100407663", "2696", 2, "00:41:19.6", "00:20:12.4", "00:21:07.1", "finished"],
+  [3, "Alexa", "Dobesh", "Lakeville South HS", "100474286", "2650", 2, "00:42:05.7", "00:20:21.5", "00:21:44.1", "finished"],
+  [4, "Lexi", "Helgeson", "Austin HS", "100390801", "2604", 2, "00:43:29.9", "00:20:56.3", "00:22:33.6", "finished"],
+  [5, "Kate", "Nowak", "Hastings", "100391954", "2640", 2, "00:43:31.9", "00:20:38.6", "00:22:53.3", "finished"],
+  [6, "Lily", "Kohn", "Hudson HS", "100391242", "2643", 2, "00:43:35.3", "00:21:02.9", "00:22:32.3", "finished"],
+  [7, "Aliza", "Jacobson", "Crosby-Ironton HS", "100486165", "2625", 2, "00:44:28.9", "00:21:46.3", "00:22:42.5", "finished"],
+  [8, "Beatrice", "Toftey", "Edina Cycling", "100392887", "2637", 2, "00:45:01.8", "00:22:35.6", "00:22:26.1", "finished"],
+  [9, "Stephanie", "Galvan-Ortiz", "Shakopee HS", "100390492", "2691", 2, "00:45:24.9", "00:21:47.5", "00:23:37.4", "finished"],
+  [10, "Vivian", "Hoppe", "Edina Cycling", "100411923", "2635", 2, "00:45:40.9", "00:21:47.0", "00:23:53.9", "finished"],
+  [11, "Maddison", "Lydon", "White Bear Lake HS", "100478581", "2715", 2, "00:45:43.6", "00:22:37.1", "00:23:06.5", "finished"],
+  [12, "Mialynn", "Metsa", "Rock Ridge", "100391717", "2683", 2, "00:45:43.9", "00:22:22.7", "00:23:21.2", "finished"],
+  [13, "Alison", "Foster", "Minnetonka HS", "100524796", "2661", 2, "00:46:01.5", "00:22:25.1", "00:23:36.4", "finished"],
+  [14, "Lilly", "Hansen", "Winona", "100405739", "2718", 2, "00:46:02.5", "00:22:34.8", "00:23:27.6", "finished"],
+  [15, "Adeline", "Barmann", "Edina Cycling", "100532841", "2629", 2, "00:46:31.6", "00:22:37.0", "00:23:54.5", "finished"],
+  [16, "River", "Galloway", "Rock Ridge", "100390489", "2681", 2, "00:46:44.7", "00:22:22.7", "00:24:21.9", "finished"],
+  [17, "Emma", "Padley", "Burnsville HS", "100392058", "2620", 2, "00:47:07.1", "00:22:35.0", "00:24:32.0", "finished"],
+  [18, "Ava", "Kaufmann", "Lakeville North HS", "100391144", "2648", 2, "00:47:36.0", "00:22:40.7", "00:24:55.2", "finished"],
+  [19, "Erika", "Dwyer", "Rosemount HS", "100483997", "2684", 2, "00:48:00.6", "00:23:16.1", "00:24:44.4", "finished"],
+  [20, "Ada", "Stangl", "Winona", "100429355", "2721", 2, "00:48:05.0", "00:23:13.7", "00:24:51.3", "finished"],
+  [21, "Morgan", "Matheson", "River Falls HS", "100391621", "2677", 2, "00:48:06.2", "00:22:44.5", "00:25:21.6", "finished"],
+  [22, "Eva", "Grotenhuis", "Lakeville South HS", "100390619", "2651", 2, "00:48:10.3", "00:22:56.4", "00:25:13.9", "finished"],
+  [23, "Mya", "Weckman", "New Prague MS and HS", "100425915", "2670", 2, "00:48:36.2", "00:23:17.7", "00:25:18.5", "finished"],
+  [24, "Caroline", "Shoemaker", "Rosemount HS", "100392601", "2685", 2, "00:48:38.8", "00:23:14.7", "00:25:24.1", "finished"],
+  [25, "Sophia", "Bevis", "Minnetonka HS", "100528817", "2660", 2, "00:48:47.0", "00:23:27.3", "00:25:19.7", "finished"],
+  [26, "Piper", "Schmidt", "Minnetonka HS", "100482685", "2664", 2, "00:48:51.0", "00:23:34.2", "00:25:16.7", "finished"],
+  [27, "Scarlett", "Erlandson", "Edina Cycling", "100513340", "2632", 2, "00:48:56.0", "00:23:31.4", "00:25:24.6", "finished"],
+  [28, "Milca", "Galvan-Ortiz", "Shakopee HS", "100462929", "2690", 2, "00:50:23.8", "00:24:20.2", "00:26:03.6", "finished"],
+  [29, "Chloe", "Hardtke", "Rochester Area", "100390716", "2678", 2, "00:50:26.8", "00:23:50.3", "00:26:36.4", "finished"],
+  [30, "Noelle", "Kubala", "Burnsville HS", "100491630", "2618", 2, "00:50:30.8", "00:23:45.5", "00:26:45.2", "finished"],
+  [31, "Peyton", "Moidl", "Wayzata Mountain Bike", "100512292", "2711", 2, "00:50:35.2", "00:24:28.4", "00:26:06.7", "finished"],
+  [32, "Luz", "Willaert", "Rochester Mayo", "100533519", "2680", 2, "00:51:16.7", "00:23:33.9", "00:27:42.7", "finished"],
+  [33, "Hazel", "Goodpaster", "River Falls HS", "100470414", "2676", 2, "00:51:26.8", "00:24:27.4", "00:26:59.4", "finished"],
+  [34, "Olivia", "Ostrander", "Wayzata Mountain Bike", "100521902", "2712", 2, "00:53:12.1", "00:23:59.3", "00:29:12.8", "finished"],
+  [35, "Charlotte", "Cannon", "White Bear Lake HS", "100478878", "2714", 2, "00:53:46.9", "00:25:35.2", "00:28:11.7", "finished"],
+  [36, "Elliot", "Gauster", "St Croix", "100512136", "2697", 2, "00:53:49.0", "00:25:14.0", "00:28:35.0", "finished"],
+  [37, "Cora", "Martensen", "Brainerd HS", "100391599", "2615", 2, "00:54:18.7", "00:25:42.0", "00:28:36.6", "finished"],
+  [38, "Rebecca", "Miller", "Wayzata Mountain Bike", "100391749", "2710", 2, "00:54:20.4", "00:24:40.6", "00:29:39.7", "finished"],
+  [39, "Eve", "Aspengren", "Alexandria Youth Cycling", "100532420", "2601", 2, "00:54:20.7", "00:26:00.3", "00:28:20.3", "finished"],
+  [40, "Ariella", "Rosenwald", "Wayzata Mountain Bike", "100431384", "2713", 2, "00:55:27.3", "00:26:09.9", "00:29:17.4", "finished"],
+  [41, "Rahee", "Kim", "Mounds View HS", "100391190", "2667", 2, "00:55:33.5", "00:26:21.6", "00:29:11.8", "finished"],
+  [42, "Nora", "Leger", "Winona", "100391416", "2719", 2, "01:01:44.5", "00:29:52.3", "00:31:52.1", "finished"],
+  [43, "Katelyn", "Bucholz", "Minnesota Valley", "100530248", "2659", 2, "01:01:46.2", "00:31:07.7", "00:30:38.4", "finished"],
+  [44, "Grace", "Kubala", "Burnsville HS", "100493107", "2617", 2, "01:02:15.2", "00:29:20.9", "00:32:54.2", "finished"],
+  [45, "Lillian", "Kainz", "Rock Ridge", "100427192", "2682", 2, "01:07:07.4", "00:29:52.5", "00:37:14.9", "finished"],
+  [46, "Rylee", "Lund", "New Prague MS and HS", "100533767", "2669", 2, "01:08:55.3", "00:31:00.4", "00:37:54.9", "finished"],
+  [47, "Dylan", "Schmidt", "Hudson HS", "100392505", "2646", 1, "00:34:27.0", "00:34:27.0", nil, "pulled"],
+  [48, "Camila", "Galvan-Ortiz", "Shakopee HS", "100462928", "2689", 1, "00:22:36.6", "00:22:36.6", nil, "DNF"]
+]
 
-puts "\n✓ Whitetail Freshman Girls results: #{whitetail_freshman_girls_results.count} racers imported"
-
-# JV3 Boys category
-jv3_boys_category = Category.find_by!(name: "JV3 Boys")
-
-# JV3 Boys Race Results - Complete data with lap times
-# Format: [place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, lap2_time, lap3_time, status]
+# Whitetail Jv3 Boys Results
 whitetail_jv3_boys_results = [
   [1, "Jake", "Mercado", "Edina Cycling", "100391710", "1074", 3, "00:50:57.1", "00:15:56.7", "00:17:38.2", "00:17:22.1", "finished"],
   [2, "Cole", "Hunter", "Apple Valley HS", "100465388", "1009", 3, "00:52:45.6", "00:16:39.9", "00:18:09.2", "00:17:56.3", "finished"],
@@ -1938,77 +771,7 @@ whitetail_jv3_boys_results = [
   [98, "Ladd", "Nelson", "Crosby-Ironton HS", "100429640", "1056", 2, "00:44:57.3", "00:17:53.0", "00:27:04.2", nil, "DNF end of lap 2"]
 ]
 
-# Create racers, seasons, and race results for JV3 Boys
-whitetail_jv3_boys_results.each do |place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, lap2_time, lap3_time, status|
-  # Find team
-  team = Team.find_by(name: team_name)
-  if team.nil?
-    puts "⚠️  Warning: Team '#{team_name}' not found for #{first_name} #{last_name}"
-    next
-  end
-  
-  # Create or find racer
-  racer = Racer.find_or_create_by!(
-    first_name: first_name,
-    last_name: last_name,
-    team: team
-  ) do |r|
-    r.number = rider_number
-  end
-  
-  # Create or find racer season (use the race's year)
-  racer_season = RacerSeason.find_or_create_by!(
-    racer: racer,
-    year: whitetail_race.year
-  ) do |season|
-    season.plate_number = plate
-  end
-  
-  # Create race result
-  race_result = RaceResult.find_or_create_by!(
-    race: whitetail_race,
-    racer_season: racer_season
-  ) do |result|
-    result.place = place
-    result.total_time_ms = parse_time_to_ms(total_time)
-    result.total_time_raw = total_time
-    result.laps_completed = laps
-    result.laps_expected = 3
-    result.status = status
-    result.category = jv3_boys_category
-    result.plate_number_snapshot = plate
-  end
-  
-  # Create lap times
-  cumulative_time = 0
-  lap_times = [lap1_time, lap2_time, lap3_time].compact
-  
-  lap_times.each_with_index do |lap_time, index|
-    lap_number = index + 1
-    lap_time_ms = parse_time_to_ms(lap_time)
-    cumulative_time += lap_time_ms if lap_time_ms
-    
-    RaceResultLap.find_or_create_by!(
-      race_result: race_result,
-      lap_number: lap_number
-    ) do |lap|
-      lap.lap_time_ms = lap_time_ms
-      lap.lap_time_raw = lap_time
-      lap.cumulative_time_ms = cumulative_time
-      lap.cumulative_time_raw = format_time_ms(cumulative_time)
-    end
-  end
-  
-  print "."
-end
-
-puts "\n✓ Whitetail JV3 Boys results: #{whitetail_jv3_boys_results.count} racers imported"
-
-# Varsity Boys category
-varsity_boys_category = Category.find_by!(name: "Varsity Boys")
-
-# Varsity Boys Race Results - Complete data with lap times
-# Format: [place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, lap2_time, lap3_time, lap4_time, status]
+# Whitetail Varsity Boys Results
 whitetail_varsity_boys_results = [
   [1, "Edward", "Full", "Elk River", "100390473", "31", 4, "01:07:42.6", "00:16:28.7", "00:17:22.3", "00:17:00.8", "00:16:50.6", "finished"],
   [2, "Miles", "Bremer", "Eastview HS", "100389771", "21", 4, "01:08:35.3", "00:16:29.1", "00:17:21.5", "00:17:15.6", "00:17:28.9", "finished"],
@@ -2063,77 +826,7 @@ whitetail_varsity_boys_results = [
   [51, "Owen", "Allred", "Winona", "100389419", "79", 0, nil, nil, nil, nil, "DNF"]
 ]
 
-# Create racers, seasons, and race results for Varsity Boys
-whitetail_varsity_boys_results.each do |place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, lap2_time, lap3_time, lap4_time, status|
-  # Find team
-  team = Team.find_by(name: team_name)
-  if team.nil?
-    puts "⚠️  Warning: Team '#{team_name}' not found for #{first_name} #{last_name}"
-    next
-  end
-  
-  # Create or find racer
-  racer = Racer.find_or_create_by!(
-    first_name: first_name,
-    last_name: last_name,
-    team: team
-  ) do |r|
-    r.number = rider_number
-  end
-  
-  # Create or find racer season (use the race's year)
-  racer_season = RacerSeason.find_or_create_by!(
-    racer: racer,
-    year: whitetail_race.year
-  ) do |season|
-    season.plate_number = plate
-  end
-  
-  # Create race result
-  race_result = RaceResult.find_or_create_by!(
-    race: whitetail_race,
-    racer_season: racer_season
-  ) do |result|
-    result.place = place
-    result.total_time_ms = parse_time_to_ms(total_time)
-    result.total_time_raw = total_time
-    result.laps_completed = laps
-    result.laps_expected = 4
-    result.status = status
-    result.category = varsity_boys_category
-    result.plate_number_snapshot = plate
-  end
-  
-  # Create lap times
-  cumulative_time = 0
-  lap_times = [lap1_time, lap2_time, lap3_time, lap4_time].compact
-  
-  lap_times.each_with_index do |lap_time, index|
-    lap_number = index + 1
-    lap_time_ms = parse_time_to_ms(lap_time)
-    cumulative_time += lap_time_ms if lap_time_ms
-    
-    RaceResultLap.find_or_create_by!(
-      race_result: race_result,
-      lap_number: lap_number
-    ) do |lap|
-      lap.lap_time_ms = lap_time_ms
-      lap.lap_time_raw = lap_time
-      lap.cumulative_time_ms = cumulative_time
-      lap.cumulative_time_raw = format_time_ms(cumulative_time)
-    end
-  end
-  
-  print "."
-end
-
-puts "\n✓ Whitetail Varsity Boys results: #{whitetail_varsity_boys_results.count} racers imported"
-
-# JV3 Girls category
-jv3_girls_category = Category.find_by!(name: "JV3 Girls")
-
-# JV3 Girls Race Results - Complete data with lap times
-# Format: [place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, lap2_time, lap3_time, status]
+# Whitetail Jv3 Girls Results
 whitetail_jv3_girls_results = [
   [1, "Margo", "Bremer", "Eastview HS", "100409037", "1641", 3, "01:00:51.4", "00:19:06.5", "00:20:54.0", "00:20:50.8", "finished"],
   [2, "Kate", "Nickleski", "River Falls HS", "100391921", "1629", 3, "01:01:03.2", "00:19:23.7", "00:21:08.1", "00:20:31.2", "finished"],
@@ -2158,77 +851,7 @@ whitetail_jv3_girls_results = [
   [21, "Kamdyn", "Karel", "Mounds View HS", "100405966", "1623", 3, "01:31:59.7", "00:19:32.4", "00:46:25.4", "00:23:01.8", "3 Min Outside Assist"]
 ]
 
-# Create racers, seasons, and race results for JV3 Girls
-whitetail_jv3_girls_results.each do |place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, lap2_time, lap3_time, status|
-  # Find team
-  team = Team.find_by(name: team_name)
-  if team.nil?
-    puts "⚠️  Warning: Team '#{team_name}' not found for #{first_name} #{last_name}"
-    next
-  end
-  
-  # Create or find racer
-  racer = Racer.find_or_create_by!(
-    first_name: first_name,
-    last_name: last_name,
-    team: team
-  ) do |r|
-    r.number = rider_number
-  end
-  
-  # Create or find racer season (use the race's year)
-  racer_season = RacerSeason.find_or_create_by!(
-    racer: racer,
-    year: whitetail_race.year
-  ) do |season|
-    season.plate_number = plate
-  end
-  
-  # Create race result
-  race_result = RaceResult.find_or_create_by!(
-    race: whitetail_race,
-    racer_season: racer_season
-  ) do |result|
-    result.place = place
-    result.total_time_ms = parse_time_to_ms(total_time)
-    result.total_time_raw = total_time
-    result.laps_completed = laps
-    result.laps_expected = 3
-    result.status = status
-    result.category = jv3_girls_category
-    result.plate_number_snapshot = plate
-  end
-  
-  # Create lap times
-  cumulative_time = 0
-  lap_times = [lap1_time, lap2_time, lap3_time].compact
-  
-  lap_times.each_with_index do |lap_time, index|
-    lap_number = index + 1
-    lap_time_ms = parse_time_to_ms(lap_time)
-    cumulative_time += lap_time_ms if lap_time_ms
-    
-    RaceResultLap.find_or_create_by!(
-      race_result: race_result,
-      lap_number: lap_number
-    ) do |lap|
-      lap.lap_time_ms = lap_time_ms
-      lap.lap_time_raw = lap_time
-      lap.cumulative_time_ms = cumulative_time
-      lap.cumulative_time_raw = format_time_ms(cumulative_time)
-    end
-  end
-  
-  print "."
-end
-
-puts "\n✓ Whitetail JV3 Girls results: #{whitetail_jv3_girls_results.count} racers imported"
-
-# Varsity Girls category
-varsity_girls_category = Category.find_by!(name: "Varsity Girls")
-
-# Varsity Girls Race Results - Complete data with lap times
-# Format: [place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, lap2_time, lap3_time, lap4_time, status]
+# Whitetail Varsity Girls Results
 whitetail_varsity_girls_results = [
   [1, "Stella", "Swanson", "Minnetonka HS", "100417745", "215", 4, "01:16:05.7", "00:17:15.2", "00:19:32.4", "00:19:46.2", "00:19:31.6", "finished"],
   [2, "Evie", "Malec", "Minnetonka HS", "100391563", "214", 4, "01:19:23.2", "00:18:26.9", "00:20:33.5", "00:20:12.9", "00:20:09.7", "finished"],
@@ -2241,235 +864,209 @@ whitetail_varsity_girls_results = [
   [9, "Aliya", "Gricius", "Winona", "100390608", "226", 4, "01:35:41.7", "00:21:09.9", "00:24:54.4", "00:24:53.5", "00:24:43.7", "finished"]
 ]
 
-# Create racers, seasons, and race results for Varsity Girls
-whitetail_varsity_girls_results.each do |place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, lap2_time, lap3_time, lap4_time, status|
-  # Find team
-  team = Team.find_by(name: team_name)
-  if team.nil?
-    puts "⚠️  Warning: Team '#{team_name}' not found for #{first_name} #{last_name}"
-    next
-  end
-  
-  # Create or find racer
-  racer = Racer.find_or_create_by!(
-    first_name: first_name,
-    last_name: last_name,
-    team: team
-  ) do |r|
-    r.number = rider_number
-  end
-  
-  # Create or find racer season (use the race's year)
-  racer_season = RacerSeason.find_or_create_by!(
-    racer: racer,
-    year: whitetail_race.year
-  ) do |season|
-    season.plate_number = plate
-  end
-  
-  # Create race result
-  race_result = RaceResult.find_or_create_by!(
-    race: whitetail_race,
-    racer_season: racer_season
-  ) do |result|
-    result.place = place
-    result.total_time_ms = parse_time_to_ms(total_time)
-    result.total_time_raw = total_time
-    result.laps_completed = laps
-    result.laps_expected = 4
-    result.status = status
-    result.category = varsity_girls_category
-    result.plate_number_snapshot = plate
-  end
-  
-  # Create lap times
-  cumulative_time = 0
-  lap_times = [lap1_time, lap2_time, lap3_time, lap4_time].compact
-  
-  lap_times.each_with_index do |lap_time, index|
-    lap_number = index + 1
-    lap_time_ms = parse_time_to_ms(lap_time)
-    cumulative_time += lap_time_ms if lap_time_ms
-    
-    RaceResultLap.find_or_create_by!(
-      race_result: race_result,
-      lap_number: lap_number
-    ) do |lap|
-      lap.lap_time_ms = lap_time_ms
-      lap.lap_time_raw = lap_time
-      lap.cumulative_time_ms = cumulative_time
-      lap.cumulative_time_raw = format_time_ms(cumulative_time)
-    end
-  end
-  
-  print "."
-end
-
-puts "\n✓ Whitetail Varsity Girls results: #{whitetail_varsity_girls_results.count} racers imported"
-
-# ===============================================================================
-# JV2 Boys D1 - 2 laps
-# ===============================================================================
-
-puts "\nAdding Whitetail JV2 Boys D1 results..."
-
-jv2_boys_d1_category = Category.find_by!(name: "JV2 Boys D1")
-
-whitetail_jv2_boys_d1_results = [
-  [1, "Bennett", "Alexander", "Minnetonka HS", "100514003", "4635", 2, "00:30:13.4", "00:14:49.4", "00:15:24.0", "finished"],
-  [2, "Jake", "Otto", "Rosemount HS", "100422806", "4749", 2, "00:30:37.2", "00:15:10.6", "00:15:26.6", "finished"],
-  [3, "Declan", "Mauer", "Prior Lake HS", "100434419", "4743", 2, "00:30:37.9", "00:15:11.7", "00:15:26.2", "finished"],
-  [4, "Carter", "Johnson", "Hudson HS", "100448073", "4609", 2, "00:30:45.1", "00:15:05.5", "00:15:39.6", "finished"],
-  [5, "Owen", "Green", "Woodbury HS", "100527906", "4878", 2, "00:31:04.7", "00:15:27.4", "00:15:37.3", "finished"],
-  [6, "Andrew", "Delaney", "Eastview HS", "100429411", "4580", 2, "00:31:26.5", "00:15:25.1", "00:16:01.4", "finished"],
-  [7, "Gabriel", "Schacht", "Maple Grove HS", "100519346", "4669", 2, "00:31:28.9", "00:15:24.8", "00:16:04.1", "finished"],
-  [8, "Levi", "Nelson", "Osseo Composite", "100534298", "4727", 2, "00:31:29.9", "00:15:41.7", "00:15:48.2", "finished"],
-  [9, "Logan", "Larson", "Woodbury HS", "100456928", "4879", 2, "00:31:44.2", "00:15:51.1", "00:15:53.1", "finished"],
-  [10, "Luke", "Donovan", "Wayzata Mountain Bike", "100416953", "4848", 2, "00:31:53.5", "00:15:53.1", "00:16:00.4", "finished"],
-  [11, "Camden", "Goetz", "Eagan HS", "100399062", "4583", 2, "00:31:58.4", "00:15:30.3", "00:16:28.1", "finished"],
-  [12, "Blake", "Rasmussen", "Prior Lake HS", "100515827", "4744", 2, "00:32:22.5", "00:15:45.1", "00:16:37.4", "finished"],
-  [13, "Caiden", "Watson", "Osseo HS", "100546090", "4737", 2, "00:32:24.3", "00:15:57.5", "00:16:26.8", "finished"],
-  [14, "Chase", "Holke", "Lakeville South HS", "100524068", "4638", 2, "00:32:40.4", "00:15:57.4", "00:16:43.0", "finished"],
-  [15, "Nick", "Ness", "Wayzata Mountain Bike", "100522577", "4849", 2, "00:32:47.9", "00:16:04.3", "00:16:43.6", "finished"],
-  [16, "Bryce", "Elliott", "Eden Prairie HS", "100427624", "4581", 2, "00:32:51.7", "00:16:00.7", "00:16:51.0", "finished"],
-  [17, "Andrew", "Blegen", "Prior Lake HS", "100547341", "4742", 2, "00:33:03.2", "00:16:05.4", "00:16:57.8", "finished"],
-  [18, "Silas", "Stangland", "Hudson HS", "100471988", "4613", 2, "00:33:04.3", "00:16:26.0", "00:16:38.3", "finished"],
-  [19, "Aiden", "Juaire", "Hopkins HS", "100457468", "4600", 2, "00:33:12.1", "00:16:02.9", "00:17:09.2", "finished"],
-  [20, "Sullivan", "Novacek", "Chaska HS", "100518616", "4572", 2, "00:33:35.6", "00:16:28.5", "00:17:07.1", "finished"],
-  [21, "Soren", "Knutson", "Wayzata Mountain Bike", "100515851", "4850", 2, "00:33:42.9", "00:16:47.7", "00:16:55.2", "finished"],
-  [22, "Paul", "Roberts", "Edina Cycling", "100481003", "4588", 2, "00:33:44.4", "00:16:34.5", "00:17:09.9", "finished"],
-  [23, "Oscar", "McBroom", "Osseo Composite", "100470998", "4728", 2, "00:33:52.4", "00:16:37.0", "00:17:15.4", "finished"],
-  [24, "Hank", "Quaale", "Hopkins HS", "100430422", "4601", 2, "00:33:54.7", "00:16:48.3", "00:17:06.4", "finished"],
-  [25, "Owen", "Pirkl", "Wayzata Mountain Bike", "100438829", "4851", 2, "00:34:02.5", "00:16:53.3", "00:17:09.2", "finished"],
-  [26, "Alexander", "Wickoren", "Prior Lake HS", "100534286", "4745", 2, "00:34:05.0", "00:16:44.8", "00:17:20.2", "finished"],
-  [27, "Jayden", "Erickson", "Minnetonka HS", "100533536", "4636", 2, "00:34:08.2", "00:16:47.3", "00:17:20.9", "finished"],
-  [28, "Paul", "Jochims", "Prior Lake HS", "100509628", "4746", 2, "00:34:14.4", "00:17:00.6", "00:17:13.8", "finished"],
-  [29, "Blake", "Tveito", "Osseo Composite", "100461409", "4729", 2, "00:34:15.1", "00:16:56.3", "00:17:18.8", "finished"],
-  [30, "Jason", "Green", "Woodbury HS", "100416978", "4880", 2, "00:34:17.9", "00:16:54.6", "00:17:23.3", "finished"],
-  [31, "Ian", "Hoff", "Hudson HS", "100546553", "4610", 2, "00:34:19.9", "00:17:03.1", "00:17:16.8", "finished"],
-  [32, "Ben", "Hartman", "Osseo Composite", "100468239", "4730", 2, "00:34:23.0", "00:17:15.4", "00:17:07.6", "finished"],
-  [33, "Kieran", "Johnson", "Roseville", "100548642", "4755", 2, "00:34:26.3", "00:16:53.0", "00:17:33.3", "finished"],
-  [34, "Easton", "Becker", "Eden Prairie HS", "100423883", "4582", 2, "00:34:45.7", "00:17:08.3", "00:17:37.4", "finished"],
-  [35, "Ryan", "Gallagher", "Stillwater Mountain Bike", "100421965", "4813", 2, "00:34:47.0", "00:16:57.1", "00:17:49.9", "finished"],
-  [36, "Mason", "Smith", "Woodbury HS", "100490003", "4881", 2, "00:34:51.8", "00:17:24.7", "00:17:27.1", "finished"],
-  [37, "Charles", "Jevne", "Edina Cycling", "100519383", "4589", 2, "00:34:58.8", "00:17:15.7", "00:17:43.1", "finished"],
-  [38, "Carter", "Sinkler", "Lakeville South HS", "100522584", "4639", 2, "00:35:16.3", "00:17:35.5", "00:17:40.8", "finished"],
-  [39, "Brayden", "McDivitt", "Eagan HS", "100498734", "4584", 2, "00:35:27.5", "00:17:25.2", "00:18:02.3", "finished"],
-  [40, "Beckett", "Smothers", "Hudson HS", "100477511", "4614", 2, "00:35:28.2", "00:17:27.2", "00:18:01.0", "finished"],
-  [41, "Brody", "Novotny", "Chaska HS", "100522589", "4573", 2, "00:35:30.8", "00:17:34.1", "00:17:56.7", "finished"],
-  [42, "Connor", "Johnson", "Hopkins HS", "100469969", "4602", 2, "00:35:34.9", "00:17:16.8", "00:18:18.1", "finished"],
-  [43, "Max", "Heegaard", "Eden Prairie HS", "100498738", "4584", 2, "00:35:40.4", "00:17:41.0", "00:17:59.4", "finished"],
-  [44, "Cooper", "Halgren", "Minnetonka HS", "100509637", "4637", 2, "00:35:42.1", "00:17:31.0", "00:18:11.1", "finished"],
-  [45, "Calvin", "Ott", "Eastview HS", "100538631", "4581", 2, "00:35:48.9", "00:17:38.5", "00:18:10.4", "finished"],
-  [46, "Jake", "Holmstrom", "Hudson HS", "100501513", "4611", 2, "00:35:52.9", "00:17:42.6", "00:18:10.3", "finished"],
-  [47, "Matthew", "Hahn", "Prior Lake HS", "100518633", "4747", 2, "00:36:12.1", "00:17:47.5", "00:18:24.6", "finished"],
-  [48, "Payton", "Bahr", "Rosemount HS", "100535537", "4750", 2, "00:36:16.3", "00:17:48.6", "00:18:27.7", "finished"],
-  [49, "Liam", "Stein", "Wayzata Mountain Bike", "100482986", "4852", 2, "00:36:30.5", "00:17:49.8", "00:18:40.7", "finished"],
-  [50, "Alex", "Busse", "Eastview HS", "100517606", "4582", 2, "00:36:33.4", "00:17:53.0", "00:18:40.4", "finished"],
-  [51, "Nolan", "Pedersen", "Rosemount HS", "100521616", "4751", 2, "00:36:35.6", "00:17:57.1", "00:18:38.5", "finished"],
-  [52, "Quinn", "Lund", "Wayzata Mountain Bike", "100533549", "4853", 2, "00:36:38.4", "00:18:00.7", "00:18:37.7", "finished"],
-  [53, "Logan", "Johnson", "Lakeville South HS", "100534311", "4640", 2, "00:36:54.7", "00:18:04.5", "00:18:50.2", "finished"],
-  [54, "Cole", "White", "Osseo HS", "100402606", "4738", 2, "00:37:01.9", "00:18:23.3", "00:18:38.6", "finished"],
-  [55, "Nico", "Raduechel", "Minnetonka HS", "100548666", "4638", 2, "00:37:07.1", "00:17:54.1", "00:19:13.0", "finished"],
-  [56, "Devan", "Hendrix", "Eden Prairie HS", "100547378", "4585", 2, "00:37:15.8", "00:18:25.4", "00:18:50.4", "finished"],
-  [57, "Andrew", "Ness", "Wayzata Mountain Bike", "100522561", "4854", 2, "00:37:16.2", "00:18:18.3", "00:18:57.9", "finished"],
-  [58, "Braden", "Hecht", "Woodbury HS", "100537626", "4882", 2, "00:37:38.4", "00:18:38.4", "00:19:00.0", "finished"],
-  [59, "William", "Knoepke", "Eastview HS", "100530513", "4583", 2, "00:37:42.9", "00:18:31.3", "00:19:11.6", "finished"],
-  [60, "Jeremiah", "LaRoe", "Osseo Composite", "100463433", "4731", 2, "00:37:52.8", "00:18:39.5", "00:19:13.3", "finished"],
-  [61, "Andrew", "Turek", "Lakeville South HS", "100522607", "4641", 2, "00:37:58.3", "00:18:46.9", "00:19:11.4", "finished"],
-  [62, "Nathan", "Vig", "Minnetonka HS", "100536563", "4639", 2, "00:38:06.1", "00:18:42.5", "00:19:23.6", "finished"],
-  [63, "Augie", "Jarmuth", "Chaska HS", "100546578", "4574", 2, "00:38:11.2", "00:18:51.0", "00:19:20.2", "finished"],
-  [64, "Daniel", "Barve", "Woodbury HS", "100476534", "4883", 2, "00:38:13.5", "00:18:47.8", "00:19:25.7", "finished"],
-  [65, "Isaac", "Rens", "Chaska HS", "100538643", "4575", 2, "00:38:21.6", "00:18:54.8", "00:19:26.8", "finished"],
-  [66, "Erik", "Nelson", "Osseo HS", "100547359", "4739", 2, "00:38:25.2", "00:19:00.6", "00:19:24.6", "finished"],
-  [67, "Nolan", "Goode", "Woodbury HS", "100534323", "4884", 2, "00:38:25.5", "00:19:07.2", "00:19:18.3", "finished"],
-  [68, "Caden", "Burke", "Eastview HS", "100533561", "4584", 2, "00:38:38.4", "00:18:59.5", "00:19:38.9", "finished"],
-  [69, "Benjamin", "Wright", "Prior Lake HS", "100533577", "4748", 2, "00:38:46.5", "00:19:13.8", "00:19:32.7", "finished"],
-  [70, "Max", "Walsh", "Osseo HS", "100530507", "4740", 2, "00:39:05.3", "00:19:11.8", "00:19:53.5", "finished"],
-  [71, "Blake", "Parnell", "Hopkins HS", "100514027", "4603", 2, "00:39:20.7", "00:19:27.9", "00:19:52.8", "finished"],
-  [72, "Keegan", "Wickstrom", "Minnetonka HS", "100537638", "4640", 2, "00:39:21.5", "00:19:19.7", "00:20:01.8", "finished"],
-  [73, "Sam", "Cramer", "Lakeville South HS", "100524051", "4642", 2, "00:39:34.9", "00:19:31.5", "00:20:03.4", "finished"],
-  [74, "Charlie", "Meehan", "Hudson HS", "100547372", "4615", 2, "00:39:39.6", "00:19:33.0", "00:20:06.6", "finished"],
-  [75, "Logan", "Paape", "Rosemount HS", "100533565", "4752", 2, "00:39:41.8", "00:19:30.7", "00:20:11.1", "finished"],
-  [76, "Silas", "Anderson", "Stillwater Mountain Bike", "100548699", "4814", 2, "00:39:44.7", "00:19:36.1", "00:20:08.6", "finished"],
-  [77, "Blake", "Parnell", "Osseo Composite", "100534335", "4732", 2, "00:39:51.5", "00:19:41.4", "00:20:10.1", "finished"],
-  [78, "Bryce", "Benowitz", "Edina Cycling", "100530531", "4590", 2, "00:39:59.6", "00:19:36.5", "00:20:23.1", "finished"],
-  [79, "Bryce", "Jurek", "Eastview HS", "100546578", "4585", 2, "00:40:06.9", "00:19:51.3", "00:20:15.6", "finished"],
-  [80, "Austin", "Schroeder", "Prior Lake HS", "100530525", "4749", 2, "00:40:14.7", "00:19:53.7", "00:20:21.0", "finished"],
-  [81, "Leo", "Peterson", "Wayzata Mountain Bike", "100546590", "4855", 2, "00:40:17.2", "00:20:00.8", "00:20:16.4", "finished"],
-  [82, "Jack", "Prom", "Lakeville South HS", "100547384", "4643", 2, "00:40:19.9", "00:19:59.2", "00:20:20.7", "finished"],
-  [83, "Owen", "Carlson", "Roseville", "100538667", "4756", 2, "00:40:29.3", "00:20:01.5", "00:20:27.8", "finished"],
-  [84, "Mason", "Goettl", "Chaska HS", "100533589", "4576", 2, "00:40:29.4", "00:20:02.3", "00:20:27.1", "finished"],
-  [85, "Ethan", "Parnell", "Hopkins HS", "100514003", "4604", 2, "00:40:39.7", "00:20:05.1", "00:20:34.6", "finished"],
-  [86, "Colin", "Kennedy", "Wayzata Mountain Bike", "100533593", "4856", 2, "00:40:59.2", "00:20:23.5", "00:20:35.7", "finished"],
-  [87, "Brady", "Novacek", "Chaska HS", "100533609", "4577", 2, "00:41:09.7", "00:20:23.3", "00:20:46.4", "finished"],
-  [88, "Ben", "Oswald", "Rosemount HS", "100537650", "4753", 2, "00:41:39.4", "00:20:51.4", "00:20:48.0", "finished"],
-  [89, "Jameson", "Howe", "Woodbury HS", "100546602", "4885", 2, "00:41:52.8", "00:20:51.9", "00:21:00.9", "finished"],
-  [90, "Ian", "Jirele", "Lakeville South HS", "100533617", "4644", 2, "00:42:10.6", "00:21:09.6", "00:21:01.0", "finished"],
-  [91, "Charles", "Wagner", "Stillwater Mountain Bike", "100546614", "4815", 2, "00:43:06.4", "00:21:38.6", "00:21:27.8", "finished"],
-  [92, "Elijah", "Maier", "Rosemount HS", "100549678", "4754", 2, "00:43:09.8", "00:21:33.2", "00:21:36.6", "finished"]
+# Whitetail Jv2 Boys D2 Results
+whitetail_jv2_boys_d2_results = [
+  [1, "Noah", "Kaufmann", "Lakeville North HS", "100391145", "2176", 2, "00:37:11.6", "00:18:04.3", "00:19:07.3", "finished"],
+  [2, "Brayden", "Krejce", "Lakeville North HS", "100391267", "2177", 2, "00:37:12.8", "00:18:04.9", "00:19:07.8", "finished"],
+  [3, "Breck", "Swanson", "Armstrong Cycle", "100427609", "2026", 2, "00:37:23.5", "00:18:03.4", "00:19:20.0", "finished"],
+  [4, "Alex", "Friedle", "Rochester Century HS", "100390451", "2343", 2, "00:37:36.1", "00:18:31.1", "00:19:05.0", "finished"],
+  [5, "Colton", "Ellenbecker", "Rochester Mayo", "100390266", "2350", 2, "00:37:39.3", "00:18:32.6", "00:19:06.7", "finished"],
+  [6, "Aiden", "Nelson", "Rogers HS", "100391875", "2370", 2, "00:37:41.0", "00:18:20.3", "00:19:20.6", "finished"],
+  [7, "Joe", "Stephenson", "Hudson HS", "100407377", "2160", 2, "00:37:41.9", "00:18:04.0", "00:19:37.8", "finished"],
+  [8, "Alexander", "Podoll", "Rogers HS", "100484606", "2371", 2, "00:38:28.9", "00:18:42.6", "00:19:46.3", "finished"],
+  [9, "Hunter", "Peters", "Austin HS", "100392141", "2029", 2, "00:38:36.9", "00:18:33.3", "00:20:03.5", "finished"],
+  [10, "Corben", "Asuma", "Rock Ridge", "100389501", "2354", 2, "00:38:38.0", "00:18:41.5", "00:19:56.4", "finished"],
+  [11, "Taylor", "Calkins", "River Falls HS", "100463664", "2333", 2, "00:38:59.4", "00:18:44.6", "00:20:14.7", "finished"],
+  [12, "Ian", "Horeck", "Winona", "100390921", "2522", 2, "00:38:59.6", "00:19:04.0", "00:19:55.5", "finished"],
+  [13, "Cole", "Shoultz", "Elk River", "100429434", "2141", 2, "00:39:02.3", "00:18:38.9", "00:20:23.4", "finished"],
+  [14, "Dylan", "Klevann", "St Michael / Albertville", "100391222", "2419", 2, "00:39:05.2", "00:18:40.5", "00:20:24.6", "finished"],
+  [15, "Kaden", "King", "Apple Valley HS", "100520641", "2015", 2, "00:39:09.4", "00:18:59.8", "00:20:09.6", "finished"],
+  [16, "Ben", "Allington", "Winona", "100389416", "2521", 2, "00:39:13.5", "00:18:50.3", "00:20:23.1", "finished"],
+  [17, "Henry", "Diaz", "Armstrong Cycle", "100390153", "2019", 2, "00:39:18.7", "00:18:33.1", "00:20:45.6", "finished"],
+  [18, "Brayden", "Andrews", "Austin HS", "100389464", "2028", 2, "00:39:31.3", "00:18:56.5", "00:20:34.7", "finished"],
+  [19, "Owen", "Plantenberg", "St Croix", "100414230", "2416", 2, "00:39:32.6", "00:19:02.5", "00:20:30.0", "finished"],
+  [20, "Jackson", "Tripp", "Elk River", "100429358", "2142", 2, "00:39:36.4", "00:18:39.3", "00:20:57.0", "finished"],
+  [21, "Ari", "Greenberg", "North Dakota", "100532015", "2291", 2, "00:39:38.0", "00:19:13.5", "00:20:24.4", "finished"],
+  [22, "Hayden", "Hoff", "Apple Valley HS", "100427718", "2014", 2, "00:39:39.1", "00:19:09.1", "00:20:30.0", "finished"],
+  [23, "Harrison", "Adam", "Rosemount HS", "100426761", "2372", 2, "00:39:45.0", "00:19:14.6", "00:20:30.4", "finished"],
+  [24, "Nolan", "Blaha", "Northwest", "100389685", "2294", 2, "00:39:59.8", "00:18:54.5", "00:21:05.3", "finished"],
+  [25, "Danny", "Schwartz", "St Croix", "100520545", "2417", 2, "00:40:11.5", "00:19:13.2", "00:20:58.3", "finished"],
+  [26, "Aydan", "Dark", "Minneapolis Northside", "100535602", "2209", 2, "00:40:13.2", "00:19:39.8", "00:20:33.4", "finished"],
+  [27, "Vincent", "Humpal", "Mahtomedi HS", "100390952", "2196", 2, "00:40:13.4", "00:19:06.6", "00:21:06.7", "finished"],
+  [28, "Ezekiel", "Buettner", "Elk River", "100487574", "2135", 2, "00:40:33.8", "00:19:28.9", "00:21:04.9", "finished"],
+  [29, "Takeo", "Haertel-Strehlow", "Burnsville HS", "100390653", "2066", 2, "00:40:52.5", "00:19:38.3", "00:21:14.1", "finished"],
+  [30, "Micah", "Bolduc", "Burnsville HS", "100461721", "2064", 2, "00:40:59.5", "00:19:46.5", "00:21:12.9", "finished"],
+  [31, "Marshall", "Friese", "River Falls HS", "100390458", "2334", 2, "00:41:15.6", "00:19:59.0", "00:21:16.6", "finished"],
+  [32, "Brody", "Reiter", "River Falls HS", "100421884", "2336", 2, "00:41:54.4", "00:20:16.4", "00:21:38.0", "finished"],
+  [33, "Hayden", "Allen", "Lakeville North HS", "100389412", "2169", 2, "00:42:03.8", "00:20:08.4", "00:21:55.3", "finished"],
+  [34, "Frankie", "Roque", "Minneapolis Northside", "100392379", "2211", 2, "00:42:13.1", "00:20:11.5", "00:22:01.6", "finished"],
+  [35, "Cerwyn", "Dobbelmann", "Mahtomedi HS", "100483668", "2194", 2, "00:42:19.1", "00:20:16.5", "00:22:02.6", "finished"],
+  [36, "Drew", "Wood", "Lakeville North HS", "100393196", "2180", 2, "00:42:19.8", "00:20:20.4", "00:21:59.4", "finished"],
+  [37, "Jacob", "Rank", "Mahtomedi HS", "100420905", "2197", 2, "00:42:25.2", "00:20:16.8", "00:22:08.3", "finished"],
+  [38, "James", "Morrell", "Minnesota Valley", "100391822", "2245", 2, "00:42:53.3", "00:20:12.2", "00:22:41.1", "finished"],
+  [39, "Jonah", "Leonardson", "Armstrong Cycle", "100391438", "2024", 2, "00:42:54.2", "00:20:06.2", "00:22:48.0", "finished"],
+  [40, "Leo", "Fallgatter", "Lakeville North HS", "100390343", "2172", 2, "00:43:13.0", "00:20:27.4", "00:22:45.5", "finished"],
+  [41, "Kai", "Hill", "Rochester Century HS", "100390858", "2344", 2, "00:43:38.4", "00:20:47.7", "00:22:50.6", "finished"],
+  [42, "Ethan", "Mueller", "Totino Grace-Irondale", "100407939", "2481", 2, "00:44:24.6", "00:21:12.2", "00:23:12.4", "finished"],
+  [43, "John", "Durry", "Burnsville HS", "100464468", "2065", 2, "00:44:24.9", "00:21:28.9", "00:22:56.0", "finished"],
+  [44, "Jonathan", "Mccormack", "Elk River", "100391652", "2139", 2, "00:44:35.8", "00:22:01.9", "00:22:33.8", "finished"],
+  [45, "Trevor", "Burleigh", "Elk River", "100389842", "2136", 2, "00:44:40.6", "00:21:09.0", "00:23:31.5", "finished"],
+  [46, "Jude", "Boden", "St Croix", "100389702", "2415", 2, "00:44:41.6", "00:22:02.9", "00:22:38.6", "finished"],
+  [47, "Andrew", "Lovelace", "Eastview HS", "100485148", "2111", 2, "00:44:54.4", "00:21:49.2", "00:23:05.1", "finished"],
+  [48, "Jeffrey", "Brown", "Hastings", "100389805", "2145", 2, "00:44:59.0", "00:22:01.1", "00:22:57.9", "finished"],
+  [49, "Christian", "Loga", "River Falls HS", "100388685", "2335", 2, "00:45:01.8", "00:21:15.8", "00:23:45.9", "finished"],
+  [50, "Reginald", "DeBruin", "Mahtomedi HS", "100388187", "2193", 2, "00:45:02.2", "00:21:50.7", "00:23:11.4", "finished"],
+  [51, "Cruz", "Dilly", "Lakeville North HS", "100483701", "2170", 2, "00:45:07.0", "00:22:00.4", "00:23:06.6", "finished"],
+  [52, "Chris", "Schefelbein", "Totino Grace-Irondale", "100471323", "2482", 2, "00:45:08.0", "00:21:44.8", "00:23:23.2", "finished"],
+  [53, "Owen", "St. Denis", "Hastings", "100483096", "2148", 2, "00:45:13.0", "00:22:05.1", "00:23:07.9", "finished"],
+  [54, "Donovan", "Baskett", "Rochester Century HS", "100411798", "2342", 2, "00:45:23.5", "00:21:18.2", "00:24:05.2", "finished"],
+  [55, "Gage", "Soucek", "Austin HS", "100392687", "2030", 2, "00:45:35.3", "00:21:28.2", "00:24:07.0", "finished"],
+  [56, "Isaiah", "Bucholz", "Minnesota Valley", "100483237", "2243", 2, "00:45:54.7", "00:21:51.9", "00:24:02.8", "finished"],
+  [57, "Connor", "Ehn", "Armstrong Cycle", "100427933", "2020", 2, "00:46:09.2", "00:21:53.1", "00:24:16.1", "finished"],
+  [58, "Alix", "Hardtke", "Rochester Area", "100390715", "2341", 2, "00:46:19.1", "00:22:18.0", "00:24:01.0", "finished"],
+  [59, "Timothy", "Zwiefel", "Rosemount HS", "100393238", "2375", 2, "00:46:46.9", "00:21:58.8", "00:24:48.0", "finished"],
+  [60, "Brock", "Magruder", "Elk River", "100391545", "2138", 2, "00:46:56.3", "00:22:54.7", "00:24:01.6", "finished"],
+  [61, "Ethan", "Fogal", "Roseville", "100533672", "2379", 2, "00:46:58.5", "00:21:57.8", "00:25:00.7", "finished"],
+  [62, "Patrick", "Bliss", "Rochester Mayo", "100483996", "2347", 2, "00:47:02.0", "00:22:01.3", "00:25:00.6", "finished"],
+  [63, "Logan", "Gaver", "Lakeville North HS", "100390519", "2173", 2, "00:48:20.3", "00:23:05.5", "00:25:14.7", "finished"],
+  [64, "Bodhi", "Ziemann", "Mahtomedi HS", "100427078", "2199", 2, "00:48:21.0", "00:23:02.0", "00:25:18.9", "finished"],
+  [65, "Xander", "Vail", "Minnesota Valley", "100473718", "2246", 2, "00:48:24.3", "00:23:10.8", "00:25:13.5", "finished"],
+  [66, "Carson", "Abel", "Rochester Area", "100467726", "2337", 2, "00:48:26.4", "00:23:25.2", "00:25:01.2", "finished"],
+  [67, "Nathan", "Hermanson", "Elk River", "100488910", "2137", 2, "00:48:53.8", "00:22:08.9", "00:26:44.9", "finished"],
+  [68, "Corbet", "Hainey", "Rock Ridge", "100484378", "2356", 2, "00:49:06.7", "00:23:46.7", "00:25:19.9", "finished"],
+  [69, "Lukas", "Skinner", "Roseville", "100392629", "2385", 2, "00:49:14.9", "00:23:25.0", "00:25:49.8", "finished"],
+  [70, "Edwin", "Smith", "St Michael / Albertville", "100535532", "2420", 2, "00:49:43.6", "00:23:23.9", "00:26:19.7", "finished"],
+  [71, "David", "Yurk", "Lake Area Composite", "100393223", "2093", 2, "00:50:02.8", "00:23:23.6", "00:26:39.1", "finished"],
+  [72, "Oliver", "Plautz", "Minneapolis Northside", "100429289", "2210", 2, "00:50:07.0", "00:23:46.1", "00:26:20.9", "finished"],
+  [73, "Jacob", "Hammerstrom", "Armstrong Cycle", "100390682", "2022", 2, "00:50:22.0", "00:23:53.8", "00:26:28.1", "finished"],
+  [74, "Ian", "Mcconn", "Roseville", "100391651", "2382", 2, "00:50:41.1", "00:24:32.5", "00:26:08.6", "finished"],
+  [75, "James", "Unger", "Mahtomedi HS", "100392951", "2198", 2, "00:50:56.5", "00:23:54.7", "00:27:01.7", "finished"],
+  [76, "Wyatt", "Kapala", "Burnsville HS", "100533455", "2067", 2, "00:52:14.2", "00:24:20.4", "00:27:53.8", "finished"],
+  [77, "Carson", "Stipe", "Lake Area Composite", "100432840", "2092", 2, "00:53:20.3", "00:28:33.9", "00:24:46.4", "finished"],
+  [78, "Jonathan", "Gallager", "Armstrong Cycle", "100488789", "2021", 2, "00:57:12.9", "00:27:27.6", "00:29:45.2", "finished"],
+  [79, "Hudson", "Siebenaler", "Hastings", "100468636", "2147", 1, "00:32:08.8", "00:32:08.8", nil, "DNF"],
+  [80, "Dylan", "Cover", "Armstrong Cycle", "100390040", "2018", 1, "00:51:11.8", "00:46:11.8", nil, "DNF"]
 ]
 
-puts "Processing JV2 Boys D1 racers..."
-print "Progress: "
+# Whitetail Jv2 Boys D1 Results
+whitetail_jv2_boys_d1_results = [
+  [1, "Liam", "Kirvida", "Edina Cycling", "100459872", "2123", 2, "00:36:15.7", "00:17:34.6", "00:18:41.1", "finished"],
+  [2, "Jones", "Lauson", "Edina Cycling", "100391394", "2125", 2, "00:36:36.5", "00:17:39.3", "00:18:57.1", "finished"],
+  [3, "Henry", "Dahn", "New Prague MS and HS", "100420495", "2285", 2, "00:36:38.7", "00:18:10.0", "00:18:28.6", "finished"],
+  [4, "Axel", "Chenier", "Minnetonka HS", "100417581", "2248", 2, "00:37:46.2", "00:18:08.7", "00:19:37.4", "finished"],
+  [5, "Skogen", "Scharrer", "Lakeville South HS", "100483368", "2188", 2, "00:37:46.4", "00:18:36.0", "00:19:10.3", "finished"],
+  [6, "Ben", "Scholten", "Alexandria Youth Cycling", "100392520", "2012", 2, "00:37:47.3", "00:18:21.0", "00:19:26.3", "finished"],
+  [7, "Austin", "Dvorak", "New Prague MS and HS", "100476926", "2286", 2, "00:38:15.3", "00:18:45.2", "00:19:30.0", "finished"],
+  [8, "Cody", "Hurwitz", "Edina Cycling", "100412195", "2121", 2, "00:38:22.1", "00:18:31.5", "00:19:50.5", "finished"],
+  [9, "Tyler", "Rosemeier", "New Prague MS and HS", "100411201", "2290", 2, "00:38:26.5", "00:18:39.2", "00:19:47.3", "finished"],
+  [10, "Greysen", "Charnstrom", "New Prague MS and HS", "100389926", "2283", 2, "00:38:50.7", "00:18:31.5", "00:20:19.1", "finished"],
+  [11, "Jackson", "Engelbrecht", "Alexandria Youth Cycling", "100390288", "2002", 2, "00:39:18.7", "00:18:44.7", "00:20:33.9", "finished"],
+  [12, "Benjamin", "Robles", "Edina Cycling", "100392355", "2130", 2, "00:39:26.6", "00:18:46.6", "00:20:40.0", "finished"],
+  [13, "Cason", "Juergens", "White Bear Lake HS", "100480765", "2508", 2, "00:39:30.9", "00:19:13.4", "00:20:17.4", "finished"],
+  [14, "Simon", "Hahn", "Minnetonka HS", "100524380", "2252", 2, "00:39:34.3", "00:19:25.4", "00:20:08.8", "finished"],
+  [15, "Owen", "Craig", "Lakeville South HS", "100482244", "2184", 2, "00:39:34.5", "00:18:33.9", "00:21:00.6", "finished"],
+  [16, "Will", "Nichols", "Alexandria Youth Cycling", "100391916", "2008", 2, "00:39:51.8", "00:19:15.0", "00:20:36.8", "finished"],
+  [17, "Will", "Francis-Jones", "Edina Cycling", "100390421", "2117", 2, "00:39:55.0", "00:19:27.4", "00:20:27.6", "finished"],
+  [18, "Wyatt", "Backowski", "Crosby-Ironton HS", "100389517", "2095", 2, "00:39:57.8", "00:18:59.5", "00:20:58.3", "finished"],
+  [19, "Kaegan", "Museus", "Brainerd HS", "100391857", "2061", 2, "00:40:11.7", "00:19:05.8", "00:21:05.8", "finished"],
+  [20, "Benjamin", "Tabios", "Shakopee HS", "100408835", "2408", 2, "00:40:12.2", "00:19:42.7", "00:20:29.5", "finished"],
+  [21, "Henry", "Hemming", "Mounds View HS", "100475758", "2273", 2, "00:40:21.3", "00:19:42.1", "00:20:39.2", "finished"],
+  [22, "Austin", "Hagerty", "Wayzata Mountain Bike", "100468487", "2489", 2, "00:40:26.8", "00:19:39.1", "00:20:47.6", "finished"],
+  [23, "Colton", "Simpson", "Edina Cycling", "100432580", "2132", 2, "00:40:36.0", "00:19:51.7", "00:20:44.3", "finished"],
+  [24, "Logan", "Casey", "Mounds View HS", "100389911", "2269", 2, "00:40:48.9", "00:19:39.4", "00:21:09.5", "finished"],
+  [25, "Ian", "Hartman", "Alexandria Youth Cycling", "100486349", "2005", 2, "00:41:08.4", "00:19:26.1", "00:21:42.3", "finished"],
+  [26, "Camden", "Esser", "Brainerd HS", "100486570", "2058", 2, "00:41:10.3", "00:19:44.4", "00:21:25.9", "finished"],
+  [27, "William", "Maxwell", "Edina Cycling", "100391630", "2126", 2, "00:41:15.1", "00:19:38.9", "00:21:36.1", "finished"],
+  [28, "Mark", "Berry", "White Bear Lake HS", "100482575", "2504", 2, "00:41:15.3", "00:19:20.8", "00:21:54.4", "finished"],
+  [29, "Logan", "Delahay", "Mounds View HS", "100461864", "2271", 2, "00:41:18.2", "00:19:55.4", "00:21:22.8", "finished"],
+  [30, "Nolan", "McGuire", "Shakopee HS", "100427503", "2401", 2, "00:41:37.9", "00:19:38.6", "00:21:59.3", "finished"],
+  [31, "Griffin", "Boldt", "Mounds View HS", "100389719", "2267", 2, "00:41:38.1", "00:20:11.0", "00:21:27.1", "finished"],
+  [32, "Joe", "Nicklason", "White Bear Lake HS", "100391920", "2514", 2, "00:41:38.2", "00:20:08.9", "00:21:29.3", "finished"],
+  [33, "Paxton", "Hruby", "Minnetonka HS", "100407310", "2255", 2, "00:41:57.6", "00:20:59.5", "00:20:58.1", "finished"],
+  [34, "Graham", "Roberts", "Eagan HS", "100392347", "2104", 2, "00:42:00.1", "00:20:04.9", "00:21:55.2", "finished"],
+  [35, "James", "Nagel", "Minnetonka HS", "100406019", "2258", 2, "00:42:01.7", "00:20:36.9", "00:21:24.7", "finished"],
+  [36, "Calvin", "Sjoberg", "Minnetonka HS", "100392620", "2260", 2, "00:42:08.0", "00:20:29.2", "00:21:38.7", "finished"],
+  [37, "Ben", "Nigbur", "Shakopee HS", "100483266", "2403", 2, "00:42:10.9", "00:20:24.6", "00:21:46.3", "finished"],
+  [38, "Brock", "Collison", "Shakopee HS", "100413234", "2390", 2, "00:42:12.7", "00:20:27.9", "00:21:44.7", "finished"],
+  [39, "Walter", "Ratwik", "Mounds View HS", "100407894", "2278", 2, "00:42:12.9", "00:20:35.0", "00:21:37.9", "finished"],
+  [40, "Isaiah", "Anderson", "Alexandria Youth Cycling", "100408035", "2001", 2, "00:42:13.0", "00:20:11.2", "00:22:01.8", "finished"],
+  [41, "Per", "Gunnerud", "Edina Cycling", "100388355", "2119", 2, "00:42:13.3", "00:20:58.9", "00:21:14.3", "finished"],
+  [42, "Liam", "Nordby", "New Prague MS and HS", "100391940", "2288", 2, "00:42:13.4", "00:20:32.5", "00:21:40.9", "finished"],
+  [43, "Caden", "Lauer", "Edina Cycling", "100424944", "2124", 2, "00:42:23.5", "00:20:49.7", "00:21:33.7", "finished"],
+  [44, "Gavin", "Peterson", "Alexandria Youth Cycling", "100392155", "2010", 2, "00:42:24.7", "00:20:27.5", "00:21:57.1", "finished"],
+  [45, "Griffin", "Pond", "Shakopee HS", "100392201", "2404", 2, "00:42:27.0", "00:20:47.6", "00:21:39.4", "finished"],
+  [46, "Owen", "Eslinger", "Shakopee HS", "100390314", "2393", 2, "00:42:29.5", "00:20:54.8", "00:21:34.6", "finished"],
+  [47, "Mitchell", "Hayes", "Minnetonka HS", "100408495", "2253", 2, "00:43:00.0", "00:20:45.0", "00:22:15.0", "finished"],
+  [48, "Carter", "Gamm", "Alexandria Youth Cycling", "100428770", "2003", 2, "00:43:00.1", "00:20:52.2", "00:22:07.8", "finished"],
+  [49, "Logan", "Holtz", "Alexandria Youth Cycling", "100482354", "2006", 2, "00:43:02.0", "00:20:44.5", "00:22:17.4", "finished"],
+  [50, "Joseph", "Reiling", "Shakopee HS", "100427607", "2405", 2, "00:43:20.1", "00:20:33.7", "00:22:46.3", "finished"],
+  [51, "Grant", "Swenson", "Shakopee HS", "100432703", "2407", 2, "00:43:22.8", "00:21:16.6", "00:22:06.1", "finished"],
+  [52, "Isaac", "Grieve", "Alexandria Youth Cycling", "100390613", "2004", 2, "00:43:34.3", "00:21:06.6", "00:22:27.6", "finished"],
+  [53, "Dan", "Denardo", "Shakopee HS", "100419611", "2392", 2, "00:43:35.6", "00:21:01.1", "00:22:34.5", "finished"],
+  [54, "Sam", "Schwandt", "Edina Cycling", "100531314", "2131", 2, "00:43:51.5", "00:20:57.2", "00:22:54.3", "finished"],
+  [55, "Liam", "OConnell", "Eagan HS", "100426824", "2102", 2, "00:43:55.4", "00:21:00.4", "00:22:55.0", "finished"],
+  [56, "Weston", "Kinney", "Wayzata Mountain Bike", "100486457", "2492", 2, "00:44:00.8", "00:21:17.0", "00:22:43.7", "finished"],
+  [57, "Calum", "Fisher", "Wayzata Mountain Bike", "100535053", "2488", 2, "00:44:08.9", "00:21:31.5", "00:22:37.3", "finished"],
+  [58, "Ian", "Telsrow", "White Bear Lake HS", "100392825", "2516", 2, "00:44:09.9", "00:21:28.4", "00:22:41.5", "finished"],
+  [59, "Evan", "Larson", "Shakopee HS", "100482286", "2400", 2, "00:44:26.8", "00:21:57.9", "00:22:28.9", "finished"],
+  [60, "Landon", "Danielson", "Lakeville South HS", "100468370", "2185", 2, "00:44:35.4", "00:21:36.2", "00:22:59.2", "finished"],
+  [61, "Tucker", "Connelly", "New Prague MS and HS", "100427242", "2284", 2, "00:44:38.8", "00:21:17.2", "00:23:21.5", "finished"],
+  [62, "Jacob", "Foss", "Minnetonka HS", "100410430", "2251", 2, "00:44:53.5", "00:21:12.6", "00:23:40.9", "finished"],
+  [63, "Wyatt", "Zarns", "Wayzata Mountain Bike", "100476239", "2499", 2, "00:44:58.6", "00:21:19.8", "00:23:38.7", "finished"],
+  [64, "Carter", "Long", "White Bear Lake HS", "100489224", "2510", 2, "00:45:13.2", "00:21:25.1", "00:23:48.0", "finished"],
+  [65, "Henry", "Collins", "Mounds View HS", "100406267", "2270", 2, "00:45:17.5", "00:20:53.3", "00:24:24.2", "finished"],
+  [66, "Harry", "Ding", "Wayzata Mountain Bike", "100422865", "2486", 2, "00:45:24.8", "00:21:34.2", "00:23:50.5", "finished"],
+  [67, "Cael", "Harty", "Wayzata Mountain Bike", "100476355", "2490", 2, "00:45:30.6", "00:21:33.3", "00:23:57.2", "finished"],
+  [68, "Finn", "Gridley", "Eagan HS", "100390611", "2100", 2, "00:45:30.6", "00:21:53.4", "00:23:37.2", "finished"],
+  [69, "Levi", "Berry", "White Bear Lake HS", "100482587", "2503", 2, "00:45:47.7", "00:22:21.9", "00:23:25.7", "finished"],
+  [70, "Brady", "Antony", "Shakopee HS", "100410672", "2387", 2, "00:46:05.1", "00:22:12.4", "00:23:52.6", "finished"],
+  [71, "Elliott", "Burrows", "Minnetonka HS", "100416289", "2247", 2, "00:46:06.7", "00:22:54.1", "00:23:12.5", "finished"],
+  [72, "Felix", "Barten", "New Prague MS and HS", "100532438", "2282", 2, "00:46:09.9", "00:22:21.5", "00:23:48.4", "finished"],
+  [73, "Francis", "Moua", "White Bear Lake HS", "100532424", "2513", 2, "00:46:19.6", "00:22:09.5", "00:24:10.0", "finished"],
+  [74, "Colin", "Johnson", "Minnetonka HS", "100470774", "2257", 2, "00:46:44.2", "00:22:56.1", "00:23:48.0", "finished"],
+  [75, "Ethan", "Anderson", "White Bear Lake HS", "100389450", "2500", 2, "00:47:02.0", "00:22:57.6", "00:24:04.4", "finished"],
+  [76, "Nolan", "Sullivan", "Minnetonka HS", "100392783", "2262", 2, "00:47:05.9", "00:22:52.7", "00:24:13.2", "finished"],
+  [77, "Ryan", "Waller", "Wayzata Mountain Bike", "100521268", "2537", 2, "00:47:19.4", "00:22:49.4", "00:24:30.0", "finished"],
+  [78, "Clark", "Swanson", "Wayzata Mountain Bike", "100475844", "2495", 2, "00:47:19.7", "00:22:13.0", "00:25:06.6", "finished"],
+  [79, "Anders", "Clemon", "Lakeville South HS", "100417307", "2183", 2, "00:48:00.5", "00:23:14.5", "00:24:45.9", "finished"],
+  [80, "Ben", "Fruechte", "Edina Cycling", "100472456", "2118", 2, "00:48:19.0", "00:22:52.8", "00:25:26.2", "finished"],
+  [81, "Landon", "Kek", "Shakopee HS", "100391149", "2397", 2, "00:48:43.8", "00:23:14.1", "00:25:29.7", "finished"],
+  [82, "Kellen", "Nesbitt", "Lakeville South HS", "100527754", "2536", 2, "00:48:46.9", "00:22:53.5", "00:25:53.4", "finished"],
+  [83, "Zachary", "Stay", "Wayzata Mountain Bike", "100426009", "2494", 2, "00:48:47.3", "00:24:00.7", "00:24:46.6", "finished"],
+  [84, "Alex", "Thielen", "White Bear Lake HS", "100429427", "2517", 2, "00:48:49.2", "00:23:19.7", "00:25:29.5", "finished"],
+  [85, "Davey", "Blaylock", "Lakeville South HS", "100470828", "2181", 2, "00:48:52.9", "00:22:42.0", "00:26:10.9", "finished"],
+  [86, "George", "Hillstrom", "Brainerd HS", "100424422", "2059", 2, "00:49:13.2", "00:23:34.9", "00:25:38.3", "finished"],
+  [87, "Cash", "Peters", "Edina Cycling", "100473069", "2128", 2, "00:50:19.8", "00:24:02.0", "00:26:17.7", "finished"],
+  [88, "Jensen", "Vadnais", "White Bear Lake HS", "100425699", "2518", 2, "00:51:05.2", "00:24:02.1", "00:27:03.1", "finished"],
+  [89, "Jacob", "Roach", "Minnetonka HS", "100392337", "2259", 2, "00:52:38.9", "00:24:52.2", "00:27:46.6", "finished"],
+  [90, "Nathaniel", "Barker", "White Bear Lake HS", "100389547", "2501", 2, "00:53:32.7", "00:25:20.0", "00:28:12.6", "finished"],
+  [91, "Tyler", "Khith", "Shakopee HS", "100474031", "2398", 2, "00:56:32.3", "00:25:41.5", "00:30:50.7", "finished"],
+  [92, "Jacob", "Fischer", "Wayzata Mountain Bike", "100390378", "2487", 2, "01:06:53.3", "00:20:28.8", "00:46:24.5", "finished"]
+]
 
-whitetail_jv2_boys_d1_results.each do |place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, lap2_time, status|
-  # Find team (handle nil gracefully)
-  team = Team.find_by(name: team_name)
-  
-  # Create or find racer
-  racer = Racer.find_or_create_by!(
-    first_name: first_name,
-    last_name: last_name,
-    team: team
-  ) do |new_racer|
-    new_racer.number = rider_number
-  end
-  
-  # Create or find racer season (use the race's year)
-  racer_season = RacerSeason.find_or_create_by!(
-    racer: racer,
-    year: whitetail_race.year
-  ) do |season|
-    season.plate_number = plate
-  end
-  
-  # Create race result
-  race_result = RaceResult.find_or_create_by!(
-    race: whitetail_race,
-    racer_season: racer_season
-  ) do |result|
-    result.place = place
-    result.total_time_ms = parse_time_to_ms(total_time)
-    result.total_time_raw = total_time
-    result.laps_completed = laps
-    result.laps_expected = 2
-    result.status = status
-    result.category = jv2_boys_d1_category
-    result.plate_number_snapshot = plate
-  end
-  
-  # Create lap times
-  cumulative_time = 0
-  lap_times = [lap1_time, lap2_time].compact
-  
-  lap_times.each_with_index do |lap_time, index|
-    lap_number = index + 1
-    lap_time_ms = parse_time_to_ms(lap_time)
-    cumulative_time += lap_time_ms if lap_time_ms
-    
-    RaceResultLap.find_or_create_by!(
-      race_result: race_result,
-      lap_number: lap_number
-    ) do |lap|
-      lap.lap_time_ms = lap_time_ms
-      lap.lap_time_raw = lap_time
-      lap.cumulative_time_ms = cumulative_time
-      lap.cumulative_time_raw = format_time_ms(cumulative_time)
-    end
-  end
-  
-  print "."
-end
+# ===============================================================================
+# IMPORT ALL DIVISIONS
+# ===============================================================================
 
-puts "\n✓ Whitetail JV2 Boys D1 results: #{whitetail_jv2_boys_d1_results.count} racers imported"
+import_division_results(race, "JV2 Girls", whitetail_jv2_girls_results, 2)
+import_division_results(race, "6th Grade Girls", whitetail_6th_grade_girls_results, 1)
+import_division_results(race, "6th Grade Boys D2", whitetail_6th_grade_boys_d2_results, 1)
+import_division_results(race, "6th Grade Boys D1", whitetail_6th_grade_boys_d1_results, 1)
+import_division_results(race, "7th Grade Girls", whitetail_7th_grade_girls_results, 1)
+import_division_results(race, "7th Grade Boys D2", whitetail_7th_grade_boys_d2_results, 1)
+import_division_results(race, "7th Grade Boys D1", whitetail_7th_grade_boys_d1_results, 1)
+import_division_results(race, "8th Grade Girls", whitetail_8th_grade_girls_results, 1)
+import_division_results(race, "8th Grade Boys D2", whitetail_8th_grade_boys_d2_results, 1)
+import_division_results(race, "8th Grade Boys D1", whitetail_8th_grade_boys_d1_results, 1)
+import_division_results(race, "Freshman Boys D2", whitetail_freshman_boys_d2_results, 1)
+import_division_results(race, "JV2 Boys D2", whitetail_jv2_boys_d2_results, 2)
+import_division_results(race, "Freshman Boys D1", whitetail_freshman_boys_d1_results, 1)
+import_division_results(race, "Freshman Girls", whitetail_freshman_girls_results, 1)
+import_division_results(race, "JV3 Boys", whitetail_jv3_boys_results, 3)
+import_division_results(race, "Varsity Boys", whitetail_varsity_boys_results, 4)
+import_division_results(race, "JV3 Girls", whitetail_jv3_girls_results, 3)
+import_division_results(race, "Varsity Girls", whitetail_varsity_girls_results, 4)
+import_division_results(race, "JV2 Boys D1", whitetail_jv2_boys_d1_results, 2)
+
+puts "\n🎉 Race 5N - Whitetail Ridge Official Results seed data created successfully!"
+puts "Total racers imported: #{RaceResult.where(race: race).count}"
