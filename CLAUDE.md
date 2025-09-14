@@ -106,6 +106,7 @@ Each race venue has its own PDF format, requiring venue-specific parsers that in
 - Updated to use Category model instead of embedded category strings
 - Theme updated to "emerald"
 - Removed racer_season_assignments table in favor of storing category_id on the race_results for tracking a racer's category
+- Updated the race import to come from seed files instead of parsing raw pdf's each time
 
 ## When Working on This Project
 1. Always check existing patterns before implementing new features
@@ -114,3 +115,4 @@ Each race venue has its own PDF format, requiring venue-specific parsers that in
 4. Follow Rails conventions for controller actions and model methods
 5. Use the existing Hotwire setup for dynamic UI interactions
 6. Provide tests for new or modified functionality
+7. Always follow the exact same format, include file structure, helper method names and variable names when creating seed files for race results. The only difference should be race name and results.
