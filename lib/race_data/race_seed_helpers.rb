@@ -55,7 +55,7 @@ module RaceData
 
     def import_single_result(race, category, result_data, expected_laps)
       # Handle flexible parameter formats - normalize the data
-      place, first_name, last_name, team_name, rider_number, plate, laps, total_time, *lap_times, status = normalize_result_data(result_data, expected_laps)
+      place, first_name, last_name, team_name, rider_number, plate, laps, total_time, *lap_times, status, comments = normalize_result_data(result_data, expected_laps)
       
       # Team lookup with error handling
       team = find_team_with_error_handling(team_name, first_name, last_name)
@@ -66,7 +66,7 @@ module RaceData
       racer_season = find_or_create_racer_season(racer, race.year, plate)
       
       # Race result creation  
-      race_result = create_race_result(race, racer_season, category, place, total_time, laps, expected_laps, status, plate)
+      race_result = create_race_result(race, racer_season, category, place, total_time, laps, expected_laps, status, plate, comments)
       
       # Lap processing
       create_lap_times(race_result, lap_times) if lap_times.any?
@@ -75,19 +75,21 @@ module RaceData
     def normalize_result_data(result_data, expected_laps)
       # Handle different data formats
       if result_data.length > 11
-        # New format: [place, first_name, last_name, team_name, rider_number, plate, points, total_time, lap1_time, lap2_time, lap3_time, status]
-        place, first_name, last_name, team_name, rider_number, plate, points, total_time, *lap_times_and_status = result_data
-        status = lap_times_and_status.pop
-        lap_times = lap_times_and_status.compact
+        # New format: [place, first_name, last_name, team_name, rider_number, plate, points, total_time, lap1_time, lap2_time, lap3_time, status, comments]
+        place, first_name, last_name, team_name, rider_number, plate, points, total_time, *lap_times_status_comments = result_data
+        comments = lap_times_status_comments.length > 1 ? lap_times_status_comments.pop : nil
+        status = lap_times_status_comments.pop
+        lap_times = lap_times_status_comments.compact
         laps = lap_times.length > 0 ? lap_times.length : expected_laps
       else
-        # Standard format: [place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, lap2_time, status]
-        place, first_name, last_name, team_name, rider_number, plate, laps, total_time, *lap_times_and_status = result_data
-        status = lap_times_and_status.pop
-        lap_times = lap_times_and_status.compact
+        # Standard format: [place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, lap2_time, status, comments]
+        place, first_name, last_name, team_name, rider_number, plate, laps, total_time, *lap_times_status_comments = result_data
+        comments = lap_times_status_comments.length > 1 ? lap_times_status_comments.pop : nil
+        status = lap_times_status_comments.pop
+        lap_times = lap_times_status_comments.compact
       end
       
-      [place, first_name, last_name, team_name, rider_number, plate, laps, total_time, *lap_times, status]
+      [place, first_name, last_name, team_name, rider_number, plate, laps, total_time, *lap_times, status, comments]
     end
 
     def find_team_with_error_handling(team_name, first_name, last_name)
@@ -118,7 +120,7 @@ module RaceData
       end
     end
 
-    def create_race_result(race, racer_season, category, place, total_time, laps, expected_laps, status, plate)
+    def create_race_result(race, racer_season, category, place, total_time, laps, expected_laps, status, plate, comments = nil)
       RaceResult.find_or_create_by!(
         race: race,
         racer_season: racer_season
@@ -131,6 +133,7 @@ module RaceData
         result.status = status
         result.category = category
         result.plate_number_snapshot = plate
+        result.comments = comments
       end
     end
 

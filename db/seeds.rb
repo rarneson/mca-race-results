@@ -41,6 +41,7 @@ TEAM_NAMES = [
   "Lakeville North HS",
   "Lakeville South HS",
   "Mahtomedi HS",
+  "Mankato",
   "Mankato West HS",
   "Maple Grove HS",
   "Minneapolis Northside",
@@ -138,9 +139,12 @@ puts "#{Team.count} teams created/verified."
 
 puts "\nLoading race data from seed files..."
 
-# Load all seed files from db/seeds/ directory
+# Load all seed files from db/seeds/ directory (excluding template)
 Dir[Rails.root.join('db', 'seeds', '*.rb')].sort.each do |file|
-  puts "Loading #{File.basename(file)}..."
+  filename = File.basename(file)
+  next if filename == '_template.rb'
+  
+  puts "Loading #{filename}..."
   require file
 end
 
