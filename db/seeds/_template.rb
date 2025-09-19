@@ -3,15 +3,20 @@ require_relative '../../lib/race_data/race_seed_helpers'
 # Include the shared helpers
 include RaceData::RaceSeedHelpers
 
+def get_expected_laps(category_name)
+  category_data = CATEGORY_DATA.find { |cat| cat[:name] == category_name }
+  category_data ? category_data[:laps] : 1
+end
+
 # ===============================================================================
 # RACE DATA - RACE NUMBER - RACE NAME (DATE)
 # ===============================================================================
 
-puts "Creating RACE NUMBER - RACE NAME and results..."
+puts "Creating Race NUMBER - RACE NAME and results..."
 
 # Create the race
 race = Race.find_or_create_by!(
-  name: "RACE NUMBER - RACE NAME",
+  name: "Race NUMBER - RACE NAME",
   race_date: Date.parse("DATE")
 ) do |race|
   race.location = "RACE NAME"
@@ -126,25 +131,25 @@ lake_rebecca_jv2_boys_d1_results = [
 # ===============================================================================
 
 # TODO: Uncomment these lines once race results data is added above
-# import_division_results(race, "6th Grade Girls", lake_rebecca_6th_grade_girls_results, 1)
-# import_division_results(race, "6th Grade Boys D2", lake_rebecca_6th_grade_boys_d2_results, 1)
-# import_division_results(race, "6th Grade Boys D1", lake_rebecca_6th_grade_boys_d1_results, 1)
-# import_division_results(race, "7th Grade Girls", lake_rebecca_7th_grade_girls_results, 1)
-# import_division_results(race, "7th Grade Boys D2", lake_rebecca_7th_grade_boys_d2_results, 1)
-# import_division_results(race, "7th Grade Boys D1", lake_rebecca_7th_grade_boys_d1_results, 1)
-# import_division_results(race, "8th Grade Girls", lake_rebecca_8th_grade_girls_results, 1)
-# import_division_results(race, "8th Grade Boys D2", lake_rebecca_8th_grade_boys_d2_results, 1)
-# import_division_results(race, "8th Grade Boys D1", lake_rebecca_8th_grade_boys_d1_results, 1)
-# import_division_results(race, "Freshman Boys D2", lake_rebecca_freshman_boys_d2_results, 1)
-# import_division_results(race, "Freshman Boys D1", lake_rebecca_freshman_boys_d1_results, 1)
-# import_division_results(race, "Freshman Girls", lake_rebecca_freshman_girls_results, 1)
-# import_division_results(race, "JV2 Girls", lake_rebecca_jv2_girls_results, 2)
-# import_division_results(race, "JV3 Boys", lake_rebecca_jv3_boys_results, 3)
-# import_division_results(race, "Varsity Boys", lake_rebecca_varsity_boys_results, 4)
-# import_division_results(race, "Varsity Girls", lake_rebecca_varsity_girls_results, 4)
-# import_division_results(race, "JV3 Girls", lake_rebecca_jv3_girls_results, 3)
-# import_division_results(race, "JV2 Boys D2", lake_rebecca_jv2_boys_d2_results, 2)
-# import_division_results(race, "JV2 Boys D1", lake_rebecca_jv2_boys_d1_results, 2)
+# import_division_results(race, "6th Grade Girls", race_name_6th_grade_girls_results, get_expected_laps("6th Grade Girls"))
+# import_division_results(race, "6th Grade Boys D2", race_name_6th_grade_boys_d2_results, get_expected_laps("6th Grade Boys D2"))
+# import_division_results(race, "6th Grade Boys D1", race_name_6th_grade_boys_d1_results, get_expected_laps("6th Grade Boys D1"))
+# import_division_results(race, "7th Grade Girls", race_name_7th_grade_girls_results, get_expected_laps("7th Grade Girls"))
+# import_division_results(race, "7th Grade Boys D2", race_name_7th_grade_boys_d2_results, get_expected_laps("7th Grade Boys D2"))
+# import_division_results(race, "7th Grade Boys D1", race_name_7th_grade_boys_d1_results, get_expected_laps("7th Grade Boys D1"))
+# import_division_results(race, "8th Grade Girls", race_name_8th_grade_girls_results, get_expected_laps("8th Grade Girls"))
+# import_division_results(race, "8th Grade Boys D2", race_name_8th_grade_boys_d2_results, get_expected_laps("8th Grade Boys D2"))
+# import_division_results(race, "8th Grade Boys D1", race_name_8th_grade_boys_d1_results, get_expected_laps("8th Grade Boys D1"))
+# import_division_results(race, "Freshman Boys D2", race_name_freshman_boys_d2_results, get_expected_laps("Freshman Boys D2"))
+# import_division_results(race, "Freshman Boys D1", race_name_freshman_boys_d1_results, get_expected_laps("Freshman Boys D1"))
+# import_division_results(race, "Freshman Girls", race_name_freshman_girls_results, get_expected_laps("Freshman Girls"))
+# import_division_results(race, "JV2 Girls", race_name_jv2_girls_results, get_expected_laps("JV2 Girls"))
+# import_division_results(race, "JV3 Boys", race_name_jv3_boys_results, get_expected_laps("JV3 Boys"))
+# import_division_results(race, "Varsity Boys", race_name_varsity_boys_results, get_expected_laps("Varsity Boys"))
+# import_division_results(race, "Varsity Girls", race_name_varsity_girls_results, get_expected_laps("Varsity Girls"))
+# import_division_results(race, "JV3 Girls", race_name_jv3_girls_results, get_expected_laps("JV3 Girls"))
+# import_division_results(race, "JV2 Boys D2", race_name_jv2_boys_d2_results, get_expected_laps("JV2 Boys D2"))
+# import_division_results(race, "JV2 Boys D1", race_name_jv2_boys_d1_results, get_expected_laps("JV2 Boys D1"))
 
 puts "\n🎉 RACE NUMBER - RACE NAME seed data created successfully!"
 puts "Total racers imported: #{RaceResult.where(race: race).count}"

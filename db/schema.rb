@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_17_005326) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_18_032426) do
   create_table "categories", force: :cascade do |t|
     t.string "name", null: false
     t.integer "sort_order", null: false
@@ -45,6 +45,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_17_005326) do
     t.string "total_time_raw"
     t.integer "category_id"
     t.text "comments"
+    t.string "penalty"
     t.index ["category_id"], name: "index_race_results_on_category_id"
     t.index ["race_id", "racer_season_id"], name: "index_race_results_on_race_id_and_racer_season_id", unique: true
     t.index ["race_id"], name: "index_race_results_on_race_id"

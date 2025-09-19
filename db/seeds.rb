@@ -92,25 +92,25 @@ TEAM_NAMES = [
 ].freeze
 
 CATEGORY_DATA = [
-  { name: "6th Grade Girls", sort_order: 1 },
-  { name: "6th Grade Boys D1", sort_order: 2 },
-  { name: "6th Grade Boys D2", sort_order: 3 },
-  { name: "7th Grade Girls", sort_order: 4 },
-  { name: "7th Grade Boys D1", sort_order: 5 },
-  { name: "7th Grade Boys D2", sort_order: 6 },
-  { name: "8th Grade Girls", sort_order: 7 },
-  { name: "8th Grade Boys D1", sort_order: 8 },
-  { name: "8th Grade Boys D2", sort_order: 9 },
-  { name: "Freshman Girls", sort_order: 10 },
-  { name: "Freshman Boys D1", sort_order: 11 },
-  { name: "Freshman Boys D2", sort_order: 12 },
-  { name: "JV2 Girls", sort_order: 13 },
-  { name: "JV2 Boys D1", sort_order: 14 },
-  { name: "JV2 Boys D2", sort_order: 15 },
-  { name: "JV3 Girls", sort_order: 16 },
-  { name: "JV3 Boys", sort_order: 17 },
-  { name: "Varsity Girls", sort_order: 18 },
-  { name: "Varsity Boys", sort_order: 19 }
+  { name: "6th Grade Girls", laps: 1, sort_order: 1 },
+  { name: "6th Grade Boys D1", laps: 1, sort_order: 2 },
+  { name: "6th Grade Boys D2", laps: 1, sort_order: 3 },
+  { name: "7th Grade Girls", laps: 1, sort_order: 4 },
+  { name: "7th Grade Boys D1", laps: 1, sort_order: 5 },
+  { name: "7th Grade Boys D2", laps: 1, sort_order: 6 },
+  { name: "8th Grade Girls", laps: 1, sort_order: 7 },
+  { name: "8th Grade Boys D1", laps: 1, sort_order: 8 },
+  { name: "8th Grade Boys D2", laps: 1, sort_order: 9 },
+  { name: "Freshman Girls", laps: 2, sort_order: 10 },
+  { name: "Freshman Boys D1", laps: 2, sort_order: 11 },
+  { name: "Freshman Boys D2", laps: 2, sort_order: 12 },
+  { name: "JV2 Girls", laps: 2, sort_order: 13 },
+  { name: "JV2 Boys D1", laps: 2, sort_order: 14 },
+  { name: "JV2 Boys D2", laps: 2, sort_order: 15 },
+  { name: "JV3 Girls", laps: 3, sort_order: 16 },
+  { name: "JV3 Boys", laps: 3, sort_order: 17 },
+  { name: "Varsity Girls", laps: 4, sort_order: 18 },
+  { name: "Varsity Boys", laps: 4, sort_order: 19 }
 ].freeze
 
 puts "Creating categories..."

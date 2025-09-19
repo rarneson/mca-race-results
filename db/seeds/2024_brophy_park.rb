@@ -3,6 +3,11 @@ require_relative '../../lib/race_data/race_seed_helpers'
 # Include the shared helpers
 include RaceData::RaceSeedHelpers
 
+def get_expected_laps(category_name)
+  category_data = CATEGORY_DATA.find { |cat| cat[:name] == category_name }
+  category_data ? category_data[:laps] : 1
+end
+
 # ===============================================================================
 # RACE DATA - Race 1 - Brophy Park (August 24, 2024)
 # ===============================================================================
@@ -942,25 +947,25 @@ brophy_jv2_boys_d1_results = [
 # IMPORT ALL DIVISIONS
 # ===============================================================================
 
-import_division_results(race, "6th Grade Girls", brophy_6th_grade_girls_results, 1)
-import_division_results(race, "6th Grade Boys D2", brophy_6th_grade_boys_d2_results, 1)
-import_division_results(race, "6th Grade Boys D1", brophy_6th_grade_boys_d1_results, 1)
-import_division_results(race, "7th Grade Girls", brophy_7th_grade_girls_results, 1)
-import_division_results(race, "7th Grade Boys D2", brophy_7th_grade_boys_d2_results, 1)
-import_division_results(race, "7th Grade Boys D1", brophy_7th_grade_boys_d1_results, 1)
-import_division_results(race, "8th Grade Girls", brophy_8th_grade_girls_results, 1)
-import_division_results(race, "8th Grade Boys D2", brophy_8th_grade_boys_d2_results, 1)
-import_division_results(race, "8th Grade Boys D1", brophy_8th_grade_boys_d1_results, 1)
-import_division_results(race, "Freshman Boys D2", brophy_freshman_boys_d2_results, 1)
-import_division_results(race, "Freshman Boys D1", brophy_freshman_boys_d1_results, 1)
-import_division_results(race, "Freshman Girls", brophy_freshman_girls_results, 1)
-import_division_results(race, "JV2 Girls", brophy_jv2_girls_results, 2)
-import_division_results(race, "JV3 Boys", brophy_jv3_boys_results, 3)
-import_division_results(race, "Varsity Boys", brophy_varsity_boys_results, 4)
-import_division_results(race, "Varsity Girls", brophy_varsity_girls_results, 4)
-import_division_results(race, "JV3 Girls", brophy_jv3_girls_results, 3)
-import_division_results(race, "JV2 Boys D2", brophy_jv2_boys_d2_results, 2)
-import_division_results(race, "JV2 Boys D1", brophy_jv2_boys_d1_results, 2)
+import_division_results(race, "6th Grade Girls", brophy_6th_grade_girls_results, get_expected_laps("6th Grade Girls"))
+import_division_results(race, "6th Grade Boys D2", brophy_6th_grade_boys_d2_results, get_expected_laps("6th Grade Boys D2"))
+import_division_results(race, "6th Grade Boys D1", brophy_6th_grade_boys_d1_results, get_expected_laps("6th Grade Boys D1"))
+import_division_results(race, "7th Grade Girls", brophy_7th_grade_girls_results, get_expected_laps("7th Grade Girls"))
+import_division_results(race, "7th Grade Boys D2", brophy_7th_grade_boys_d2_results, get_expected_laps("7th Grade Boys D2"))
+import_division_results(race, "7th Grade Boys D1", brophy_7th_grade_boys_d1_results, get_expected_laps("7th Grade Boys D1"))
+import_division_results(race, "8th Grade Girls", brophy_8th_grade_girls_results, get_expected_laps("8th Grade Girls"))
+import_division_results(race, "8th Grade Boys D2", brophy_8th_grade_boys_d2_results, get_expected_laps("8th Grade Boys D2"))
+import_division_results(race, "8th Grade Boys D1", brophy_8th_grade_boys_d1_results, get_expected_laps("8th Grade Boys D1"))
+import_division_results(race, "Freshman Boys D2", brophy_freshman_boys_d2_results, get_expected_laps("Freshman Boys D2"))
+import_division_results(race, "Freshman Boys D1", brophy_freshman_boys_d1_results, get_expected_laps("Freshman Boys D1"))
+import_division_results(race, "Freshman Girls", brophy_freshman_girls_results, get_expected_laps("Freshman Girls"))
+import_division_results(race, "JV2 Girls", brophy_jv2_girls_results, get_expected_laps("JV2 Girls"))
+import_division_results(race, "JV3 Boys", brophy_jv3_boys_results, get_expected_laps("JV3 Boys"))
+import_division_results(race, "Varsity Boys", brophy_varsity_boys_results, get_expected_laps("Varsity Boys"))
+import_division_results(race, "Varsity Girls", brophy_varsity_girls_results, get_expected_laps("Varsity Girls"))
+import_division_results(race, "JV3 Girls", brophy_jv3_girls_results, get_expected_laps("JV3 Girls"))
+import_division_results(race, "JV2 Boys D2", brophy_jv2_boys_d2_results, get_expected_laps("JV2 Boys D2"))
+import_division_results(race, "JV2 Boys D1", brophy_jv2_boys_d1_results, get_expected_laps("JV2 Boys D1"))
 
 puts "\n🎉 Race 1 - Brophy Park seed data created successfully!"
 puts "Total racers imported: #{RaceResult.where(race: race).count}"
