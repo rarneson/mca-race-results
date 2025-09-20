@@ -116,3 +116,9 @@ Each race venue has its own PDF format, requiring venue-specific parsers that in
 5. Use the existing Hotwire setup for dynamic UI interactions
 6. Provide tests for new or modified functionality
 7. Always follow the exact same format, include file structure, helper method names and variable names when creating seed files for race results. The only difference should be race name and results.
+
+## When importing race results data
+1. Assume data is coming in this format for a 1 lap race: [place, first_name, last_name, team_name, rider_number, plate, laps, comment, penalty, total_time, lap1_time]
+1. Assume data is coming in this format for a 2 lap race: [place, first_name, last_name, team_name, rider_number, plate, laps, comment, penalty, total_time, lap1_time, lap2_time]
+1. Assume data is coming in this format for a 3 lap race: [place, first_name, last_name, team_name, rider_number, plate, laps, comment, penalty, total_time, lap1_time, lap2_time, lap3_time]
+1. Assume data is coming in this format for a 4 lap race: [place, first_name, last_name, team_name, rider_number, plate, laps, comment, penalty, total_time, lap1_time, lap2_time, lap3_time, lap4_time]
