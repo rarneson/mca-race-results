@@ -17,7 +17,7 @@ puts "Creating Race 2 - Lake Rebecca and results..."
 # Create the race
 race = Race.find_or_create_by!(
   name: "Race 2 - Lake Rebecca",
-  race_date: Date.parse("September 7-8, 2024")
+  race_date: Date.parse("September 7, 2024")
 ) do |race|
   race.location = "Lake Rebecca"
   race.year = 2024

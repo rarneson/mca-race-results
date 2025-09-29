@@ -12,7 +12,7 @@ puts "Creating RACE 4N - Theodore Wirth Park and results..."
 # Create the race
 race = Race.find_or_create_by!(
   name: "Race 4N - Theodore Wirth Park",
-  race_date: Date.parse("September 21-22, 2024"),
+  race_date: Date.parse("September 21, 2024"),
 ) do |race|
   race.location = "Theodore Wirth Park"
   race.year = 2024

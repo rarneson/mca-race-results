@@ -36,6 +36,7 @@ TEAM_NAMES = [
   "Hudson HS",
   "Hutchinson Tigers",
   "Independent HS",
+  "ISD728",
   "Kerkhoven",
   "Lake Area Composite",
   "Lakeville North HS",
@@ -85,7 +86,9 @@ TEAM_NAMES = [
   "Tioga Trailblazers",
   "Totino Grace-Irondale",
   "Waconia HS",
+  "Watertown-Mayer",
   "Wayzata Mountain Bike",
+  "Westonka",
   "White Bear Lake HS",
   "Winona",
   "Woodbury HS"
