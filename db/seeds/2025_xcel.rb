@@ -69,7 +69,7 @@ results_6th_grade_boys_d2 = [
   [1, "JOEY", "WORMWOOD", "Mahtomedi HS", "100560074", "7606", 1, "15:45.7", "15:45.7", "Warning - Hands off bars"],
   [2, "THOMAS", "HAIRRELL", "Champlin Park HS", "100557454", "7543", 1, "15:50.7", "15:50.7", "finished"],
   [3, "MITCHELL", "GRUNDEL", "Austin HS", "100575041", "7518", 1, "15:51.5", "15:51.5", "finished"],
-  [4, "COOPER", "CLEARY", "River Falls", "100461517", "7686", 1, "15:51.6", "15:51.6", "finished"],
+  [4, "COOPER", "CLEARY", "River Falls HS", "100461517", "7686", 1, "15:51.6", "15:51.6", "finished"],
   [5, "GRANT", "BARON", "Austin HS", "100557891", "7516", 1, "16:40.4", "16:40.4", "finished"],
   [6, "KNOX", "CONNELLY", "Tioga Trailblazers", "100535807", "7738", 1, "16:43.2", "16:43.2", "finished"],
   [7, "GRAHAM", "STUTSMAN", "Watertown-Mayer", "100565697", "7740", 1, "16:47.2", "16:47.2", "finished"],
@@ -441,7 +441,7 @@ results_8th_grade_boys_d2 = [
   [92, "COLTON", "ROBBINS", "Lake Area Composite", "100566970", "5649", 1, "21:40.8", "21:40.8", "finished"],
   [93, "DANIEL", "FINO", "Lake Area Composite", "100558035", "5646", 1, "21:42.6", "21:42.6", "finished"],
   [94, "BRICESON", "TERRILL", "Mahtomedi HS", "100532820", "5670", 1, "24:54.9", "24:54.9", "finished"],
-  [95, "HENRY", "GUCINSKI", "St Cloud", "100483812", "5803", 1, "6 Min Outside Assist", "25:15.2", "19:15.2", "6 Min Outside Assist"],
+  [95, "HENRY", "GUCINSKI", "St Cloud", "100483812", "5803", 1, "6 Min Outside Assist", "25:15.2", "19:15.2", "finished"],
   [96, "EVAN", "DAHL", "St Paul Composite - North", "100514273", "5827", 0, "DNF", "2:00:00.0", "DNF"]
 ]
 
