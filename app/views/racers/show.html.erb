@@ -214,85 +214,99 @@
   <!-- Race History & Lap Analysis Section -->
   <div class="mb-8">
     <h2 class="text-2xl font-bold mb-6">Race History & Lap Analysis</h2>
-    <% if @racer.race_results.any? %>
-      <div class="space-y-4">
-        <% @racer.race_results.includes(:race, :race_result_laps).order('races.race_date DESC').each_with_index do |result, index| %>
-          <div class="bg-white rounded-lg border">
-            <!-- Race Header -->
-            <div class="p-4 border-b">
-              <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                  <h3 class="text-lg font-semibold mr-4">
-                    <%= result.race&.name || 'Unknown Race' %>
-                    <% if index == 0 %>
-                      <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full ml-2">Latest</span>
-                    <% end %>
-                  </h3>
-                </div>
-                
-                <button 
-                  class="text-gray-500 hover:text-gray-700"
-                  onclick="toggleLapTimes('race-<%= result.id %>')"
-                >
-                  <span id="race-<%= result.id %>-toggle">Show Lap Times</span>
-                  <svg class="w-4 h-4 inline ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                  </svg>
-                </button>
-              </div>
-              
-              <div class="flex items-center gap-6 mt-2 text-sm text-gray-600">
-                <span>📅 <%= result.race&.race_date&.strftime('%m/%d/%Y') || 'Unknown Date' %></span>
-                <span>📍 <%= result.race&.location || 'Unknown Location' %></span>
-                <span>📏 <%= "32.5 km" %></span>
-                <% if result.category %>
-                  <span class="<%= category_css_class(result.category.name) %> px-2 py-1 rounded text-xs font-medium">
-                    <%= result.category.name %>
-                  </span>
-                <% end %>
-              </div>
-              
-              <div class="flex items-center mt-3">
-                <span class="text-sm text-gray-600 mr-2">Position:</span>
-                <% if result.place == 1 %>
-                  <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-sm font-medium">1st</span>
-                <% elsif result.place && result.place <= 5 %>
-                  <span class="bg-orange-100 text-orange-800 px-2 py-1 rounded text-sm font-medium"><%= result.place.ordinalize %></span>
-                <% elsif result.place %>
-                  <span class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm font-medium"><%= result.place.ordinalize %></span>
-                <% else %>
-                  <span class="bg-red-100 text-red-800 px-2 py-1 rounded text-sm font-medium">DNF</span>
-                <% end %>
-                
-                <span class="ml-4 font-mono text-lg">
-                  <% if result.total_time_ms %>
-                    <%= Time.at(result.total_time_ms / 1000.0).utc.strftime('%M:%S') %>
-                  <% else %>
-                    --:--
-                  <% end %>
-                </span>
-              </div>
+    <% if @race_results_by_year.any? %>
+      <div class="space-y-8">
+        <% @race_results_by_year.each do |year, results| %>
+          <div class="bg-gray-50 rounded-lg p-6">
+            <!-- Year Header -->
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-xl font-bold text-gray-800"><%= year %> Season</h3>
+              <span class="text-sm text-gray-600"><%= pluralize(results.count, 'race') %></span>
             </div>
             
-            <!-- Expandable Lap Times -->
-            <div id="race-<%= result.id %>-laps" class="hidden p-4 bg-gray-50">
-              <% if result.race_result_laps.any? %>
-                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
-                  <% result.race_result_laps.order(:lap_number).each do |lap| %>
-                    <div class="text-center p-2 bg-white rounded border">
-                      <div class="text-xs text-gray-500 mb-1">Lap <%= lap.lap_number %></div>
-                      <div class="font-mono text-sm">
-                        <% if lap.lap_time_ms %>
-                          <%= Time.at(lap.lap_time_ms / 1000.0).utc.strftime('%M:%S') %>
+            <!-- Races for this year -->
+            <div class="space-y-4">
+              <% results.each_with_index do |result, index| %>
+                <% is_latest_overall = year == @race_results_by_year.keys.first && index == 0 %>
+                <div class="bg-white rounded-lg border">
+                  <!-- Race Header -->
+                  <div class="p-4 border-b">
+                    <div class="flex items-center justify-between">
+                      <div class="flex items-center">
+                        <h4 class="text-lg font-semibold mr-4">
+                          <%= result.race&.name || 'Unknown Race' %>
+                          <% if is_latest_overall %>
+                            <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full ml-2">Latest</span>
+                          <% end %>
+                        </h4>
+                      </div>
+                      
+                      <button 
+                        class="text-gray-500 hover:text-gray-700"
+                        onclick="toggleLapTimes('race-<%= result.id %>')"
+                      >
+                        <span id="race-<%= result.id %>-toggle">Show Lap Times</span>
+                        <svg class="w-4 h-4 inline ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                      </button>
+                    </div>
+                    
+                    <div class="flex items-center gap-6 mt-2 text-sm text-gray-600">
+                      <span>📅 <%= result.race&.race_date&.strftime('%m/%d/%Y') || 'Unknown Date' %></span>
+                      <span>📍 <%= result.race&.location || 'Unknown Location' %></span>
+                      <span>📏 <%= "32.5 km" %></span>
+                      <% if result.category %>
+                        <span class="<%= category_css_class(result.category.name) %> px-2 py-1 rounded text-xs font-medium">
+                          <%= result.category.name %>
+                        </span>
+                      <% end %>
+                    </div>
+                    
+                    <div class="flex items-center mt-3">
+                      <span class="text-sm text-gray-600 mr-2">Position:</span>
+                      <% if result.place == 1 %>
+                        <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-sm font-medium">1st</span>
+                      <% elsif result.place && result.place <= 5 %>
+                        <span class="bg-orange-100 text-orange-800 px-2 py-1 rounded text-sm font-medium"><%= result.place.ordinalize %></span>
+                      <% elsif result.place %>
+                        <span class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm font-medium"><%= result.place.ordinalize %></span>
+                      <% else %>
+                        <span class="bg-red-100 text-red-800 px-2 py-1 rounded text-sm font-medium">DNF</span>
+                      <% end %>
+                      
+                      <span class="ml-4 font-mono text-lg">
+                        <% if result.total_time_ms %>
+                          <%= Time.at(result.total_time_ms / 1000.0).utc.strftime('%M:%S') %>
                         <% else %>
                           --:--
                         <% end %>
-                      </div>
+                      </span>
                     </div>
-                  <% end %>
+                  </div>
+                  
+                  <!-- Expandable Lap Times -->
+                  <div id="race-<%= result.id %>-laps" class="hidden p-4 bg-gray-50">
+                    <% if result.race_result_laps.any? %>
+                      <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
+                        <% result.race_result_laps.order(:lap_number).each do |lap| %>
+                          <div class="text-center p-2 bg-white rounded border">
+                            <div class="text-xs text-gray-500 mb-1">Lap <%= lap.lap_number %></div>
+                            <div class="font-mono text-sm">
+                              <% if lap.lap_time_ms %>
+                                <%= Time.at(lap.lap_time_ms / 1000.0).utc.strftime('%M:%S') %>
+                              <% else %>
+                                --:--
+                              <% end %>
+                            </div>
+                          </div>
+                        <% end %>
+                      </div>
+                    <% else %>
+                      <p class="text-gray-500 text-center">No lap time data available for this race.</p>
+                    <% end %>
+                  </div>
                 </div>
-              <% else %>
-                <p class="text-gray-500 text-center">No lap time data available for this race.</p>
               <% end %>
             </div>
           </div>

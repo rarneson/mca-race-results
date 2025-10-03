@@ -13,6 +13,13 @@ class RacersController < ApplicationController
     # Get current category from the most recent race result or current season
     @current_category = get_current_category
     
+    # Group race results by year for organized display
+    @race_results_by_year = @racer.race_results
+                                  .includes(:race, :race_result_laps, :category)
+                                  .joins(:race)
+                                  .order('races.race_date DESC')
+                                  .group_by { |result| result.race.race_date.year }
+    
     # Determine the back path based on referer
     @back_path, @back_text = determine_back_path
   end
