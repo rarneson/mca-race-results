@@ -7,56 +7,155 @@
 <% content_for :title, "Teams" %>
 
 <div class="flex justify-between items-center mb-8">
-  <h1 class="text-3xl font-bold">Teams</h1>
-  <%#= link_to "New Team", new_team_path, class: "btn btn-primary" %>
+  <div>
+    <h1 class="text-3xl font-bold text-gray-900">Teams</h1>
+    <p class="text-gray-600 mt-1">All teams and their performance statistics</p>
+  </div>
 </div>
 
-<div class="mb-6">
-  <%= form_with url: teams_path, method: :get, local: true, class: "flex gap-2 items-center" do |form| %>
-    <%= form.text_field :search, placeholder: "Search teams...", value: params[:search], class: "input input-bordered flex-1 max-w-md" %>
-    <%= form.submit "Search", class: "btn btn-secondary" %>
-    <% if params[:search].present? %>
-      <%= link_to "Clear", teams_path, class: "btn btn-outline" %>
-    <% end %>
-  <% end %>
+<!-- Overall Statistics -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+  <%= render "shared/stat_card", 
+      title: "Total Teams", 
+      value: @total_teams, 
+      subtitle: "Total Teams", 
+      icon: '<svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>',
+      color_class: "bg-gray-50" %>
+  
+  <%= render "shared/stat_card", 
+      title: "Total Racers", 
+      value: @total_racers, 
+      subtitle: "Total Racers", 
+      icon: '<svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>',
+      color_class: "bg-gray-50" %>
 </div>
 
 <div class="container mx-auto">
   <% if @teams.any? %>
-    <div class="overflow-x-auto">
-      <table class="table table-zebra">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Division</th>
-            <th>Racers</th>
-            <th class="text-right">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @teams.each do |team| %>
-            <tr id="<%= dom_id team %>">
-              <td class="font-medium"><%= team.name %></td>
-              <td>
-                <span class="badge badge-outline"><%= team.division&.humanize || 'No Division' %></span>
-              </td>
-              <td>
-                <span class="font-semibold"><%= team.racers.count %></span>
-              </td>
-              <td class="text-right">
-                <div class="flex gap-2 justify-end">
-                  <%= link_to "View", team, class: "btn btn-sm btn-outline" %>
-                  <%= link_to "Edit", edit_team_path(team), class: "btn btn-sm btn-secondary" %>
-                  <%#= button_to "Delete", team, method: :delete, 
-                                class: "btn btn-sm btn-error", 
-                                confirm: "Are you sure you want to delete #{team.name}?",
-                                form: { style: "display: inline;" } %>
-                </div>
-              </td>
-            </tr>
+    <!-- All Teams Section -->
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-2xl font-bold text-gray-900">All Teams</h2>
+      <span class="text-gray-600"><%= pluralize(@teams.count, 'team') %> competing</span>
+    </div>
+
+    <div class="space-y-8">
+      <% @teams.each do |team| %>
+        <% stats = @team_stats[team.id] %>
+        <div class="bg-white border border-gray-200 rounded-lg p-6">
+          <!-- Team Header -->
+          <div class="flex justify-between items-start mb-6">
+            <div>
+              <div class="flex items-center gap-3 mb-2">
+                <h3 class="text-xl font-bold text-gray-900"><%= team.name %></h3>
+                <% if team.division %>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    Division <%= team.division.gsub('division_', '').upcase %>
+                  </span>
+                <% end %>
+              </div>
+              <p class="text-gray-600"><%= pluralize(stats[:total_racers], 'racer') %> • <%= pluralize(team.racers.flat_map(&:race_results).count, 'race entry') %></p>
+            </div>
+            <%= link_to "View Race Results →", team_path(team), class: "text-green-600 hover:text-green-700 font-medium" %>
+          </div>
+
+          <!-- Performance Statistics -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-yellow-50 rounded-lg p-4 text-center">
+              <div class="text-2xl font-bold text-yellow-600 mb-1">
+                <svg class="w-6 h-6 inline-block mr-1" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <%= stats[:total_wins] %>
+              </div>
+              <div class="text-sm text-yellow-700">Wins</div>
+            </div>
+
+            <div class="bg-orange-50 rounded-lg p-4 text-center">
+              <div class="text-2xl font-bold text-orange-600 mb-1">
+                <svg class="w-6 h-6 inline-block mr-1" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                </svg>
+                <%= stats[:total_podiums] %>
+              </div>
+              <div class="text-sm text-orange-700">Podiums</div>
+            </div>
+
+            <div class="bg-gray-50 rounded-lg p-4 text-center">
+              <div class="text-2xl font-bold text-gray-600 mb-1">
+                <svg class="w-6 h-6 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                </svg>
+                <%= stats[:best_finish] || 'N/A' %>
+              </div>
+              <div class="text-sm text-gray-600">Best Finish</div>
+            </div>
+
+            <div class="bg-blue-50 rounded-lg p-4 text-center">
+              <div class="text-2xl font-bold text-blue-600 mb-1">
+                <svg class="w-6 h-6 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                </svg>
+                <%= stats[:total_racers] %>
+              </div>
+              <div class="text-sm text-blue-700">Racers</div>
+            </div>
+          </div>
+
+          <!-- Roster by Category -->
+          <% racers_by_category = group_racers_by_category(team.racers) %>
+          <% if racers_by_category.any? %>
+            <div class="border-t pt-4">
+              <div class="flex items-center gap-2 mb-3">
+                <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+                <h4 class="font-semibold text-gray-900">Roster by Category</h4>
+              </div>
+              
+              <div class="space-y-2">
+                <% racers_by_category.each do |category_name, category_racers| %>
+                  <div class="flex items-center gap-2">
+                    <% if category_name == "Uncategorized" %>
+                      <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-700">
+                        <%= category_name %>: <%= category_racers.count %>
+                      </span>
+                    <% else %>
+                      <% color_class = case category_name.downcase
+                           when /varsity/ then "bg-yellow-100 text-yellow-800"
+                           when /jv/ then "bg-blue-100 text-blue-800"
+                           when /freshman/ then "bg-green-100 text-green-800"
+                           else "bg-purple-100 text-purple-800"
+                           end %>
+                      <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium <%= color_class %>">
+                        <%= category_name %>: <%= category_racers.count %>
+                      </span>
+                    <% end %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
           <% end %>
-        </tbody>
-      </table>
+
+          <!-- Team Highlights -->
+          <% if stats[:total_wins] > 0 || stats[:total_podiums] > 0 %>
+            <div class="border-t pt-4 mt-4">
+              <div class="flex items-center gap-2 mb-2">
+                <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                </svg>
+                <h4 class="font-semibold text-gray-900">Team Highlights</h4>
+              </div>
+              <div class="text-sm text-gray-600">
+                <% highlights = [] %>
+                <% highlights << "#{stats[:total_wins]} race #{'win'.pluralize(stats[:total_wins])}" if stats[:total_wins] > 0 %>
+                <% highlights << "#{stats[:total_podiums]} podium #{'finish'.pluralize(stats[:total_podiums])}" if stats[:total_podiums] > 0 %>
+                <% highlights << "Best overall finish: #{stats[:best_finish]}" if stats[:best_finish] %>
+                <%= highlights.join(' • ') %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
     </div>
   <% else %>
     <div class="hero min-h-[400px]">
@@ -70,7 +169,6 @@
               Get started by creating your first team.
             <% end %>
           </p>
-          <%#= link_to "Create New Team", new_team_path, class: "btn btn-primary" %>
         </div>
       </div>
     </div>
