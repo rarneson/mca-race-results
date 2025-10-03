@@ -22,57 +22,8 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="p-6">
-    <!-- Theme Switcher -->
-    <!-- <div class="fixed top-4 right-4 z-50">
-      <div class="dropdown dropdown-end">
-        <div tabindex="0" role="button" class="btn btn-sm btn-ghost">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
-          </svg>
-          Theme
-        </div>
-        <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow max-h-96 overflow-y-auto">
-          <li><label class="label cursor-pointer"><span class="label-text">Light</span><input type="radio" name="theme-controller" value="light" class="theme-controller radio radio-xs" /></label></li>
-          <li><label class="label cursor-pointer"><span class="label-text">Dark</span><input type="radio" name="theme-controller" value="dark" class="theme-controller radio radio-xs" /></label></li>
-          <li><label class="label cursor-pointer"><span class="label-text">Cupcake</span><input type="radio" name="theme-controller" value="cupcake" class="theme-controller radio radio-xs" /></label></li>
-          <li><label class="label cursor-pointer"><span class="label-text">Bumblebee</span><input type="radio" name="theme-controller" value="bumblebee" class="theme-controller radio radio-xs" /></label></li>
-          <li><label class="label cursor-pointer"><span class="label-text">Emerald</span><input type="radio" name="theme-controller" value="emerald" class="theme-controller radio radio-xs" /></label></li>
-          <li><label class="label cursor-pointer"><span class="label-text">Corporate</span><input type="radio" name="theme-controller" value="corporate" class="theme-controller radio radio-xs" /></label></li>
-          <li><label class="label cursor-pointer"><span class="label-text">Synthwave</span><input type="radio" name="theme-controller" value="synthwave" class="theme-controller radio radio-xs" /></label></li>
-          <li><label class="label cursor-pointer"><span class="label-text">Retro</span><input type="radio" name="theme-controller" value="retro" class="theme-controller radio radio-xs" /></label></li>
-          <li><label class="label cursor-pointer"><span class="label-text">Cyberpunk</span><input type="radio" name="theme-controller" value="cyberpunk" class="theme-controller radio radio-xs" checked /></label></li>
-          <li><label class="label cursor-pointer"><span class="label-text">Valentine</span><input type="radio" name="theme-controller" value="valentine" class="theme-controller radio radio-xs" /></label></li>
-          <li><label class="label cursor-pointer"><span class="label-text">Halloween</span><input type="radio" name="theme-controller" value="halloween" class="theme-controller radio radio-xs" /></label></li>
-          <li><label class="label cursor-pointer"><span class="label-text">Garden</span><input type="radio" name="theme-controller" value="garden" class="theme-controller radio radio-xs" /></label></li>
-          <li><label class="label cursor-pointer"><span class="label-text">Forest</span><input type="radio" name="theme-controller" value="forest" class="theme-controller radio radio-xs" /></label></li>
-          <li><label class="label cursor-pointer"><span class="label-text">Aqua</span><input type="radio" name="theme-controller" value="aqua" class="theme-controller radio radio-xs" /></label></li>
-          <li><label class="label cursor-pointer"><span class="label-text">Lofi</span><input type="radio" name="theme-controller" value="lofi" class="theme-controller radio radio-xs" /></label></li>
-          <li><label class="label cursor-pointer"><span class="label-text">Pastel</span><input type="radio" name="theme-controller" value="pastel" class="theme-controller radio radio-xs" /></label></li>
-          <li><label class="label cursor-pointer"><span class="label-text">Fantasy</span><input type="radio" name="theme-controller" value="fantasy" class="theme-controller radio radio-xs" /></label></li>
-          <li><label class="label cursor-pointer"><span class="label-text">Wireframe</span><input type="radio" name="theme-controller" value="wireframe" class="theme-controller radio radio-xs" /></label></li>
-          <li><label class="label cursor-pointer"><span class="label-text">Black</span><input type="radio" name="theme-controller" value="black" class="theme-controller radio radio-xs" /></label></li>
-          <li><label class="label cursor-pointer"><span class="label-text">Luxury</span><input type="radio" name="theme-controller" value="luxury" class="theme-controller radio radio-xs" /></label></li>
-          <li><label class="label cursor-pointer"><span class="label-text">Dracula</span><input type="radio" name="theme-controller" value="dracula" class="theme-controller radio radio-xs" /></label></li>
-          <li><label class="label cursor-pointer"><span class="label-text">CMYK</span><input type="radio" name="theme-controller" value="cmyk" class="theme-controller radio radio-xs" /></label></li>
-          <li><label class="label cursor-pointer"><span class="label-text">Autumn</span><input type="radio" name="theme-controller" value="autumn" class="theme-controller radio radio-xs" /></label></li>
-          <li><label class="label cursor-pointer"><span class="label-text">Business</span><input type="radio" name="theme-controller" value="business" class="theme-controller radio radio-xs" /></label></li>
-          <li><label class="label cursor-pointer"><span class="label-text">Acid</span><input type="radio" name="theme-controller" value="acid" class="theme-controller radio radio-xs" /></label></li>
-          <li><label class="label cursor-pointer"><span class="label-text">Lemonade</span><input type="radio" name="theme-controller" value="lemonade" class="theme-controller radio radio-xs" /></label></li>
-          <li><label class="label cursor-pointer"><span class="label-text">Night</span><input type="radio" name="theme-controller" value="night" class="theme-controller radio radio-xs" /></label></li>
-          <li><label class="label cursor-pointer"><span class="label-text">Coffee</span><input type="radio" name="theme-controller" value="coffee" class="theme-controller radio radio-xs" /></label></li>
-          <li><label class="label cursor-pointer"><span class="label-text">Winter</span><input type="radio" name="theme-controller" value="winter" class="theme-controller radio radio-xs" /></label></li>
-          <li><label class="label cursor-pointer"><span class="label-text">Dim</span><input type="radio" name="theme-controller" value="dim" class="theme-controller radio radio-xs" /></label></li>
-          <li><label class="label cursor-pointer"><span class="label-text">Nord</span><input type="radio" name="theme-controller" value="nord" class="theme-controller radio radio-xs" /></label></li>
-          <li><label class="label cursor-pointer"><span class="label-text">Sunset</span><input type="radio" name="theme-controller" value="sunset" class="theme-controller radio radio-xs" /></label></li>
-          <li><label class="label cursor-pointer"><span class="label-text">Caramellatte</span><input type="radio" name="theme-controller" value="caramellatte" class="theme-controller radio radio-xs" /></label></li>
-          <li><label class="label cursor-pointer"><span class="label-text">Abyss</span><input type="radio" name="theme-controller" value="abyss" class="theme-controller radio radio-xs" /></label></li>
-          <li><label class="label cursor-pointer"><span class="label-text">Silk</span><input type="radio" name="theme-controller" value="silk" class="theme-controller radio radio-xs" /></label></li>
-        </ul>
-      </div>
-    </div> -->
-
-    <main class="pt-16">
+  <body>
+    <main>
       <%= yield %>
     </main>
   </body>

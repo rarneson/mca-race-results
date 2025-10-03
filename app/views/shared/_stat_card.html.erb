@@ -1,0 +1,22 @@
+<%
+  # Locals expected:
+  # - title: string (card title)
+  # - value: string/number (main value to display)
+  # - subtitle: string (description/label)
+  # - icon: string (emoji or html for icon)
+  # - color_class: string (optional, defaults to gray)
+  # - border_class: string (optional, defaults to gray border)
+  
+  color_class ||= "bg-white"
+  border_class ||= "border-gray-200"
+%>
+
+<div class="<%= color_class %> rounded-lg p-6 border <%= border_class %>">
+  <div class="flex items-center justify-between mb-2">
+    <div class="p-2 bg-gray-100 rounded-lg">
+      <%= raw icon %>
+    </div>
+  </div>
+  <div class="text-3xl font-bold text-gray-900 mb-1"><%= value %></div>
+  <div class="text-sm text-gray-600"><%= subtitle %></div>
+</div>

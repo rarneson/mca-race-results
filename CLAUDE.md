@@ -35,6 +35,7 @@ Located in `lib/race_data/`, this system:
 - Use Rubocop Rails Omakase for linting (`rubocop`)
 - No unnecessary comments unless complex logic requires explanation
 - Prefer existing patterns over introducing new libraries
+- Follow KISS and DRY principles
 
 ### File Organization
 - Controllers in `app/controllers/` follow RESTful conventions

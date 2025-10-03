@@ -1,6 +1,7 @@
 class RacesController < ApplicationController
   def index
-    @races = Race.all.order(race_date: :desc)
+    races = Race.all.order(race_date: :desc)
+    @races_by_year = races.group_by { |race| race.race_date.year }
   end
 
   def show

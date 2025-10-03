@@ -1,56 +1,54 @@
 <% content_for(:title, "Races - MTB Race Center") %>
 
-<div class="max-w-7xl mx-auto bg-gray-50 min-h-screen">
-  <!-- Header -->
-  <div class="bg-emerald-600 text-white p-6">
-    <div class="flex items-center gap-3 mb-4">
-      <div class="bg-white text-emerald-600 p-2 rounded-lg">
-        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M21 8c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-8-5c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-8 5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/>
-        </svg>
-      </div>
-      <div>
-        <h1 class="text-2xl font-bold">MTB Race Center</h1>
-        <p class="text-emerald-100">Live race results and statistics</p>
-      </div>
-    </div>
-  </div>
+<div class="min-h-screen bg-gray-50">
+  <%= render 'shared/navigation_header' %>
 
-  <!-- Races List -->
-  <div class="p-6">
-    <h2 class="text-2xl font-bold text-gray-900 mb-6">All Races</h2>
-    
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <% @races.each do |race| %>
-        <div class="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
-          <%= link_to race_path(race), class: "block p-6" do %>
-            <h3 class="text-xl font-semibold text-gray-900 mb-2"><%= race.name %></h3>
-            <div class="space-y-2 text-gray-600">
-              <div class="flex items-center gap-2">
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
-                </svg>
-                <%= race.race_date.strftime("%B %d, %Y") %>
+  <!-- Main Content -->
+  <div class="max-w-7xl mx-auto px-6 py-8">
+    <!-- Page Header -->
+    <!-- <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">Races</h1>
+      <p class="text-gray-600">Browse all races by season</p>
+    </div> -->
+
+    <!-- Races by Season -->
+    <% @races_by_year.keys.sort.reverse.each do |year| %>
+      <div class="mb-12">       
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <% @races_by_year[year].each do |race| %>
+            <div class="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
+              <div class="p-6">
+                <div class="flex justify-between items-start mb-4">
+                  <h3 class="text-xl font-semibold text-gray-900"><%= race.name %></h3>
+                  <span class="text-sm text-gray-500 font-medium">Year <%= year %></span>
+                </div>
+                
+                <div class="space-y-2 text-gray-600 mb-6">
+                  <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+                    </svg>
+                    <%= race.race_date.strftime("%-m/%-d/%Y") %>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                    </svg>
+                    <%= race.location %>
+                  </div>
+                </div>
+                
+                <%= link_to race_path(race), class: "w-full bg-emerald-600 text-white font-medium py-3 px-4 rounded-lg hover:bg-emerald-700 transition-colors flex items-center justify-center gap-2" do %>
+                  View Results
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+                  </svg>
+                <% end %>
               </div>
-              <div class="flex items-center gap-2">
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                </svg>
-                <%= race.location %>
-              </div>
-              <div class="flex items-center gap-2">
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M16,6H8A2,2 0 0,0 6,8V16A2,2 0 0,0 8,18H16A2,2 0 0,0 18,16V8A2,2 0 0,0 16,6M16,16H8V8H16V16Z"/>
-                </svg>
-                <%= race.race_results.count %> participants
-              </div>
-            </div>
-            <div class="mt-4">
-              <span class="text-emerald-600 font-medium">View Results →</span>
             </div>
           <% end %>
         </div>
-      <% end %>
-    </div>
+      </div>
+    <% end %>
   </div>
 </div>

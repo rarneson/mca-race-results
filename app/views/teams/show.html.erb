@@ -32,59 +32,33 @@
 
   <!-- Statistics Cards -->
   <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-    <!-- Total Racers -->
-    <div class="bg-white rounded-lg p-6 border border-gray-200">
-      <div class="flex items-center justify-between mb-2">
-        <div class="p-2 bg-gray-100 rounded-lg">
-          <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-          </svg>
-        </div>
-      </div>
-      <div class="text-3xl font-bold text-gray-900 mb-1"><%= @team_stats[:total_racers] %></div>
-      <div class="text-sm text-gray-600">Total Racers</div>
-    </div>
+    <%= render 'shared/stat_card', 
+        title: 'Total Racers',
+        value: @team_stats[:total_racers],
+        subtitle: 'Total Racers',
+        icon: '<svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>' %>
 
-    <!-- Total Wins -->
-    <div class="bg-white rounded-lg p-6 border border-amber-200">
-      <div class="flex items-center justify-between mb-2">
-        <div class="p-2 bg-amber-100 rounded-lg">
-          <svg class="w-5 h-5 text-amber-600" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2l2.09 6.26L20 9l-4.95 3.61L17.18 20 12 15.7 6.82 20l2.13-7.39L4 9l5.91-.74L12 2z"/>
-          </svg>
-        </div>
-      </div>
-      <div class="text-3xl font-bold text-amber-600 mb-1"><%= @team_stats[:total_wins] %></div>
-      <div class="text-sm text-gray-600">Total Wins</div>
-    </div>
+    <%= render 'shared/stat_card', 
+        title: 'Total Wins',
+        value: @team_stats[:total_wins],
+        subtitle: 'Total Wins',
+        icon: '<svg class="w-5 h-5 text-amber-600" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l2.09 6.26L20 9l-4.95 3.61L17.18 20 12 15.7 6.82 20l2.13-7.39L4 9l5.91-.74L12 2z"/></svg>',
+        color_class: 'bg-white',
+        border_class: 'border-amber-200' %>
 
-    <!-- Total Podiums -->
-    <div class="bg-white rounded-lg p-6 border border-orange-200">
-      <div class="flex items-center justify-between mb-2">
-        <div class="p-2 bg-orange-100 rounded-lg">
-          <svg class="w-5 h-5 text-orange-600" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 6V2l4 4-4 4V6c-3.31 0-6 2.69-6 6 0 1.66.67 3.16 1.76 4.24l1.42-1.42C8.45 14.09 8 13.1 8 12c0-2.21 1.79-4 4-4zm6.76 1.74l-1.42 1.42C17.55 9.91 18 10.9 18 12c0 2.21-1.79 4-4 4v-4l-4 4 4 4v-4c3.31 0 6-2.69 6-6 0-1.66-.67-3.16-1.76-4.24z"/>
-          </svg>
-        </div>
-      </div>
-      <div class="text-3xl font-bold text-orange-600 mb-1"><%= @team_stats[:total_podiums] %></div>
-      <div class="text-sm text-gray-600">Total Podiums</div>
-    </div>
+    <%= render 'shared/stat_card', 
+        title: 'Total Podiums',
+        value: @team_stats[:total_podiums],
+        subtitle: 'Total Podiums',
+        icon: '<svg class="w-5 h-5 text-orange-600" fill="currentColor" viewBox="0 0 24 24"><path d="M12 6V2l4 4-4 4V6c-3.31 0-6 2.69-6 6 0 1.66.67 3.16 1.76 4.24l1.42-1.42C8.45 14.09 8 13.1 8 12c0-2.21 1.79-4 4-4zm6.76 1.74l-1.42 1.42C17.55 9.91 18 10.9 18 12c0 2.21-1.79 4-4 4v-4l-4 4 4 4v-4c3.31 0 6-2.69 6-6 0-1.66-.67-3.16-1.76-4.24z"/></svg>',
+        color_class: 'bg-white',
+        border_class: 'border-orange-200' %>
 
-    <!-- Best Finish -->
-    <div class="bg-white rounded-lg p-6 border border-gray-200">
-      <div class="flex items-center justify-between mb-2">
-        <div class="p-2 bg-gray-100 rounded-lg">
-          <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2l2.09 6.26L20 9l-4.95 3.61L17.18 20 12 15.7 6.82 20l2.13-7.39L4 9l5.91-.74L12 2z"/>
-          </svg>
-        </div>
-      </div>
-      <div class="text-3xl font-bold text-gray-900 mb-1">
-        <%= @team_stats[:best_finish] || "—" %>
-      </div>
-      <div class="text-sm text-gray-600">Best Finish</div>
-    </div>
+    <%= render 'shared/stat_card', 
+        title: 'Best Finish',
+        value: @team_stats[:best_finish] || "—",
+        subtitle: 'Best Finish',
+        icon: '<svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l2.09 6.26L20 9l-4.95 3.61L17.18 20 12 15.7 6.82 20l2.13-7.39L4 9l5.91-.74L12 2z"/></svg>' %>
   </div>
 
   <!-- Team Roster Section -->
@@ -241,7 +215,7 @@
                   </td>
                   <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
                     <% if result.place %>
-                      <span class="<%= result.place <= 3 ? 'font-bold' : '' %> <%= result.place == 1 ? 'text-amber-600' : result.place <= 3 ? 'text-orange-600' : '' %>">
+                      <span class="<%= place_css_class(result.place) %>">
                         <%= result.place %>
                       </span>
                     <% else %>

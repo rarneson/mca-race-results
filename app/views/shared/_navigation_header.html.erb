@@ -1,0 +1,39 @@
+<div class="bg-white shadow-sm border-b border-gray-200">
+  <div class="max-w-7xl mx-auto px-6 py-4">
+    <div class="flex items-center justify-between">
+      <!-- Left side - Logo and Title -->
+      <div class="flex items-center gap-3">
+        <div class="bg-emerald-600 text-white p-2 rounded-lg">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M14.47 9.97L12 15l-2.47-5.03L8 10l4-8 4 8-1.53-.03zM4 18h16c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2z"/>
+          </svg>
+        </div>
+        <span class="text-xl font-semibold text-gray-900">MTB Race Center</span>
+      </div>
+      
+      <!-- Right side - Navigation -->
+      <div class="flex gap-2">
+        <%= link_to root_path, class: "px-4 py-2 #{'bg-gray-100 text-gray-900' if current_page?(root_path)} #{'text-gray-600 hover:text-gray-900' unless current_page?(root_path)} font-medium rounded-lg hover:bg-gray-100 transition-colors flex items-center gap-2" do %>
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+          </svg>
+          Home
+        <% end %>
+        
+        <%= link_to races_path, class: "px-4 py-2 #{'bg-gray-100 text-gray-900' if current_page?(races_path)} #{'text-gray-600 hover:text-gray-900' unless current_page?(races_path)} font-medium rounded-lg hover:bg-gray-100 transition-colors flex items-center gap-2" do %>
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M9 11H7v9a2 2 0 002 2h8a2 2 0 002-2V9h3l-1-1-9-9-9 9z"/>
+          </svg>
+          Races
+        <% end %>
+        
+        <%= link_to teams_path, class: "px-4 py-2 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition-colors flex items-center gap-2" do %>
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zM4 18v-4h2v-3H4.5c-.83 0-1.5-.67-1.5-1.5S3.67 8 4.5 8H6V5h2v3h1.5c.83 0 1.5.67 1.5 1.5S10.33 12 9.5 12H8v3h2v4H4z"/>
+          </svg>
+          Teams
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
