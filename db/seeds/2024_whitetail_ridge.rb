@@ -9,14 +9,14 @@ def get_expected_laps(category_name)
 end
 
 # ===============================================================================
-# RACE DATA - Race 5N - Whitetail Ridge Official Results (September 28, 2024)
+# RACE DATA - Race 5N - Whitetail Ridge  (September 28, 2024)
 # ===============================================================================
 
-puts "Creating Race 5N - Whitetail Ridge Official Results and results..."
+puts "Creating Race 5N - Whitetail Ridge and results..."
 
 # Create the race
 race = Race.find_or_create_by!(
-  name: "Race 5N - Whitetail Ridge Official Results",
+  name: "Race 5N - Whitetail Ridge ",
   race_date: Date.parse("September 28, 2024")
 ) do |race|
   race.location = "Whitetail Ridge"
@@ -1073,5 +1073,5 @@ import_division_results(race, "JV3 Girls", whitetail_jv3_girls_results, get_expe
 import_division_results(race, "Varsity Girls", whitetail_varsity_girls_results, get_expected_laps("Varsity Girls"))
 import_division_results(race, "JV2 Boys D1", whitetail_jv2_boys_d1_results, get_expected_laps("JV2 Boys D1"))
 
-puts "\n🎉 Race 5N - Whitetail Ridge Official Results seed data created successfully!"
+puts "\n🎉 Race 5N - Whitetail Ridge  seed data created successfully!"
 puts "Total racers imported: #{RaceResult.where(race: race).count}"
