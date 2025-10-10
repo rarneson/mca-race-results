@@ -1,0 +1,27 @@
+<div class="navbar bg-base-100 shadow-sm px-4">
+  <!-- Logo and Title -->
+  <div class="navbar-start">
+    <%= link_to root_path, class: "flex items-center gap-3 text-xl hover:text-emerald-600 transition-colors" do %>
+      <span class="text-emerald-600 font-semibold">MCA Race & Team Data</span>
+    <% end %>
+  </div>
+
+  <!-- Breadcrumbs -->
+  <div class="navbar-end">
+    <% if breadcrumbs.length > 1 %>
+      <div class="breadcrumbs text-sm">
+        <ul>
+          <% breadcrumbs.each do |crumb| %>
+            <li>
+              <% if crumb[:path] %>
+                <%= link_to crumb[:name], crumb[:path], class: "text-base-content/70 hover:text-base-content" %>
+              <% else %>
+                <span class="text-base-content font-medium"><%= crumb[:name] %></span>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+  </div>
+</div>

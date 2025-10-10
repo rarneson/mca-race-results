@@ -1,18 +1,18 @@
 module ApplicationHelper
   def time_from_ms(milliseconds)
-    return '00:00.0' if milliseconds.nil? || milliseconds == 0
-    
+    return "00:00.0" if milliseconds.nil? || milliseconds == 0
+
     total_seconds = milliseconds / 1000.0
     minutes = (total_seconds / 60).floor
     seconds = (total_seconds % 60).floor
     ms = (milliseconds % 1000) / 100
-    
-    "%d:%02d.%d" % [minutes, seconds, ms]
+
+    "%d:%02d.%d" % [ minutes, seconds, ms ]
   end
 
   def category_css_class(category_name)
     return "bg-gray-100 text-gray-700" if category_name.blank?
-    
+
     case category_name
     when /6th Grade/
       "bg-green-100 text-green-700"
@@ -35,7 +35,7 @@ module ApplicationHelper
 
   def place_css_class(place)
     return "" unless place
-    
+
     if place == 1
       "text-amber-600 font-bold"
     elsif place <= 3
@@ -47,16 +47,53 @@ module ApplicationHelper
 
   def status_css_class(status)
     return "bg-gray-100 text-gray-800" if status.blank?
-    
+
     case status.upcase
-    when 'DNF'
+    when "DNF"
       "bg-red-100 text-red-800"
-    when 'DNS'
+    when "DNS"
       "bg-yellow-100 text-yellow-800"
-    when 'DSQ'
+    when "DSQ"
       "bg-purple-100 text-purple-800"
     else
       "bg-gray-100 text-gray-800"
     end
+  end
+
+  def breadcrumbs
+    crumbs = [ { name: "Home", path: root_path } ]
+
+    case controller_name
+    when "races"
+      crumbs << { name: "Races", path: races_path }
+      if action_name == "show" && @race
+        crumbs << { name: @race.name, path: nil }
+      end
+    when "teams"
+      crumbs << { name: "Teams", path: teams_path }
+      if action_name == "show" && @team
+        crumbs << { name: @team.name, path: nil }
+      end
+    when "racers"
+      crumbs << { name: "Racers", path: racers_path }
+      if action_name == "show" && @racer
+        crumbs << { name: "#{@racer.first_name} #{@racer.last_name}", path: nil }
+      end
+    when "racer_seasons"
+      crumbs << { name: "Racer Seasons", path: racer_seasons_path }
+      if action_name == "show" && @racer_season
+        crumbs << { name: "Season Details", path: nil }
+      end
+    when "race_results"
+      if @race
+        crumbs << { name: "Races", path: races_path }
+        crumbs << { name: @race.name, path: race_path(@race) }
+        crumbs << { name: "Results", path: nil }
+      else
+        crumbs << { name: "Race Results", path: nil }
+      end
+    end
+
+    crumbs
   end
 end
