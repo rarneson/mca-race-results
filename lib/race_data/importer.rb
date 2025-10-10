@@ -73,16 +73,25 @@ module RaceData
     end
 
     def find_or_create_racer(racer_data, team)
-      racer = Racer.find_or_create_by(
-        first_name: racer_data[:first_name],
-        last_name: racer_data[:last_name],
-        team: team
-      ) do |new_racer|
-        new_racer.number = racer_data[:number]
+      # Case-insensitive lookup for existing racer
+      racer = Racer.where(
+        "LOWER(first_name) = LOWER(?) AND LOWER(last_name) = LOWER(?)",
+        racer_data[:first_name],
+        racer_data[:last_name]
+      ).where(team: team).first
+      
+      # If not found, create new racer
+      unless racer
+        racer = Racer.create!(
+          first_name: racer_data[:first_name],
+          last_name: racer_data[:last_name],
+          team: team,
+          number: racer_data[:number]
+        )
       end
       
       # Track orphaned racers for summary
-      if team.nil? && !@orphaned_racers.any? { |r| r[:first_name] == racer_data[:first_name] && r[:last_name] == racer_data[:last_name] }
+      if team.nil? && !@orphaned_racers.any? { |r| r[:first_name].downcase == racer_data[:first_name].downcase && r[:last_name].downcase == racer_data[:last_name].downcase }
         @orphaned_racers << {
           first_name: racer_data[:first_name],
           last_name: racer_data[:last_name],

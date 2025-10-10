@@ -354,20 +354,20 @@
         
         grid.innerHTML = laps.map((lap, index) => {
           const isBest = lap.lap_time_ms === bestLapTime;
-          const splitInfo = index > 0 ? calculateSplit(lap, laps[index - 1]) : { faster: true, text: '+45s' };
+          const splitInfo = index > 0 ? calculateSplit(lap, laps[index - 1]) : null;
           
           return `
-            <div class="p-4 border rounded-lg ${isBest ? 'border-yellow-300 bg-yellow-50' : (splitInfo.faster ? 'border-gray-200 bg-white' : 'border-red-200 bg-red-50')} relative">
+            <div class="p-4 border rounded-lg ${isBest ? 'border-yellow-300 bg-yellow-50' : (splitInfo && !splitInfo.faster ? 'border-red-200 bg-red-50' : 'border-gray-200 bg-white')} relative">
               ${isBest ? '<div class="absolute top-2 right-2 bg-yellow-500 text-white px-2 py-1 rounded text-xs font-bold flex items-center gap-1"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M9 11H7l1.5-5H10v5zm5.5 0H11v-5h3.5l-1.5 5z"/></svg>Best</div>' : ''}
               <div class="flex items-center justify-between">
                 <div class="flex-1">
                   <div class="text-sm font-medium text-gray-600">Lap ${lap.lap_number}</div>
                   <div class="text-2xl font-bold ${isBest ? 'text-yellow-700' : 'text-gray-900'}">${formatTime(lap.lap_time_ms)}</div>
-                  <div class="text-sm ${splitInfo.faster ? 'text-green-600' : 'text-red-500'}">Split: ${splitInfo.text}</div>
-                  <div class="text-sm text-gray-500">vs Lap ${index > 0 ? index : 1}: ${splitInfo.comparison || ''}</div>
-                  <div class="text-sm text-gray-500">Cumulative: ${formatTime(lap.cumulative_time_ms)}</div>
+                  ${splitInfo ? `<div class="text-sm ${splitInfo.faster ? 'text-green-600' : 'text-red-500'}">Split: ${splitInfo.text}</div>` : ''}
+                  ${splitInfo ? `<div class="text-sm text-gray-500">vs Lap ${index}: ${splitInfo.comparison || ''}</div>` : ''}
+                  ${index > 0 ? `<div class="text-sm text-gray-500">Cumulative: ${formatTime(lap.cumulative_time_ms)}</div>` : ''}
                 </div>
-                ${!splitInfo.faster ? '<svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M7,14L12,9L17,14H7Z"/></svg>' : ''}
+                ${splitInfo && !splitInfo.faster ? '<svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M7,14L12,9L17,14H7Z"/></svg>' : ''}
               </div>
             </div>
           `;

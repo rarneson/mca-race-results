@@ -111,13 +111,24 @@ module RaceData
     end
 
     def find_or_create_racer(first_name, last_name, team, rider_number)
-      Racer.find_or_create_by!(
-        first_name: first_name,
-        last_name: last_name,
-        team: team
-      ) do |r|
-        r.number = rider_number
+      # Case-insensitive lookup for existing racer
+      racer = Racer.where(
+        "LOWER(first_name) = LOWER(?) AND LOWER(last_name) = LOWER(?)",
+        first_name,
+        last_name
+      ).where(team: team).first
+      
+      # If not found, create new racer
+      unless racer
+        racer = Racer.create!(
+          first_name: first_name,
+          last_name: last_name,
+          team: team,
+          number: rider_number
+        )
       end
+      
+      racer
     end
 
     def find_or_create_racer_season(racer, year, plate)
