@@ -25,12 +25,25 @@
       </div>
       <div>
         <h1 class="text-3xl font-bold text-gray-900"><%= @team.name %></h1>
-        <p class="text-gray-600">Complete roster and performance across all categories</p>
+        <p class="text-gray-600">Complete roster and performance for <%= @selected_year %></p>
       </div>
     </div>
   </div>
 
   <!-- Statistics Cards -->
+  <div class="mb-6">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-xl font-bold text-gray-900"><%= @selected_year %> Team Statistics</h2>
+      <div class="flex items-center space-x-2">
+        <label for="year-filter-stats" class="text-sm font-medium text-gray-700">Year:</label>
+        <%= form_with url: team_path(@team), method: :get, local: true, data: { turbo_frame: "_top" }, class: "inline-flex items-center space-x-2" do |form| %>
+          <%= form.select :year, options_from_collection_for_select(@available_years, :itself, :itself, @selected_year), 
+                        { prompt: "Select Year" }, 
+                        { id: "year-filter-stats", class: "select select-bordered select-sm", onchange: "this.form.submit();" } %>
+        <% end %>
+      </div>
+    </div>
+  </div>
   <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
     <%= render 'shared/stat_card', 
         title: 'Total Racers',
@@ -83,7 +96,7 @@
 
     <!-- Team Roster Content -->
     <div id="roster-content" class="p-6">
-      <h2 class="text-xl font-bold text-gray-900 mb-6">Team Roster by Category (2024 Season)</h2>
+      <h2 class="text-xl font-bold text-gray-900 mb-6">Team Roster by Category</h2>
       
       <% if @racers_by_category.any? %>
         <% @racers_by_category.each do |category_name, racers| %>
@@ -185,11 +198,24 @@
 
     <!-- Race Results Content -->
     <div id="results-content" class="p-6 hidden">
-      <h2 class="text-xl font-bold text-gray-900 mb-6">Race Results (2024 Season)</h2>
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-xl font-bold text-gray-900">Race Results</h2>
+        <div class="flex items-center space-x-2">
+          <label for="year-filter-results" class="text-sm font-medium text-gray-700">Year:</label>
+          <%= form_with url: team_path(@team), method: :get, local: true, data: { turbo_frame: "_top" }, class: "inline-flex items-center space-x-2" do |form| %>
+            <%= form.select :year, options_from_collection_for_select(@available_years, :itself, :itself, @selected_year), 
+                          { prompt: "Select Year" }, 
+                          { id: "year-filter-results", class: "select select-bordered select-sm", onchange: "this.form.submit();" } %>
+          <% end %>
+        </div>
+      </div>
       
       <% if @team.racers.any? && @team.racers.map(&:race_results).flatten.any? %>
-        <% all_results = @team.racers.map(&:race_results).flatten.sort_by { |r| [r.race.race_date, r.category&.name || '', r.place || 999] } %>
-        <div class="overflow-x-auto">
+        <% all_results = @team.racers.map(&:race_results).flatten
+                            .select { |r| r.race.race_date.year == @selected_year }
+                            .sort_by { |r| [r.race.race_date, r.category&.name || '', r.place || 999] } %>
+        <% if all_results.any? %>
+          <div class="overflow-x-auto">
           <table class="min-w-full">
             <thead>
               <tr class="border-b border-gray-200">
@@ -236,7 +262,16 @@
               <% end %>
             </tbody>
           </table>
-        </div>
+          </div>
+        <% else %>
+          <div class="text-center py-12">
+            <svg class="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">No race results found for <%= @selected_year %></h3>
+            <p class="text-gray-500">This team doesn't have any race results for the selected year.</p>
+          </div>
+        <% end %>
       <% else %>
         <div class="text-center py-12">
           <svg class="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -4,20 +4,20 @@ class TeamsController < ApplicationController
 
   # GET /teams or /teams.json
   def index
-    @teams = Team.includes(racers: { race_results: [:category, :race] }).all
-    
+    @teams = Team.includes(racers: { race_results: [ :category, :race ] }).all
+
     # Search functionality
     if params[:search].present?
       @teams = @teams.where("name like ?", "%#{params[:search]}%")
     end
-    
+
     # Order by name for consistent display
     @teams = @teams.order(:name)
-    
+
     # Calculate overall statistics
     @total_teams = @teams.count
     @total_racers = @teams.sum { |team| team.racers.count }
-    
+
     # Calculate team statistics for each team
     @team_stats = {}
     @teams.each do |team|
@@ -29,14 +29,20 @@ class TeamsController < ApplicationController
   def show
     # Load team and eager-load associations to avoid N+1 queries
     @team = Team.includes(racers: [
-      { race_results: [:category, :race] }
+      { race_results: [ :category, :race ] }
     ]).find(params[:id])
-    
-    # Calculate team statistics
-    @team_stats = calculate_team_stats(@team)
-    
-    # Group racers by category for roster display
-    @racers_by_category = group_racers_by_category(@team.racers)
+
+    # Get selected year or default to current year
+    @selected_year = params[:year]&.to_i || Date.current.year
+
+    # Get available years for the dropdown
+    @available_years = Race.distinct.pluck(:race_date).map(&:year).uniq.sort.reverse
+
+    # Calculate team statistics for the selected year
+    @team_stats = calculate_team_stats(@team, @selected_year)
+
+    # Group racers by category for roster display, filtered by year
+    @racers_by_category = group_racers_by_category(@team.racers, @selected_year)
   end
 
   # GET /teams/new
@@ -96,18 +102,27 @@ class TeamsController < ApplicationController
   def team_params
     params.require(:team).permit(:name, :division)
   end
-  
-  def calculate_team_stats(team)
-    all_race_results = team.racers.flat_map { |racer| racer.race_results }
-    
+
+  def calculate_team_stats(team, year = Date.current.year)
+    # Filter race results by year
+    all_race_results = team.racers.flat_map do |racer|
+      racer.race_results.joins(:race)
+           .where(races: { race_date: Date.new(year, 1, 1)..Date.new(year, 12, 31) })
+    end
+
+    # Get unique racers who raced in the selected year
+    racers_in_year = team.racers.joins(:race_results)
+                         .joins("JOIN races ON race_results.race_id = races.id")
+                         .where(races: { race_date: Date.new(year, 1, 1)..Date.new(year, 12, 31) })
+                         .distinct
+
     stats = {
-      total_racers: team.racers.count,
+      total_racers: racers_in_year.count,
       total_wins: all_race_results.count { |result| result.place == 1 },
       total_podiums: all_race_results.count { |result| result.place && result.place <= 3 },
       best_finish: all_race_results.map(&:place).compact.min || nil
     }
-    
+
     stats
   end
-  
 end
