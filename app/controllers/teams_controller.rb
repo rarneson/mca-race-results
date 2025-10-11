@@ -4,25 +4,38 @@ class TeamsController < ApplicationController
 
   # GET /teams or /teams.json
   def index
-    @teams = Team.includes(racers: { race_results: [ :category, :race ] }).all
+    # Get selected year or default to current year
+    @selected_year = params[:year]&.to_i || Date.current.year
+    
+    # Get available years for the dropdown
+    @available_years = Race.distinct.pluck(:race_date).map(&:year).uniq.sort.reverse
+
+    # Get teams that had racers compete in the selected year
+    team_ids_with_racers = Team.joins(racers: { racer_seasons: { race_results: :race } })
+                               .where(races: { race_date: Date.new(@selected_year, 1, 1)..Date.new(@selected_year, 12, 31) })
+                               .distinct
+                               .pluck(:id)
+
+    # Get teams with racer counts for the year
+    @teams = Team.where(id: team_ids_with_racers)
+                 .left_joins(racers: { racer_seasons: { race_results: :race } })
+                 .where(races: { race_date: Date.new(@selected_year, 1, 1)..Date.new(@selected_year, 12, 31) })
+                 .group('teams.id')
+                 .select('teams.*, COUNT(DISTINCT racers.id) as racers_count')
 
     # Search functionality
     if params[:search].present?
-      @teams = @teams.where("name like ?", "%#{params[:search]}%")
+      @teams = @teams.where("teams.name like ?", "%#{params[:search]}%")
     end
 
     # Order by name for consistent display
-    @teams = @teams.order(:name)
+    @teams = @teams.order('teams.name')
 
-    # Calculate overall statistics
-    @total_teams = @teams.count
-    @total_racers = @teams.sum { |team| team.racers.count }
-
-    # Calculate team statistics for each team
-    @team_stats = {}
-    @teams.each do |team|
-      @team_stats[team.id] = calculate_team_stats(team)
-    end
+    # Calculate overall statistics for the selected year - use simpler approach
+    @total_teams = team_ids_with_racers.count
+    @total_racers = Racer.joins(racer_seasons: { race_results: :race })
+                         .where(races: { race_date: Date.new(@selected_year, 1, 1)..Date.new(@selected_year, 12, 31) })
+                         .distinct.count
   end
 
   # GET /teams/1 or /teams/1.json
