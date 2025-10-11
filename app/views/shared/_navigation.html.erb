@@ -6,22 +6,21 @@
     <% end %>
   </div>
 
-  <!-- Breadcrumbs -->
+  <!-- Navigation Menu -->
   <div class="navbar-end">
-    <% if breadcrumbs.length > 1 %>
-      <div class="breadcrumbs text-sm">
-        <ul>
-          <% breadcrumbs.each do |crumb| %>
-            <li>
-              <% if crumb[:path] %>
-                <%= link_to crumb[:name], crumb[:path], class: "text-base-content/70 hover:text-base-content" %>
-              <% else %>
-                <span class="text-base-content font-medium"><%= crumb[:name] %></span>
-              <% end %>
-            </li>
-          <% end %>
-        </ul>
-      </div>
-    <% end %>
+    <ul class="menu menu-horizontal px-1 gap-2">
+      <li>
+        <%= link_to "Home", root_path, class: "hover:text-emerald-600 transition-colors #{'text-emerald-600 font-medium' if current_page?(root_path)}" %>
+      </li>
+      <li>
+        <%= link_to "Races", races_path, class: "hover:text-emerald-600 transition-colors #{'text-emerald-600 font-medium' if current_page?(races_path)}" %>
+      </li>
+      <li>
+        <%= link_to "Teams", teams_path, class: "hover:text-emerald-600 transition-colors #{'text-emerald-600 font-medium' if current_page?(teams_path)}" %>
+      </li>
+      <li>
+        <%= link_to "Racers", racers_path, class: "hover:text-emerald-600 transition-colors #{'text-emerald-600 font-medium' if current_page?(racers_path)}" %>
+      </li>
+    </ul>
   </div>
 </div>

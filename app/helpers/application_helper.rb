@@ -60,40 +60,4 @@ module ApplicationHelper
     end
   end
 
-  def breadcrumbs
-    crumbs = [ { name: "Home", path: root_path } ]
-
-    case controller_name
-    when "races"
-      crumbs << { name: "Races", path: races_path }
-      if action_name == "show" && @race
-        crumbs << { name: @race.name, path: nil }
-      end
-    when "teams"
-      crumbs << { name: "Teams", path: teams_path }
-      if action_name == "show" && @team
-        crumbs << { name: @team.name, path: nil }
-      end
-    when "racers"
-      crumbs << { name: "Racers", path: racers_path }
-      if action_name == "show" && @racer
-        crumbs << { name: "#{@racer.first_name} #{@racer.last_name}", path: nil }
-      end
-    when "racer_seasons"
-      crumbs << { name: "Racer Seasons", path: racer_seasons_path }
-      if action_name == "show" && @racer_season
-        crumbs << { name: "Season Details", path: nil }
-      end
-    when "race_results"
-      if @race
-        crumbs << { name: "Races", path: races_path }
-        crumbs << { name: @race.name, path: race_path(@race) }
-        crumbs << { name: "Results", path: nil }
-      else
-        crumbs << { name: "Race Results", path: nil }
-      end
-    end
-
-    crumbs
-  end
 end
