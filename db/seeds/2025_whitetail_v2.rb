@@ -19,7 +19,7 @@ race = Race.find_or_create_by!(
   name: "Race 5A - Whitetail v2",
   race_date: Date.parse("September 27, 2025")
 ) do |race|
-  race.location = "Whitetail v2"
+  race.location = "Whitetail Ridge"
   race.year = 2025
 end
 
