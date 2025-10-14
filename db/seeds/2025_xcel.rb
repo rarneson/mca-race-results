@@ -652,7 +652,7 @@ results_freshman_girls = [
   [5, "ADDISON", "KANNAS", "Borealis", "100422621", "3011", 2, "32:17.5", "15:48.4", "16:29.1", "finished"],
   [6, "ABIGAIL", "MELHUS", "St Paul Composite - North", "100530285", "3084", 2, "32:20.1", "15:37.8", "16:42.3", "finished"],
   [7, "HAZEL", "MARCH", "Stillwater Mountain Bike", "100405762", "3089", 2, "32:34.2", "15:43.8", "16:50.4", "finished"],
-  [8, "SAGE", "LARSON", "Brainerd HS", "100488380", "3014", 2, "Warning - improperly discarded item", "32:35.4", "15:48.0", "16:47.3", "Warning - improperly discarded item"],
+  [8, "SAGE", "LARSON", "Brainerd HS", "100488380", "3014", 2, "32:35.4", "15:48.0", "16:47.3", nil, nil, "finished", "Warning - improperly discarded item", nil],
   [9, "ELLIOT", "LUNDE", "Burnsville HS", "100405867", "3017", 2, "32:37.9", "15:56.7", "16:41.1", "finished"],
   [10, "STELLA", "MUSEUS", "Brainerd HS", "100431804", "3016", 2, "32:42.3", "16:02.5", "16:39.7", "finished"],
   [11, "PEYTON", "STAMSCHROR", "Prior Lake HS", "100421499", "3069", 2, "32:44.5", "16:03.5", "16:40.9", "finished"],
