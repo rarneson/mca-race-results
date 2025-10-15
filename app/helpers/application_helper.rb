@@ -1,4 +1,38 @@
 module ApplicationHelper
+  include Pagy::Frontend
+
+  def pagy_daisyui_nav(pagy)
+    html = +'<div class="join">'
+
+    if pagy.prev
+      html << link_to("«", pagy_url_for(pagy, pagy.prev), class: "join-item btn btn-sm")
+    else
+      html << '<button class="join-item btn btn-sm btn-disabled">«</button>'
+    end
+
+    pagy.series.each do |item|
+      case item
+      when Integer
+        if item == pagy.page
+          html << %(<button class="join-item btn btn-sm btn-active">#{item}</button>)
+        else
+          html << link_to(item, pagy_url_for(pagy, item), class: "join-item btn btn-sm")
+        end
+      when "gap"
+        html << '<button class="join-item btn btn-sm btn-disabled">...</button>'
+      end
+    end
+
+    if pagy.next
+      html << link_to("»", pagy_url_for(pagy, pagy.next), class: "join-item btn btn-sm")
+    else
+      html << '<button class="join-item btn btn-sm btn-disabled">»</button>'
+    end
+
+    html << '</div>'
+    html.html_safe
+  end
+
   def time_from_ms(milliseconds)
     return "00:00.0" if milliseconds.nil? || milliseconds == 0
 

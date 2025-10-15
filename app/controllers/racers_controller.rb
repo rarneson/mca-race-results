@@ -3,7 +3,19 @@ class RacersController < ApplicationController
 
   # GET /racers or /racers.json
   def index
-    @racers = Racer.all
+    racers = Racer.all.order(:last_name, :first_name)
+
+    if params[:team].present?
+      @selected_team = params[:team]
+      if @selected_team == "No Team"
+        racers = racers.orphaned
+      else
+        racers = racers.joins(:team).where(teams: { name: @selected_team })
+      end
+    end
+
+    @pagy, @racers = pagy(racers)
+    @team_counts = calculate_team_counts
   end
 
   # GET /racers/1 or /racers/1.json
@@ -90,9 +102,22 @@ class RacersController < ApplicationController
             .first&.race_results&.first&.category
     end
 
+    def calculate_team_counts
+      counts = {}
+
+      Team.all.each do |team|
+        counts[team.name] = team.racers.count
+      end
+
+      orphaned_count = Racer.orphaned.count
+      counts["No Team"] = orphaned_count if orphaned_count > 0
+
+      counts.sort_by { |name, _| name }.to_h
+    end
+
     def determine_back_path
       referer = request.referer
-      
+
       if referer.present?
         case referer
         when /\/teams\/\d+/
