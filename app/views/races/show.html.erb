@@ -201,7 +201,7 @@
               <select id="racer-selector" class="block w-full px-4 py-2 pr-8 bg-white border border-gray-300 rounded-lg text-gray-700 hover:border-gray-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 focus:outline-none appearance-none">
                 <% @race_results.each do |result| %>
                   <option value="<%= result.id %>" data-racer-name="<%= result.racer_season.racer.first_name.humanize %> <%= result.racer_season.racer.last_name.humanize %>" data-team="<%= result.racer_season.team&.name || 'Orphaned!' %>" data-category="<%= result.category&.name || 'Unknown' %>" data-position="<%= result.place || '-' %>">
-                    <%= result.plate_number_snapshot %> <%= result.racer_season.racer.first_name.humanize %> <%= result.racer_season.racer.last_name.humanize %>
+                    <%= result.place %> <%= result.racer_season.racer.first_name.humanize %> <%= result.racer_season.racer.last_name.humanize %>
                   </option>
                 <% end %>
               </select>
