@@ -345,8 +345,7 @@
                 <div class="flex-1">
                   <div class="text-sm font-medium text-gray-600">Lap ${lap.lap_number}</div>
                   <div class="text-2xl font-bold ${isBest ? 'text-yellow-700' : 'text-gray-900'}">${formatTime(lap.lap_time_ms)}</div>
-                  ${splitInfo ? `<div class="text-sm ${splitInfo.faster ? 'text-green-600' : 'text-red-500'}">Split: ${splitInfo.text}</div>` : ''}
-                  ${splitInfo ? `<div class="text-sm text-gray-500">vs Lap ${index}: ${splitInfo.comparison || ''}</div>` : ''}
+                  ${splitInfo ? `<div class="text-sm ${splitInfo.faster ? 'text-green-600' : 'text-red-600'}">vs Lap ${index}: ${splitInfo.comparison || ''}</div>` : ''}
                   ${index > 0 ? `<div class="text-sm text-gray-500">Cumulative: ${formatTime(lap.cumulative_time_ms)}</div>` : ''}
                 </div>
                 ${splitInfo && !splitInfo.faster ? '<svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M7,14L12,9L17,14H7Z"/></svg>' : ''}
