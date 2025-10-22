@@ -130,7 +130,6 @@ results_jv2_boys_d1 = [
 # IMPORT ALL DIVISIONS
 # ===============================================================================
 
-# TODO: Uncomment these lines once race results data is added above
 import_division_results(race, "6th Grade Girls", results_6th_grade_girls, get_expected_laps("6th Grade Girls"))
 import_division_results(race, "6th Grade Boys D2", results_6th_grade_boys_d2, get_expected_laps("6th Grade Boys D2"))
 import_division_results(race, "6th Grade Boys D1", results_6th_grade_boys_d1, get_expected_laps("6th Grade Boys D1"))
