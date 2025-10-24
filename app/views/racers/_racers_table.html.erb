@@ -1,0 +1,55 @@
+<% if racers.any? %>
+  <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+        <tr>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            Racer Name
+          </th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            Team
+          </th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            Races
+          </th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        <% racers.each do |racer| %>
+          <tr class="hover:bg-gray-50">
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm font-medium text-gray-900">
+                <%= link_to racer.name, racer_path(racer), class: "text-green-600 hover:text-green-900" %>
+              </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              <%= racer.team_name %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              <%= racer.race_results.count %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="flex justify-center mt-8">
+    <%= pagy_daisyui_nav(pagy) %>
+  </div>
+<% else %>
+  <div class="hero min-h-[400px]">
+    <div class="hero-content text-center">
+      <div class="max-w-md">
+        <h3 class="text-2xl font-bold mb-4">No racers found</h3>
+        <p class="mb-6">
+          <% if defined?(@search_query) && @search_query.present? %>
+            No racers match your search for "<%= @search_query %>".
+          <% else %>
+            Get started by creating your first racer.
+          <% end %>
+        </p>
+      </div>
+    </div>
+  </div>
+<% end %>

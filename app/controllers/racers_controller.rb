@@ -5,6 +5,15 @@ class RacersController < ApplicationController
   def index
     racers = Racer.all.order(:last_name, :first_name)
 
+    if params[:search].present?
+      @search_query = params[:search]
+      search_term = "%#{@search_query}%"
+      racers = racers.left_joins(:team).where(
+        "racers.first_name LIKE ? OR racers.last_name LIKE ? OR teams.name LIKE ?",
+        search_term, search_term, search_term
+      ).distinct
+    end
+
     if params[:team].present?
       @selected_team = params[:team]
       if @selected_team == "No Team"
@@ -16,6 +25,24 @@ class RacersController < ApplicationController
 
     @pagy, @racers = pagy(racers)
     @team_counts = calculate_team_counts
+
+    respond_to do |format|
+      format.html
+      format.turbo_stream do
+        render turbo_stream: [
+          turbo_stream.update(
+            "racers_table",
+            partial: "racers/racers_table",
+            locals: { racers: @racers, pagy: @pagy }
+          ),
+          turbo_stream.update(
+            "racers_count",
+            partial: "racers/racers_count",
+            locals: { count: @pagy.count }
+          )
+        ], content_type: "text/vnd.turbo-stream.html"
+      end
+    end
   end
 
   # GET /racers/1 or /racers/1.json

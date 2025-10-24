@@ -6,7 +6,7 @@ class RacesController < ApplicationController
 
   def show
     @race = Race.includes(race_results: [racer_season: [racer: :team], category: [], race_result_laps: []])
-                .find(params[:id])
+                .find_by!(slug: params[:id])
     
     # Get all race results for stats calculation
     all_race_results = @race.race_results

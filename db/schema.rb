@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_14_165345) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_24_211058) do
   create_table "categories", force: :cascade do |t|
     t.string "name", null: false
     t.integer "sort_order", null: false
@@ -80,6 +80,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_14_165345) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "description"
+    t.string "slug"
+    t.index ["slug"], name: "index_races_on_slug", unique: true
   end
 
   create_table "teams", force: :cascade do |t|

@@ -1,0 +1,30 @@
+<% if racers.any? %>
+  <div class="py-1">
+    <% racers.limit(10).each do |racer| %>
+      <%= link_to racer_path(racer), class: "block px-4 py-3 hover:bg-gray-50 transition-colors" do %>
+        <div class="flex justify-between items-start">
+          <div class="flex-1">
+            <div class="text-sm font-medium text-gray-900">
+              <%= racer.name %>
+            </div>
+            <div class="text-xs text-gray-500 mt-0.5">
+              <%= racer.team_name %>
+            </div>
+          </div>
+          <div class="text-xs text-gray-500 ml-4">
+            <%= pluralize(racer.race_results.count, 'race') %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+    <% if racers.count > 10 %>
+      <div class="px-4 py-2 text-xs text-gray-500 bg-gray-50 border-t border-gray-100">
+        Showing first 10 of <%= racers.count %> results
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <div class="px-4 py-6 text-center text-sm text-gray-500">
+    No racers found
+  </div>
+<% end %>
