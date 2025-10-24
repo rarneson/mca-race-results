@@ -33,7 +33,7 @@ puts "✓ Race: #{race.name} (#{race.race_date})"
 results_6th_grade_girls = [
   # TODO: Add actual race results data here
   # Format: [place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, lap2_time, status]
-  # Example: [1, "FIRSTNAME", "LASTNAME", "Team Name", "100512776", "6524", 1, "00:19:20.0", "00:19:20.0", "finished"],
+  # Example: [1, "Firstname", "Lastname", "Team Name", "100512776", "6524", 1, "00:19:20.0", "00:19:20.0", "finished"],
 ]
 
 #6th Grade Boys D2 Results
