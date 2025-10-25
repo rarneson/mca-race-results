@@ -147,14 +147,14 @@ class RacersController < ApplicationController
 
       if referer.present?
         case referer
-        when /\/teams\/\d+/
+        when /\/teams\/([\w-]+)/
           # Coming from a team page
-          team_id = referer.match(/\/teams\/(\d+)/)[1]
-          [team_path(team_id), "Back to Team"]
-        when /\/races\/\d+/
-          # Coming from a race page (when race routes are implemented)
-          race_id = referer.match(/\/races\/(\d+)/)[1]
-          ["/races/#{race_id}", "Back to Race"]
+          team_slug = referer.match(/\/teams\/([\w-]+)/)[1]
+          [team_path(team_slug), "Back to Team"]
+        when /\/races\/([\w-]+)/
+          # Coming from a race page
+          race_slug = referer.match(/\/races\/([\w-]+)/)[1]
+          [race_path(race_slug), "Back to Race"]
         when /\/racers/
           # Coming from racers index
           [racers_path, "Back to Racers"]

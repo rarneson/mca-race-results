@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_24_211058) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_25_132614) do
   create_table "categories", force: :cascade do |t|
     t.string "name", null: false
     t.integer "sort_order", null: false
@@ -89,6 +89,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_24_211058) do
     t.integer "division"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "slug"
+    t.index ["slug"], name: "index_teams_on_slug", unique: true
   end
 
   add_foreign_key "race_result_laps", "race_results"

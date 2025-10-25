@@ -63,7 +63,7 @@ class TeamsController < ApplicationController
     # Load team and eager-load associations to avoid N+1 queries
     @team = Team.includes(racers: [
       { race_results: [ :category, :race ] }
-    ]).find(params[:id])
+    ]).find_by!(slug: params[:id])
 
     # Get selected year or default to current year
     @selected_year = params[:year]&.to_i || Date.current.year
@@ -128,7 +128,7 @@ class TeamsController < ApplicationController
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_team
-    @team = Team.find(params.expect(:id))
+    @team = Team.find_by!(slug: params.expect(:id))
   end
 
   # Only allow a list of trusted parameters through.
