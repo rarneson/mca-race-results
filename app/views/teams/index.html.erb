@@ -11,92 +11,43 @@
   <div class="flex justify-between items-center mb-8">
     <div>
       <h1 class="text-3xl font-bold text-gray-900 mb-2">Teams</h1>
-      <p class="text-gray-600"><%= pluralize(@total_teams, 'team') %> with <%= pluralize(@total_racers, 'racer') %> competing in <%= @selected_year %></p>
+      <p class="text-gray-600"><span id="teams_count"><%= render partial: "teams/teams_count", locals: { total_teams: @total_teams, total_racers: @total_racers, selected_year: @selected_year } %></span></p>
     </div>
-    
-    <!-- Year Filter -->
+
     <div class="flex items-center gap-4">
-      <%= form_with url: teams_path, method: :get, local: true, class: "flex items-center gap-2" do |form| %>
-        <%= form.label :year, "Year:", class: "text-sm font-medium text-gray-700" %>
-        <%= form.select :year, 
-            options_for_select(@available_years.map { |year| [year, year] }, @selected_year),
-            {},
-            {
-              class: "border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500",
-              onchange: "this.form.submit();"
-            } %>
-        <%= form.hidden_field :search, value: params[:search] if params[:search].present? %>
-      <% end %>
+      <!-- Search -->
+      <div class="flex items-center gap-2" data-controller="team-search" data-team-search-url-value="<%= teams_path %>">
+        <label for="team_search" class="text-sm font-medium text-gray-700">Team:</label>
+        <input
+          id="team_search"
+          type="text"
+          placeholder="Search teams..."
+          class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 w-64"
+          data-team-search-target="input"
+          data-action="input->team-search#search keydown->team-search#handleKeydown"
+          value="<%= @search_query %>"
+        />
+      </div>
+
+      <!-- Year Filter -->
+      <div class="flex items-center gap-2">
+        <%= form_with url: teams_path, method: :get, local: true, class: "flex items-center gap-2" do |form| %>
+          <%= form.label :year, "Year:", class: "text-sm font-medium text-gray-700" %>
+          <%= form.select :year,
+              options_for_select(@available_years.map { |year| [year, year] }, @selected_year),
+              {},
+              {
+                class: "border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500",
+                onchange: "this.form.submit();"
+              } %>
+          <%= form.hidden_field :search, value: @search_query if @search_query.present? %>
+        <% end %>
+      </div>
     </div>
   </div>
 
   <!-- Main Content -->
-  <% if @teams.any? %>
-    <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
-      <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
-          <tr>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Team Name
-            </th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Division
-            </th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Racers (<%= @selected_year %>)
-            </th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Actions
-            </th>
-          </tr>
-        </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-          <% @teams.each do |team| %>
-            <tr class="hover:bg-gray-50">
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="flex items-center">
-                  <div>
-                    <div class="text-sm font-medium text-gray-900">
-                      <%= link_to team.name, team_path(team), class: "text-green-600 hover:text-green-900" %>
-                    </div>
-                  </div>
-                </div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <% if team.division %>
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                    <%= team.division.gsub('division_', '').upcase %>
-                  </span>
-                <% else %>
-                  <span class="text-gray-400">-</span>
-                <% end %>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                <%= team.racers_count %>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                <%#= link_to "View", team_path(team), class: "text-green-600 hover:text-green-900 mr-3" %>
-                <%= link_to "Edit", edit_team_path(team), class: "text-blue-600 hover:text-blue-900" %>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
-  <% else %>
-    <div class="hero min-h-[400px]">
-      <div class="hero-content text-center">
-        <div class="max-w-md">
-          <h3 class="text-2xl font-bold mb-4">No teams found</h3>
-          <p class="mb-6">
-            <% if params[:search].present? %>
-              No teams match your search for "<%= params[:search] %>".
-            <% else %>
-              Get started by creating your first team.
-            <% end %>
-          </p>
-        </div>
-      </div>
-    </div>
-  <% end %>
+  <div id="teams_table">
+    <%= render partial: "teams/teams_table", locals: { teams: @teams, selected_year: @selected_year, search_query: @search_query } %>
+  </div>
 </div>

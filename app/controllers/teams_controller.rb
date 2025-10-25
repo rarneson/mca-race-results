@@ -6,7 +6,7 @@ class TeamsController < ApplicationController
   def index
     # Get selected year or default to current year
     @selected_year = params[:year]&.to_i || Date.current.year
-    
+
     # Get available years for the dropdown
     @available_years = Race.distinct.pluck(:race_date).map(&:year).uniq.sort.reverse
 
@@ -16,26 +16,46 @@ class TeamsController < ApplicationController
                                .distinct
                                .pluck(:id)
 
+    # Apply search filter to team IDs if present
+    filtered_team_ids = team_ids_with_racers
+    if params[:search].present?
+      @search_query = params[:search]
+      filtered_team_ids = Team.where(id: team_ids_with_racers)
+                              .where("teams.name like ?", "%#{@search_query}%")
+                              .pluck(:id)
+    end
+
     # Get teams with racer counts for the year
-    @teams = Team.where(id: team_ids_with_racers)
+    @teams = Team.where(id: filtered_team_ids)
                  .left_joins(racers: { racer_seasons: { race_results: :race } })
                  .where(races: { race_date: Date.new(@selected_year, 1, 1)..Date.new(@selected_year, 12, 31) })
                  .group('teams.id')
                  .select('teams.*, COUNT(DISTINCT racers.id) as racers_count')
-
-    # Search functionality
-    if params[:search].present?
-      @teams = @teams.where("teams.name like ?", "%#{params[:search]}%")
-    end
-
-    # Order by name for consistent display
-    @teams = @teams.order('teams.name')
+                 .order('teams.name')
 
     # Calculate overall statistics for the selected year - use simpler approach
-    @total_teams = team_ids_with_racers.count
+    @total_teams = filtered_team_ids.count
     @total_racers = Racer.joins(racer_seasons: { race_results: :race })
                          .where(races: { race_date: Date.new(@selected_year, 1, 1)..Date.new(@selected_year, 12, 31) })
                          .distinct.count
+
+    respond_to do |format|
+      format.html
+      format.turbo_stream do
+        render turbo_stream: [
+          turbo_stream.update(
+            "teams_table",
+            partial: "teams/teams_table",
+            locals: { teams: @teams, selected_year: @selected_year, search_query: @search_query }
+          ),
+          turbo_stream.update(
+            "teams_count",
+            partial: "teams/teams_count",
+            locals: { total_teams: @total_teams, total_racers: @total_racers, selected_year: @selected_year }
+          )
+        ], content_type: "text/vnd.turbo-stream.html"
+      end
+    end
   end
 
   # GET /teams/1 or /teams/1.json
