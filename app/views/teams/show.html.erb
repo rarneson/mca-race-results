@@ -60,17 +60,17 @@
   </div>
 
   <!-- Team Roster Section -->
-  <div class="bg-white rounded-lg border border-gray-200">
+  <div class="bg-white rounded-lg border border-gray-200" data-controller="tabs">
     <!-- Tab Headers -->
     <div class="border-b border-gray-200">
       <nav class="flex space-x-8 px-6">
-        <button id="roster-tab" class="tab-button flex items-center py-4 border-b-2 border-gray-900 text-sm font-medium text-gray-900">
+        <button data-tabs-target="tab" data-action="click->tabs#switch" class="tab-button flex items-center py-4 border-b-2 border-gray-900 text-sm font-medium text-gray-900">
           <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
           </svg>
           Team Roster
         </button>
-        <button id="results-tab" class="tab-button flex items-center py-4 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
+        <button data-tabs-target="tab" data-action="click->tabs#switch" class="tab-button flex items-center py-4 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
           <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
           </svg>
@@ -80,7 +80,7 @@
     </div>
 
     <!-- Team Roster Content -->
-    <div id="roster-content" class="p-6">
+    <div data-tabs-target="content" class="p-6">
       <h2 class="text-xl font-bold text-gray-900 mb-6">Team Roster by Category</h2>
       
       <% if @racers_by_category.any? %>
@@ -182,7 +182,7 @@
     </div>
 
     <!-- Race Results Content -->
-    <div id="results-content" class="p-6 hidden">
+    <div data-tabs-target="content" class="p-6">
       <div class="flex items-center justify-between mb-6">
         <h2 class="text-xl font-bold text-gray-900">Race Results</h2>
         <div class="flex items-center space-x-2">
@@ -293,41 +293,4 @@
       <% end %>
     </div>
   </div>
-
-  <!-- Tab JavaScript -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const rosterTab = document.getElementById('roster-tab');
-      const resultsTab = document.getElementById('results-tab');
-      const rosterContent = document.getElementById('roster-content');
-      const resultsContent = document.getElementById('results-content');
-
-      function showTab(activeTab, activeContent, inactiveTab, inactiveContent) {
-        // Update tab appearance
-        activeTab.classList.remove('border-transparent', 'text-gray-500');
-        activeTab.classList.add('border-gray-900', 'text-gray-900');
-        
-        inactiveTab.classList.remove('border-gray-900', 'text-gray-900');
-        inactiveTab.classList.add('border-transparent', 'text-gray-500');
-
-        // Show/hide content
-        activeContent.classList.remove('hidden');
-        inactiveContent.classList.add('hidden');
-      }
-
-      // Make sure roster tab is active by default
-      rosterContent.classList.remove('hidden');
-      resultsContent.classList.add('hidden');
-
-      rosterTab.addEventListener('click', function() {
-        showTab(rosterTab, rosterContent, resultsTab, resultsContent);
-      });
-
-      resultsTab.addEventListener('click', function() {
-        showTab(resultsTab, resultsContent, rosterTab, rosterContent);
-      });
-    });
-  </script>
 </div>
-
-
