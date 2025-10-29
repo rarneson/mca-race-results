@@ -10,7 +10,7 @@
   <div class="flex justify-between items-center mb-8">
     <div>
       <h1 class="text-3xl font-bold text-gray-900 mb-2">Racers</h1>
-      <p class="text-gray-600"><span id="racers_count"><%= pluralize(@pagy.count, 'racer') %></span> total</p>
+      <p class="text-gray-600"><span id="racers_count"><%= render partial: "racers/racers_count", locals: { count: @pagy.count, selected_year: @selected_year } %></span></p>
     </div>
 
     <div class="flex items-center gap-4">
@@ -28,6 +28,22 @@
         />
       </div>
 
+      <!-- Year Filter -->
+      <div class="flex items-center gap-2">
+        <%= form_with url: racers_path, method: :get, local: true, class: "flex items-center gap-2" do |form| %>
+          <%= form.label :year, "Year:", class: "text-sm font-medium text-gray-700" %>
+          <%= form.select :year,
+              options_for_select([["All", "All"]] + @available_years.map { |year| [year, year] }, @selected_year),
+              {},
+              {
+                class: "border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500",
+                onchange: "this.form.submit();"
+              } %>
+          <%= form.hidden_field :search, value: @search_query if @search_query.present? %>
+          <%= form.hidden_field :team, value: @selected_team if @selected_team.present? %>
+        <% end %>
+      </div>
+
       <!-- Team Filter -->
       <% if @team_counts.any? %>
         <div class="flex items-center gap-2">
@@ -41,6 +57,7 @@
                   onchange: "this.form.submit();"
                 } %>
             <%= form.hidden_field :search, value: @search_query if @search_query.present? %>
+            <%= form.hidden_field :year, value: @selected_year if @selected_year.present? %>
           <% end %>
         </div>
       <% end %>

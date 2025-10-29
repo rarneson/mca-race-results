@@ -1,1 +1,5 @@
-<%= pluralize(count, 'racer') %>
+<% if selected_year == "All" %>
+  <%= pluralize(count, 'racer') %> total
+<% else %>
+  <%= pluralize(count, 'racer') %> competing in <%= selected_year %>
+<% end %>

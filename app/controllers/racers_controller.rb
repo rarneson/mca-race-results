@@ -3,7 +3,24 @@ class RacersController < ApplicationController
 
   # GET /racers or /racers.json
   def index
-    racers = Racer.all.order(:last_name, :first_name)
+    # Get selected year or default to "All"
+    @selected_year = params[:year].present? && params[:year] != "" ? params[:year] : "All"
+
+    # Get available years for the dropdown
+    @available_years = Race.distinct.pluck(:race_date).map(&:year).uniq.sort.reverse
+
+    # Start with base racers query
+    if @selected_year == "All"
+      # Show all racers regardless of year
+      racers = Racer.all.order(:last_name, :first_name)
+    else
+      # Filter racers who competed in the selected year
+      year_int = @selected_year.to_i
+      racers = Racer.joins(racer_seasons: { race_results: :race })
+                    .where(races: { race_date: Date.new(year_int, 1, 1)..Date.new(year_int, 12, 31) })
+                    .distinct
+                    .order(:last_name, :first_name)
+    end
 
     if params[:search].present?
       @search_query = params[:search]
@@ -24,7 +41,7 @@ class RacersController < ApplicationController
     end
 
     @pagy, @racers = pagy(racers)
-    @team_counts = calculate_team_counts
+    @team_counts = calculate_team_counts(@selected_year)
 
     respond_to do |format|
       format.html
@@ -38,7 +55,7 @@ class RacersController < ApplicationController
           turbo_stream.update(
             "racers_count",
             partial: "racers/racers_count",
-            locals: { count: @pagy.count }
+            locals: { count: @pagy.count, selected_year: @selected_year }
           )
         ], content_type: "text/vnd.turbo-stream.html"
       end
@@ -129,15 +146,39 @@ class RacersController < ApplicationController
             .first&.race_results&.first&.category
     end
 
-    def calculate_team_counts
+    def calculate_team_counts(year = "All")
       counts = {}
 
-      Team.all.each do |team|
-        counts[team.name] = team.racers.count
-      end
+      if year == "All"
+        # Count all racers for each team
+        Team.all.each do |team|
+          racer_count = team.racers.count
+          counts[team.name] = racer_count if racer_count > 0
+        end
 
-      orphaned_count = Racer.orphaned.count
-      counts["No Team"] = orphaned_count if orphaned_count > 0
+        # Count all orphaned racers
+        orphaned_count = Racer.orphaned.count
+        counts["No Team"] = orphaned_count if orphaned_count > 0
+      else
+        # Count racers who competed in the selected year
+        year_int = year.to_i
+        Team.all.each do |team|
+          racer_count = team.racers
+                            .joins(racer_seasons: { race_results: :race })
+                            .where(races: { race_date: Date.new(year_int, 1, 1)..Date.new(year_int, 12, 31) })
+                            .distinct
+                            .count
+          counts[team.name] = racer_count if racer_count > 0
+        end
+
+        # Count orphaned racers who competed in the selected year
+        orphaned_count = Racer.orphaned
+                               .joins(racer_seasons: { race_results: :race })
+                               .where(races: { race_date: Date.new(year_int, 1, 1)..Date.new(year_int, 12, 31) })
+                               .distinct
+                               .count
+        counts["No Team"] = orphaned_count if orphaned_count > 0
+      end
 
       counts.sort_by { |name, _| name }.to_h
     end
