@@ -706,7 +706,7 @@ results_jv3_girls = [
   [12, "Beatrice", "Toftey", "Edina Cycling", "100392887", "1010", 3, "01:04:23.5", "00:20:25.4", "00:21:52.3", "00:22:05.7", nil, "finished", nil, nil],
   [13, "Mackenzie", "Burke", "Chanhassen HS", "100424968", "1005", 3, "01:05:06.8", "00:20:23.0", "00:22:15.0", "00:22:28.6", nil, "finished", nil, nil],
   [14, "Lexi", "Halvorson", "Wayzata Mountain Bike", "100422289", "1044", 3, "01:06:33.6", "00:21:28.4", "00:22:47.3", "00:22:17.8", nil, "finished", nil, nil],
-  [15, "Jacobi", "Burmeister", "Pater Bemidji", "100488021", "1002", 3, "01:07:41.0", "00:21:50.9", "00:22:42.2", "00:23:07.9", nil, "finished", nil, nil],
+  [15, "Jacobi", "Burmeister Pater", "Bemidji", "100488021", "1002", 3, "01:07:41.0", "00:21:50.9", "00:22:42.2", "00:23:07.9", nil, "finished", nil, nil],
   [16, "Maddison", "Lydon", "White Bear Lake HS", "100478581", "1046", 3, "01:08:57.1", "00:21:29.7", "00:23:18.9", "00:24:08.4", nil, "finished", nil, nil],
   [17, "Elizabeth", "Fackert", "Wayzata Mountain Bike", "100431150", "1043", 3, "01:09:55.4", "00:22:22.0", "00:23:27.5", "00:24:05.9", nil, "finished", nil, nil]
 ]

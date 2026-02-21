@@ -71,7 +71,7 @@ results_6th_grade_boys_d2 = [
   [9, "Benjamin", "Hutchinson", "Orono HS", "100531386", "6166", 1, "00:19:59.6", "00:19:59.6", nil, nil, nil, "finished", nil, nil],
   [10, "Ben", "Peterson", "Rock Ridge", "100522435", "6191", 1, "00:20:09.2", "00:20:09.2", nil, nil, nil, "finished", nil, nil],
   [11, "Nick", "Campbell", "Orono HS", "100535629", "6165", 1, "00:20:19.1", "00:20:19.1", nil, nil, nil, "finished", nil, nil],
-  [12, "Ian", "Spilthorne", "St Paul Composite", "100532634", "6049", 1, "00:20:22.1", "00:20:22.1", nil, nil, nil, "finished", nil, nil],
+  [12, "Ian", "Spilthorne", "St Paul Composite Bike", "100532634", "6049", 1, "00:20:22.1", "00:20:22.1", nil, nil, nil, "finished", nil, nil],
   [13, "Charlie", "Dixon", "Roseville", "100521844", "6198", 1, "00:21:10.2", "00:21:10.2", nil, nil, nil, "finished", nil, nil],
   [14, "Neil", "Imholte", "Tioga Trailblazers", "100535255", "6234", 1, "00:21:15.7", "00:21:15.7", nil, nil, nil, "finished", nil, nil],
   [15, "Tristan", "Peters", "Armstrong Cycle", "100522931", "6009", 1, "00:21:37.2", "00:21:37.2", nil, nil, nil, "finished", nil, nil],

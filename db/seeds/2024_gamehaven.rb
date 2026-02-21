@@ -687,7 +687,7 @@ results_jv2_boys_d2 = [
 
 #JV2 Boys D1 Results
 results_jv2_boys_d1 = [
-  [1, "Alexander", "Smith", "Clouchet-Eslac-Carlton", "100473528", "2094", 2, "00:32:29.6", "00:15:53.8", "00:16:35.7", nil, "finished", nil, nil],
+  [1, "Alexander", "Smith", "Cloquet-Esko-Carlton", "100473528", "2094", 2, "00:32:29.6", "00:15:53.8", "00:16:35.7", nil, "finished", nil, nil],
   [2, "Henry", "Dahn", "New Prague MS and HS", "100420495", "2285", 2, "00:32:29.9", "00:15:55.1", "00:16:34.7", nil, "finished", nil, nil],
   [3, "Skogen", "Scharrer", "Lakeville South HS", "100483368", "2188", 2, "00:33:15.4", "00:16:16.9", "00:16:58.4", nil, "finished", nil, nil],
   [4, "Sebastian", "Puryear-Jordan", "St Paul Central", "100392240", "2427", 2, "00:33:18.9", "00:16:15.0", "00:17:03.8", nil, "finished", nil, nil],

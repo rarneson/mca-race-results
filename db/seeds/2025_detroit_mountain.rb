@@ -607,7 +607,7 @@ results_jv3_girls = [
   [10, "Georgi", "Toftness", "Crosby-Ironton HS", "100486257", "1050", 3, "00:57:54.5", "00:19:02.5", "00:19:22.6", "00:19:29.2", nil, "finished", nil, nil],
   [11, "Mackenzie", "Burke", "Chanhassen HS", "100424968", "1005", 3, "00:58:51.2", "00:19:24.4", "00:19:50.3", "00:19:36.4", nil, "finished", nil, nil],
   [12, "Lexi", "Helgeson", "Austin HS", "100390801", "1001", 3, "00:59:50.5", "00:19:21.3", "00:20:10.8", "00:20:18.3", nil, "finished", nil, nil],
-  [13, "Jacobi", "Burmeister", "Pater Bemidji", "100488021", "1002", 3, "01:00:29.0", "00:19:57.2", "00:20:03.2", "00:20:28.4", nil, "finished", nil, nil],
+  [13, "Jacobi", "Burmeister Pater", "Bemidji", "100488021", "1002", 3, "01:00:29.0", "00:19:57.2", "00:20:03.2", "00:20:28.4", nil, "finished", nil, nil],
   [14, "Gemma", "Banks", "Elk River", "100428934", "1011", 3, "01:00:33.0", "00:19:57.2", "00:20:08.6", "00:20:27.1", nil, "finished", nil, nil],
   [15, "Maddison", "Lydon", "White Bear Lake HS", "100478581", "1046", 3, "01:01:39.5", "00:20:04.9", "00:20:44.2", "00:20:50.2", nil, "finished", nil, nil],
   [16, "Esther", "Wilcox", "St Cloud", "100393135", "1037", 3, "01:03:15.5", "00:19:52.0", "00:21:35.7", "00:21:47.7", nil, "finished", nil, nil],

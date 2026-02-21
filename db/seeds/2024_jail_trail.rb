@@ -226,7 +226,7 @@ results_7th_grade_boys_d2 = [
   [21, "Sebastian", "Yanz", "Minneapolis Roosevelt HS", "100472100", "5176", 1, "00:25:12.6", "00:25:12.6", nil, "finished", nil, nil],
   [22, "Bennett", "Hairell", "Champlin Park HS", "100521305", "5052", 1, "00:25:15.4", "00:25:15.4", nil, "finished", nil, nil],
   [23, "Thomas", "Flatau", "Northwest", "100494593", "5214", 1, "00:25:17.6", "00:25:17.6", nil, "finished", nil, nil],
-  [24, "Teddy", "Titler", "Maple Westonka", "100527867", "5201", 1, "00:25:19.2", "00:25:19.2", nil, "finished", nil, nil],
+  [24, "Teddy", "Titler", "Mound Westonka", "100527867", "5201", 1, "00:25:19.2", "00:25:19.2", nil, "finished", nil, nil],
   [25, "Charlie", "Stegemann", "Orono HS", "100468738", "5218", 1, "00:25:19.3", "00:25:19.3", nil, "finished", nil, nil],
   [26, "Sammy", "Hughes", "Minneapolis Southside", "100514635", "5179", 1, "00:25:20.1", "00:25:20.1", nil, "finished", nil, nil],
   [27, "Noah", "Bert", "Mahtomedi HS", "100474167", "5152", 1, "00:25:21.6", "00:25:21.6", nil, "finished", nil, nil],
