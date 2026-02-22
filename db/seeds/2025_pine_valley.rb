@@ -332,7 +332,7 @@ results_8th_grade_girls = [
   [34, "Iva", "Miller", "Bloomington", "100524598", "5008", 1, "00:31:38.131", "00:31:38.131", nil, nil, nil, "finished", nil, nil],
   [35, "Bethany", "Dougherty", "Rockford", "100488056", "5075", 1, "00:34:12.274", "00:34:12.274", nil, nil, nil, "finished", nil, nil],
   [36, "Chloe", "Rettinger", "Minnetonka HS", "100561826", "5058", 1, "00:34:47.929", "00:34:47.929", nil, nil, nil, "finished", nil, nil],
-  [37, "Clara (Cj)", "Simmons", "Hopkins HS", "100566065", "5039", 1, "00:40:08.349", "00:40:08.349", nil, nil, nil, "finished", nil, nil],
+  [37, "Clara", "Simmons", "Hopkins HS", "100566065", "5039", 1, "00:40:08.349", "00:40:08.349", nil, nil, nil, "finished", nil, nil],
 ]
 
 #8th Grade Boys D2 Results

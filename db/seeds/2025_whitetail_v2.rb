@@ -320,7 +320,7 @@ results_8th_grade_girls = [
   [35, "Charlotte", "Brock", "Edina Cycling", "100521156", "5032", 1, "00:30:00.3", "00:30:00.3", nil, "finished", nil, nil],
   [36, "Verity", "Riordan", "Eagan HS", "100566734", "5025", 1, "00:30:28.2", "00:30:28.2", nil, "finished", nil, nil],
   [37, "Akaylia", "Sowman", "Stillwater Mountain Bike", "100573534", "5088", 1, "00:30:35.0", "00:30:35.0", nil, "finished", nil, nil],
-  [38, "Clara (Cj)", "Simmons", "Hopkins HS", "100566065", "5039", 1, "00:37:52.7", "00:37:52.7", nil, "finished", nil, nil],
+  [38, "Clara", "Simmons", "Hopkins HS", "100566065", "5039", 1, "00:37:52.7", "00:37:52.7", nil, "finished", nil, nil],
 ]
 
 #8th Grade Boys D2 Results
