@@ -183,16 +183,8 @@
 
     <!-- Race Results Content -->
     <div data-tabs-target="content" class="p-6">
-      <div class="flex items-center justify-between mb-6">
+      <div class="mb-6">
         <h2 class="text-xl font-bold text-gray-900">Race Results</h2>
-        <div class="flex items-center space-x-2">
-          <label for="year-filter-results" class="text-sm font-medium text-gray-700">Year:</label>
-          <%= form_with url: team_path(@team), method: :get, local: true, data: { turbo_frame: "_top" }, class: "inline-flex items-center space-x-2" do |form| %>
-            <%= form.select :year, options_from_collection_for_select(@available_years, :itself, :itself, @selected_year), 
-                          { prompt: "Select Year" }, 
-                          { id: "year-filter-results", class: "select select-bordered select-sm", onchange: "this.form.submit();" } %>
-          <% end %>
-        </div>
       </div>
       
       <% if @team.racers.any? && @team.racers.map(&:race_results).flatten.any? %>
