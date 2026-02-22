@@ -4,11 +4,11 @@ class TeamsController < ApplicationController
 
   # GET /teams or /teams.json
   def index
-    # Get selected year or default to current year
-    @selected_year = params[:year]&.to_i || Date.current.year
-
     # Get available years for the dropdown
     @available_years = Race.distinct.pluck(:race_date).map(&:year).uniq.sort.reverse
+
+    # Get selected year or default to most recent year with data
+    @selected_year = params[:year]&.to_i || @available_years.first || Date.current.year
 
     # Get teams that had racers compete in the selected year
     team_ids_with_racers = Team.joins(racers: { racer_seasons: { race_results: :race } })
@@ -65,11 +65,11 @@ class TeamsController < ApplicationController
       { race_results: [ :category, :race ] }
     ]).find_by!(slug: params[:id])
 
-    # Get selected year or default to current year
-    @selected_year = params[:year]&.to_i || Date.current.year
-
     # Get available years for the dropdown
     @available_years = Race.distinct.pluck(:race_date).map(&:year).uniq.sort.reverse
+
+    # Get selected year or default to most recent year with data
+    @selected_year = params[:year]&.to_i || @available_years.first || Date.current.year
 
     # Calculate team statistics for the selected year
     @team_stats = calculate_team_stats(@team, @selected_year)

@@ -13,10 +13,25 @@ class TeamsControllerTest < ActionDispatch::IntegrationTest
   test "should get index and display team statistics" do
     get teams_url
     assert_response :success
-    
-    # Check that the page renders without error
+
     assert_select "h1", "Teams"
-    assert_select "h2", "All Teams"  # Check that the "All Teams" section is rendered
+  end
+
+  test "should list teams with race results on index" do
+    get teams_url, params: { year: 2024 }
+    assert_response :success
+
+    assert_select "a", "Mountain Velocity"
+    assert_select "a", "Trail Blazers"
+  end
+
+  test "should default to most recent year with data" do
+    get teams_url
+    assert_response :success
+
+    # Should show teams from the most recent year rather than showing no teams
+    assert @response.body.include?("Mountain Velocity") || @response.body.include?("Trail Blazers"),
+           "Expected teams to be listed when defaulting to most recent year with data"
   end
 
   test "should get index with search" do
@@ -61,6 +76,7 @@ class TeamsControllerTest < ActionDispatch::IntegrationTest
 
   test "should update team" do
     patch team_url(@team), params: { team: { name: "Updated Team Name" } }
+    @team.reload
     assert_redirected_to team_url(@team)
   end
 

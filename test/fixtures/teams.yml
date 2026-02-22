@@ -1,17 +1,21 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  name: Mountain Velocity
+  name: Test Team One
   division: 1
+  slug: test-team-one
 
 two:
-  name: Trail Blazers
+  name: Test Team Two
   division: 1
+  slug: test-team-two
 
 mountain_velocity:
   name: Mountain Velocity
   division: 1
+  slug: mountain-velocity
 
 trail_blazers:
   name: Trail Blazers
   division: 1
+  slug: trail-blazers
