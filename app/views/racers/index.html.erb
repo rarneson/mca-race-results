@@ -9,8 +9,8 @@
 
   <div class="flex justify-between items-center mb-8">
     <div>
-      <h1 class="text-3xl font-bold text-gray-900 mb-2">Racers</h1>
-      <p class="text-gray-600"><span id="racers_count"><%= render partial: "racers/racers_count", locals: { count: @pagy.count, selected_year: @selected_year } %></span></p>
+      <%= render "shared/page_header", title: "Racers",
+        subtitle: tag.span(render(partial: "racers/racers_count", locals: { count: @pagy.count, selected_year: @selected_year }), id: "racers_count") %>
     </div>
 
     <div class="flex items-center gap-4">

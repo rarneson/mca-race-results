@@ -10,8 +10,8 @@
   <!-- Page Header -->
   <div class="flex justify-between items-center mb-8">
     <div>
-      <h1 class="text-3xl font-bold text-gray-900 mb-2">Teams</h1>
-      <p class="text-gray-600"><span id="teams_count"><%= render partial: "teams/teams_count", locals: { total_teams: @total_teams, total_racers: @total_racers, selected_year: @selected_year } %></span></p>
+      <%= render "shared/page_header", title: "Teams",
+        subtitle: tag.span(render(partial: "teams/teams_count", locals: { total_teams: @total_teams, total_racers: @total_racers, selected_year: @selected_year }), id: "teams_count") %>
     </div>
 
     <div class="flex items-center gap-4">
