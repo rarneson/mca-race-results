@@ -7,7 +7,7 @@ one:
   total_time_ms: 5940000 # 99:00
   laps_completed: 3
   laps_expected: 3
-  status: FINISHED
+  status: finished
   category: varsity
   plate_number_snapshot: "1"
 
@@ -18,7 +18,7 @@ two:
   total_time_ms: 6120000 # 102:00
   laps_completed: 3
   laps_expected: 3
-  status: FINISHED
+  status: finished
   category: varsity
   plate_number_snapshot: "12"
 
@@ -29,7 +29,7 @@ alex_first_place:
   total_time_ms: 5940000 # 99:00
   laps_completed: 3
   laps_expected: 3
-  status: FINISHED
+  status: finished
   category: varsity
   plate_number_snapshot: "1"
 
@@ -40,6 +40,6 @@ sarah_second_place:
   total_time_ms: 6120000 # 102:00
   laps_completed: 3
   laps_expected: 3
-  status: FINISHED
+  status: finished
   category: varsity
   plate_number_snapshot: "12"

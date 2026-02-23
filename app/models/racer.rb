@@ -5,6 +5,7 @@ class Racer < ApplicationRecord
   
   scope :orphaned, -> { where(team: nil) }
   scope :with_team, -> { where.not(team: nil) }
+  scope :active_in_year, ->(year) { joins(racer_seasons: { race_results: :race }).merge(Race.in_year(year)).distinct }
 
   def name
     "#{first_name} #{last_name}"

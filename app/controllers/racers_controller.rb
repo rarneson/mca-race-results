@@ -8,7 +8,7 @@ class RacersController < ApplicationController
     @selected_year = params[:year].present? && params[:year] != "" ? params[:year] : "All"
 
     # Get available years for the dropdown
-    @available_years = Race.distinct.pluck(:race_date).map(&:year).uniq.sort.reverse
+    @available_years = Race.available_years
 
     # Start with base racers query
     if @selected_year == "All"
@@ -17,9 +17,7 @@ class RacersController < ApplicationController
     else
       # Filter racers who competed in the selected year
       year_int = @selected_year.to_i
-      racers = Racer.joins(racer_seasons: { race_results: :race })
-                    .where(races: { race_date: Date.new(year_int, 1, 1)..Date.new(year_int, 12, 31) })
-                    .distinct
+      racers = Racer.active_in_year(year_int)
                     .order(:last_name, :first_name)
     end
 
@@ -163,20 +161,12 @@ class RacersController < ApplicationController
         # Count racers who competed in the selected year
         year_int = year.to_i
         Team.all.each do |team|
-          racer_count = team.racers
-                            .joins(racer_seasons: { race_results: :race })
-                            .where(races: { race_date: Date.new(year_int, 1, 1)..Date.new(year_int, 12, 31) })
-                            .distinct
-                            .count
+          racer_count = team.racers.active_in_year(year_int).count
           counts[team.name] = racer_count if racer_count > 0
         end
 
         # Count orphaned racers who competed in the selected year
-        orphaned_count = Racer.orphaned
-                               .joins(racer_seasons: { race_results: :race })
-                               .where(races: { race_date: Date.new(year_int, 1, 1)..Date.new(year_int, 12, 31) })
-                               .distinct
-                               .count
+        orphaned_count = Racer.orphaned.active_in_year(year_int).count
         counts["No Team"] = orphaned_count if orphaned_count > 0
       end
 

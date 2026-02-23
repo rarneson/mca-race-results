@@ -151,13 +151,16 @@
                   <% end %>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  <% if result.status && result.status != 'finished' %>
-                    <% status_class = case result.status.upcase
-                                       when 'DNF' then 'bg-red-100 text-red-800'
-                                       when 'DNS' then 'bg-yellow-100 text-yellow-800'
-                                       when 'DSQ' then 'bg-purple-100 text-purple-800'
-                                       else 'bg-gray-100 text-gray-800'
-                                       end %>
+                  <% unless result.finished? %>
+                    <% status_class = if result.dnf?
+                                        'bg-red-100 text-red-800'
+                                      elsif result.dns?
+                                        'bg-yellow-100 text-yellow-800'
+                                      elsif result.dsq?
+                                        'bg-purple-100 text-purple-800'
+                                      else
+                                        'bg-gray-100 text-gray-800'
+                                      end %>
                     <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium <%= status_class %>">
                       <%= result.status.upcase %>
                     </span>

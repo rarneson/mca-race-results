@@ -17,7 +17,12 @@ class RaceResultsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create race_result" do
     assert_difference("RaceResult.count") do
-      post race_results_url, params: { race_result: {} }
+      post race_results_url, params: { race_result: {
+        race_id: races(:pine_valley_race).id,
+        racer_season_id: racer_seasons(:one).id,
+        status: "finished",
+        place: 1
+      } }
     end
 
     assert_redirected_to race_result_url(RaceResult.last)
@@ -34,7 +39,7 @@ class RaceResultsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update race_result" do
-    patch race_result_url(@race_result), params: { race_result: {} }
+    patch race_result_url(@race_result), params: { race_result: { status: "finished" } }
     assert_redirected_to race_result_url(@race_result)
   end
 

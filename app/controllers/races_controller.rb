@@ -43,7 +43,7 @@ class RacesController < ApplicationController
     @fastest_lap = find_fastest_lap(all_race_results)
     @average_time = calculate_average_time(all_race_results)
     @participants_count = all_race_results.count
-    @finished_count = all_race_results.where(status: 'FINISHED').count
+    @finished_count = all_race_results.finished.count
     @dnf_dns_count = @participants_count - @finished_count
     
     @category_stats = calculate_category_stats(all_race_results)
@@ -74,7 +74,7 @@ class RacesController < ApplicationController
   end
 
   def calculate_average_time(race_results)
-    finished_results = race_results.where(status: 'FINISHED')
+    finished_results = race_results.finished
     return 0 if finished_results.empty?
     
     total_time = finished_results.sum(:total_time_ms)

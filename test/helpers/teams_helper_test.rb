@@ -31,8 +31,8 @@ class TeamsHelperTest < ActionView::TestCase
     racer_season2 = RacerSeason.create!(racer: racer2)
     
     # Create race results with categories
-    RaceResult.create!(racer_season: racer_season1, race: race, category: category1, place: 1)
-    RaceResult.create!(racer_season: racer_season2, race: race, category: category2, place: 2)
+    RaceResult.create!(racer_season: racer_season1, race: race, category: category1, place: 1, status: "finished")
+    RaceResult.create!(racer_season: racer_season2, race: race, category: category2, place: 2, status: "finished")
     
     result = group_racers_by_category([racer1, racer2])
     

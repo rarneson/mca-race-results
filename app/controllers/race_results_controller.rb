@@ -81,6 +81,6 @@ class RaceResultsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def race_result_params
-      params.fetch(:race_result, {})
+      params.require(:race_result).permit(:race_id, :racer_season_id, :category_id, :status, :place, :total_time_ms, :laps_completed, :laps_expected, :plate_number_snapshot, :penalty, :comments)
     end
 end

@@ -6,14 +6,14 @@ class TeamsController < ApplicationController
   # GET /teams or /teams.json
   def index
     # Get available years for the dropdown
-    @available_years = Race.distinct.pluck(:race_date).map(&:year).uniq.sort.reverse
+    @available_years = Race.available_years
 
     # Get selected year or default to most recent year with data
     @selected_year = params[:year]&.to_i || @available_years.first || Date.current.year
 
     # Get teams that had racers compete in the selected year
     team_ids_with_racers = Team.joins(racers: { racer_seasons: { race_results: :race } })
-                               .where(races: { race_date: Date.new(@selected_year, 1, 1)..Date.new(@selected_year, 12, 31) })
+                               .merge(Race.in_year(@selected_year))
                                .distinct
                                .pluck(:id)
 
@@ -29,16 +29,14 @@ class TeamsController < ApplicationController
     # Get teams with racer counts for the year
     @teams = Team.where(id: filtered_team_ids)
                  .left_joins(racers: { racer_seasons: { race_results: :race } })
-                 .where(races: { race_date: Date.new(@selected_year, 1, 1)..Date.new(@selected_year, 12, 31) })
+                 .merge(Race.in_year(@selected_year))
                  .group('teams.id')
                  .select('teams.*, COUNT(DISTINCT racers.id) as racers_count')
                  .order('teams.name')
 
     # Calculate overall statistics for the selected year - use simpler approach
     @total_teams = filtered_team_ids.count
-    @total_racers = Racer.joins(racer_seasons: { race_results: :race })
-                         .where(races: { race_date: Date.new(@selected_year, 1, 1)..Date.new(@selected_year, 12, 31) })
-                         .distinct.count
+    @total_racers = Racer.active_in_year(@selected_year).count
 
     respond_to do |format|
       format.html
@@ -67,7 +65,7 @@ class TeamsController < ApplicationController
     ]).find_by!(slug: params[:id])
 
     # Get available years for the dropdown
-    @available_years = Race.distinct.pluck(:race_date).map(&:year).uniq.sort.reverse
+    @available_years = Race.available_years
 
     # Get selected year or default to most recent year with data
     @selected_year = params[:year]&.to_i || @available_years.first || Date.current.year
@@ -142,15 +140,10 @@ class TeamsController < ApplicationController
   def calculate_team_stats(team, year = Date.current.year)
     # Filter race results by year
     all_race_results = team.racers.flat_map do |racer|
-      racer.race_results.joins(:race)
-           .where(races: { race_date: Date.new(year, 1, 1)..Date.new(year, 12, 31) })
+      racer.race_results.joins(:race).merge(Race.in_year(year))
     end
 
-    # Get unique racers who raced in the selected year
-    racers_in_year = team.racers.joins(:race_results)
-                         .joins("JOIN races ON race_results.race_id = races.id")
-                         .where(races: { race_date: Date.new(year, 1, 1)..Date.new(year, 12, 31) })
-                         .distinct
+    racers_in_year = team.racers.active_in_year(year)
 
     stats = {
       total_racers: racers_in_year.count,

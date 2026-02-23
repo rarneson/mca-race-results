@@ -1,6 +1,9 @@
 class Race < ApplicationRecord
   has_many :race_results, dependent: :destroy
 
+  scope :in_year, ->(year) { where(race_date: Date.new(year, 1, 1)..Date.new(year, 12, 31)) }
+  scope :available_years, -> { distinct.pluck(:race_date).map(&:year).uniq.sort.reverse }
+
   before_validation :generate_slug, if: -> { name.present? && (slug.blank? || name_changed?) }
 
   validates :slug, presence: true, uniqueness: true

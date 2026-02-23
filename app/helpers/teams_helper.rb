@@ -6,7 +6,7 @@ module TeamsHelper
     racers.each do |racer|
       # Get race results and their categories for the specified year
       race_results = racer.race_results.includes(:category, :race)
-                          .where(races: { race_date: Date.new(year, 1, 1)..Date.new(year, 12, 31) })
+                          .joins(:race).merge(Race.in_year(year))
       categories = race_results.map(&:category).compact.uniq(&:id)
 
 
