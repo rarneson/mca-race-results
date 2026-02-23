@@ -1,4 +1,5 @@
 class RacersController < ApplicationController
+  include BackNavigable
   before_action :set_racer, only: %i[ show edit update destroy ]
 
   # GET /racers or /racers.json
@@ -76,8 +77,7 @@ class RacersController < ApplicationController
                                   .order('races.race_date DESC')
                                   .group_by { |result| result.race.race_date.year }
     
-    # Determine the back path based on referer
-    @back_path, @back_text = determine_back_path
+    @back_path, @back_text = determine_back_path(default_path: racers_path, default_text: "Back to Racers")
   end
 
   # GET /racers/new
@@ -183,29 +183,4 @@ class RacersController < ApplicationController
       counts.sort_by { |name, _| name }.to_h
     end
 
-    def determine_back_path
-      referer = request.referer
-
-      if referer.present?
-        case referer
-        when /\/teams\/([\w-]+)/
-          # Coming from a team page
-          team_slug = referer.match(/\/teams\/([\w-]+)/)[1]
-          [team_path(team_slug), "Back to Team"]
-        when /\/races\/([\w-]+)/
-          # Coming from a race page
-          race_slug = referer.match(/\/races\/([\w-]+)/)[1]
-          [race_path(race_slug), "Back to Race"]
-        when /\/racers/
-          # Coming from racers index
-          [racers_path, "Back to Racers"]
-        else
-          # Default fallback
-          [racers_path, "Back to Racers"]
-        end
-      else
-        # No referer, default to racers index
-        [racers_path, "Back to Racers"]
-      end
-    end
 end

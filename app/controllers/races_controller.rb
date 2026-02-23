@@ -1,4 +1,5 @@
 class RacesController < ApplicationController
+  include BackNavigable
   def index
     races = Race.all.order(name: :asc)
     @races_by_year = races.group_by { |race| race.race_date.year }
@@ -46,7 +47,9 @@ class RacesController < ApplicationController
     @dnf_dns_count = @participants_count - @finished_count
     
     @category_stats = calculate_category_stats(all_race_results)
-    
+
+    @back_path, @back_text = determine_back_path(default_path: races_path, default_text: "Back to Races")
+
     # Calculate maximum number of laps for dynamic lap columns based on filtered results
     @max_laps = @race_results.joins(:race_result_laps)
                              .maximum('race_result_laps.lap_number') || 0

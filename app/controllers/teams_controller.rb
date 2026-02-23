@@ -1,5 +1,6 @@
 class TeamsController < ApplicationController
   include TeamsHelper
+  include BackNavigable
   before_action :set_team, only: %i[ show edit update destroy ]
 
   # GET /teams or /teams.json
@@ -76,6 +77,8 @@ class TeamsController < ApplicationController
 
     # Group racers by category for roster display, filtered by year
     @racers_by_category = group_racers_by_category(@team.racers, @selected_year)
+
+    @back_path, @back_text = determine_back_path(default_path: teams_path, default_text: "Back to Teams")
   end
 
   # GET /teams/new

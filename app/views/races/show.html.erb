@@ -1,6 +1,8 @@
 <% content_for(:title, "#{@race.name} - MTB Race Center") %>
 
 <div class="container mx-auto px-4 py-6">
+  <%= render "shared/back_navigation", path: @back_path, text: @back_text %>
+
   <!-- Page Header -->
   <div class="mb-8">
     <h1 class="text-3xl font-bold text-gray-900 mb-2">Race Results</h1>
