@@ -613,13 +613,13 @@ whitetail_freshman_girls_results = [
   [22, "Fern", "Shaffner", "Roseville", "100426662", "3572", 2, "00:53:38.5", "00:25:45.1", "00:27:53.4", "finished"],
   [23, "Caitlin", "Wrisky", "White Bear Lake HS", "100530516", "3598", 2, "00:53:47.7", "00:25:49.5", "00:27:58.2", "finished"],
   [24, "Nicolette", "Parmer", "North Dakota", "100392072", "3562", 2, "00:56:50.3", "00:26:58.7", "00:29:51.5", "finished"],
-  [25, "Sophie", "Gricius", "Winona", "100390609", "3599", 2, "00:57:03.7", "00:22:38.5", "00:31:25.2", "3 Min Outside Assist"],
+  [25, "Sophie", "Gricius", "Winona", "100390609", "3599", 2, "00:57:03.7", "00:22:38.5", "00:31:25.2", "finished", "3 Min Outside Assist", nil],
   [26, "Elizabeth", "Mendez", "Burnsville HS", "100425799", "3506", 2, "00:59:47.1", "00:27:37.4", "00:32:09.7", "finished"],
   [27, "Elsa", "Miller", "Wayzata Mountain Bike", "100531726", "3593", 2, "01:01:17.5", "00:29:26.3", "00:31:51.2", "finished"],
-  [28, "Vanessa", "Rickmeyer", "Crosby-Ironton HS", "100392315", "3515", 2, "01:03:40.3", "00:20:12.3", "00:40:28.0", "3 Min Outside Assist"],
+  [28, "Vanessa", "Rickmeyer", "Crosby-Ironton HS", "100392315", "3515", 2, "01:03:40.3", "00:20:12.3", "00:40:28.0", "finished", "3 Min Outside Assist", nil],
   [29, "Marianna", "Milne", "Wayzata Mountain Bike", "100481869", "3595", 2, "01:08:19.0", "00:31:31.6", "00:36:47.4", "finished"],
   [30, "Addison", "Deutsch", "Shakopee HS", "100427539", "3576", 2, "01:09:54.7", "00:32:31.3", "00:37:23.4", "finished"],
-  [31, "Sylvia", "Klein", "Shakopee HS", "100391219", "3577", 1, "00:38:04.7", "00:38:04.7", nil, "Pulled by Ref -1"]
+  [31, "Sylvia", "Klein", "Shakopee HS", "100391219", "3577", 1, "00:38:04.7", "00:38:04.7", nil, "DNF", nil, "Pulled by Ref -1"]
 ]
 
 # Whitetail Jv2 Girls Results
@@ -670,7 +670,7 @@ whitetail_jv2_girls_results = [
   [44, "Grace", "Kubala", "Burnsville HS", "100493107", "2617", 2, "01:02:15.2", "00:29:20.9", "00:32:54.2", "finished"],
   [45, "Lillian", "Kainz", "Rock Ridge", "100427192", "2682", 2, "01:07:07.4", "00:29:52.5", "00:37:14.9", "finished"],
   [46, "Rylee", "Lund", "New Prague MS and HS", "100533767", "2669", 2, "01:08:55.3", "00:31:00.4", "00:37:54.9", "finished"],
-  [47, "Dylan", "Schmidt", "Hudson HS", "100392505", "2646", 1, "00:34:27.0", "00:34:27.0", nil, "pulled"],
+  [47, "Dylan", "Schmidt", "Hudson HS", "100392505", "2646", 1, "00:34:27.0", "00:34:27.0", nil, "DNF", nil, "pulled"],
   [48, "Camila", "Galvan-Ortiz", "Shakopee HS", "100462928", "2689", 1, "00:22:36.6", "00:22:36.6", nil, "DNF"]
 ]
 

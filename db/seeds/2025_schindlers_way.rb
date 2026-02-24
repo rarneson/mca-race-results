@@ -205,7 +205,7 @@ schindlers_way_7th_grade_boys_d2_results = [
   [10, "Cam", "Slavey", "Winona", "100511907", "6807", 2, "23:05.5", "11:04.9", "12:00.5", nil, nil, "finished", nil, nil],
   [11, "William", "Lohmeyer", "Winona", "100574006", "6806", 2, "23:05.6", "11:24.0", "11:41.6", nil, nil, "finished", nil, nil],
   [12, "Owen", "Berg", "Austin HS", "100510964", "6516", 2, "23:18.5", "11:04.5", "12:13.9", nil, nil, "finished", nil, nil],
-  [13, "Peter", "Martinson", "Minneapolis South HS", "100514067", "6641", 2, "", "Warnings - Items stay with rider", "23:20.0", "11:08.9", "12:11.1"],
+  [13, "Peter", "Martinson", "Minneapolis South HS", "100514067", "6641", 2, "23:20.0", "11:08.9", "12:11.1", nil, nil, "finished", nil, "Warnings - Items stay with rider"],
   [14, "Elliot", "Freeman", "Roseville", "100530582", "6744", 2, "23:20.8", "11:25.7", "11:55.0", nil, nil, "finished", nil, nil],
   [15, "Lincoln", "Wescott", "Hudson HS", "100510476", "6616", 2, "23:31.8", "11:27.0", "12:04.8", nil, nil, "finished", nil, nil],
   [16, "Willem", "Sheldon", "Minneapolis Northside", "100538513", "6635", 2, "23:31.9", "11:40.9", "11:51.0", nil, nil, "finished", nil, nil],
@@ -231,7 +231,7 @@ schindlers_way_7th_grade_boys_d2_results = [
   [36, "Reas", "James", "Minneapolis Southside", "100523747", "6643", 2, "28:03.1", "13:16.7", "14:46.3", nil, nil, "finished", nil, nil],
   [37, "Fritz", "Frey", "Rosemount HS", "100528778", "6740", 2, "29:15.0", "14:14.0", "15:00.9", nil, nil, "finished", nil, nil],
   [38, "Matthew", "Kriesel", "Totino Grace-Irondale", "100564705", "6788", 2, "29:28.2", "14:20.6", "15:07.5", nil, nil, "finished", nil, nil],
-  [39, "Henry", "Thomford", "St Paul Composite - North", "100566856", "6773", 2, "", "Warning - Hands not on bars", "31:13.6", "14:27.0", "16:46.6"],
+  [39, "Henry", "Thomford", "St Paul Composite - North", "100566856", "6773", 2, "31:13.6", "14:27.0", "16:46.6", nil, nil, "finished", nil, "Warning - Hands not on bars"],
   [40, "Noah", "Scherger", "Austin HS", "100514010", "6518", 2, "31:53.8", "13:58.7", "17:55.1", nil, nil, "finished", nil, nil],
   [41, "Rio", "De Paz", "Rosemount HS", "100562774", "6578", 2, "32:16.4", "14:44.5", "17:31.9", nil, nil, "finished", nil, nil],
   [42, "Bryce", "Schaaf", "Lakeville South HS", "100525474", "6627", 1, "17:30.0", "17:30.0", nil, nil, nil, "finished", nil, nil]
@@ -369,7 +369,7 @@ schindlers_way_8th_grade_boys_d2_results = [
   [36, "Turner", "Bergh", "Eagan HS", "100526743", "5575", 2, "22:58.1", "11:00.4", "11:57.7", nil, nil, "finished", nil, nil],
   [37, "Alijah", "Walker", "Eastview HS", "100517688", "5580", 2, "23:02.7", "11:29.2", "11:33.4", nil, nil, "finished", nil, nil],
   [38, "Ryan", "Cleary", "River Falls HS", "100461518", "5750", 2, "23:03.3", "11:10.7", "11:52.5", nil, nil, "finished", nil, nil],
-  [39, "Finley", "Stoks", "St Paul Composite - North", "100511267", "5829", 2, "Warning - Hands not on bars", "", "23:04.5", "11:13.8", "11:50.7"],
+  [39, "Finley", "Stoks", "St Paul Composite - North", "100511267", "5829", 2, "23:04.5", "11:13.8", "11:50.7", nil, nil, "finished", nil, "Warning - Hands not on bars"],
   [40, "Sam", "Ford", "Minneapolis Southside", "100524506", "5688", 2, "23:08.5", "11:15.1", "11:53.3", nil, nil, "finished", nil, nil],
   [41, "Derek", "Schneider", "Chanhassen HS", "100488949", "5559", 2, "23:11.6", "11:16.0", "11:55.6", nil, nil, "finished", nil, nil],
   [42, "Isaac", "Bigelow", "St Paul Highland Park", "100465401", "5835", 2, "23:12.6", "11:21.4", "11:51.2", nil, nil, "finished", nil, nil],
@@ -422,7 +422,7 @@ schindlers_way_8th_grade_boys_d1_results = [
   [18, "Linus", "Danielson", "Edina Cycling", "100478037", "5596", 2, "22:07.8", "11:14.1", "10:53.6", nil, nil, "finished", nil, nil],
   [19, "Oliver", "Ambrose", "Edina Cycling", "100468474", "5593", 2, "22:11.4", "10:53.6", "11:17.7", nil, nil, "finished", nil, nil],
   [20, "Logan", "Bundy", "New Prague MS and HS", "100534727", "5715", 2, "22:12.9", "10:52.7", "11:20.1", nil, nil, "finished", nil, nil],
-  [21, "Christian", "Cochems", "Rock Ridge", "100532458", "5775", 2, "Warning - Hands not on bars", "", "22:18.3", "10:40.2", "11:38.1"],
+  [21, "Christian", "Cochems", "Rock Ridge", "100532458", "5775", 2, "22:18.3", "10:40.2", "11:38.1", nil, nil, "finished", nil, "Warning - Hands not on bars"],
   [22, "Eamon", "Hughey", "Edina Cycling", "100479728", "5602", 2, "22:26.8", "11:03.6", "11:23.1", nil, nil, "finished", nil, nil],
   [23, "Thomas", "Rinehart", "Mounds View HS", "100566436", "5713", 2, "22:56.7", "11:07.9", "11:48.7", nil, nil, "finished", nil, nil],
   [24, "Tommy", "Raine", "Edina Cycling", "100473330", "5610", 2, "22:57.2", "11:18.5", "11:38.6", nil, nil, "finished", nil, nil],
@@ -521,7 +521,7 @@ schindlers_way_freshman_boys_d2_results = [
   [46, "Mateo", "Landayan", "North Dakota", "100577062", "3705", 3, "42:59.5", "13:37.2", "14:15.3", "15:06.9", nil, nil, "finished", nil, nil],
   [47, "Soren", "Hallanger", "Bemidji", "100577718", "3856", 3, "43:01.9", "13:39.6", "14:13.9", "15:08.2", nil, nil, "finished", nil, nil],
   [48, "Payne", "Yost", "Bemidji", "100563064", "3857", 3, "43:06.9", "13:12.2", "14:43.9", "15:10.7", nil, nil, "finished", nil, nil],
-  [49, "Drew", "Wright", "Roseville", "100573448", "3767", 3, "6 Min Outside Assist", "", "49:22.0", "18:34.1", "12:14.7", "12:33.1", ""]
+  [49, "Drew", "Wright", "Roseville", "100573448", "3767", 3, "49:22.0", "18:34.1", "12:14.7", "12:33.1", nil, "finished", "6 Min Outside Assist", nil]
 ]
 
 #Freshman Boys D1 Results
@@ -573,7 +573,7 @@ schindlers_way_freshman_boys_d1_results = [
   [45, "Keon", "Sjostrom", "Mounds View HS", "100463414", "3695", 4, "46:41.9", "10:44.3", "12:00.6", "12:02.2", "11:54.7", nil, "finished", nil, nil],
   [46, "Noah", "Berry", "Mounds View HS", "100559811", "3687", 4, "47:08.4", "11:01.9", "11:35.3", "12:14.4", "12:16.6", nil, "finished", nil, nil],
   [47, "Evan", "Sachs", "Prior Lake HS", "100421249", "3732", 4, "47:59.7", "11:41.7", "12:06.4", "11:51.4", "12:20.1", nil, "finished", nil, nil],
-  [48, "Garrett", "Lusignan", "New Prague MS and HS", "100426763", "3701", 4, "5 Min Bike Swap", "", "48:40.9", "12:02.9", "10:20.4", "10:23.3", "10:54.1"],
+  [48, "Garrett", "Lusignan", "New Prague MS and HS", "100426763", "3701", 4, "48:40.9", "12:02.9", "10:20.4", "10:23.3", "10:54.1", "finished", "5 Min Bike Swap", nil],
   [49, "Brock", "Barlage", "New Prague MS and HS", "100427535", "3699", 3, "36:12.7", "11:05.2", "12:17.8", "12:49.6", nil, nil, "finished", nil, nil],
   [50, "Thomas 'Tommy'", "Hagen", "Hopkins HS", "100533027", "3615", 3, "36:49.7", "11:20.1", "12:32.1", "12:57.4", nil, nil, "finished", nil, nil],
   [51, "Nicolai", "Glatt", "Minneapolis Roosevelt HS", "100561287", "3648", 3, "37:02.7", "11:31.4", "12:41.4", "12:49.9", nil, nil, "finished", nil, nil],

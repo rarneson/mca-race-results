@@ -72,33 +72,27 @@ module RaceData
       create_lap_times(race_result, lap_times) if lap_times.any?
     end
 
+    VALID_STATUSES = %w[finished dnf dns dsq dq].freeze
+
     def normalize_result_data(result_data, expected_laps)
-      # Handle different data formats
-      if result_data.length > 12
-        # Extended format: [place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, lap2_time, lap3_time, status, penalty, comments]
-        place, first_name, last_name, team_name, rider_number, plate, laps, total_time, *lap_times_status_penalty_comments = result_data
-        comments = lap_times_status_penalty_comments.length > 2 ? lap_times_status_penalty_comments.pop : nil
-        penalty = lap_times_status_penalty_comments.length > 1 ? lap_times_status_penalty_comments.pop : nil
-        status = lap_times_status_penalty_comments.pop
-        lap_times = lap_times_status_penalty_comments.compact
-      elsif result_data.length > 11
-        # New format: [place, first_name, last_name, team_name, rider_number, plate, points, total_time, lap1_time, lap2_time, lap3_time, status, penalty]
-        place, first_name, last_name, team_name, rider_number, plate, points, total_time, *lap_times_status_penalty = result_data
-        penalty = lap_times_status_penalty.length > 1 ? lap_times_status_penalty.pop : nil
-        status = lap_times_status_penalty.pop
-        lap_times = lap_times_status_penalty.compact
-        laps = lap_times.length > 0 ? lap_times.length : expected_laps
-        comments = nil
+      place, first_name, last_name, team_name, rider_number, plate, laps, total_time, *remaining = result_data
+
+      status_index = remaining.rindex { |val| val.is_a?(String) && VALID_STATUSES.include?(val.strip.downcase) }
+
+      if status_index
+        lap_times = remaining[0...status_index]
+        status = remaining[status_index]
+        after_status = remaining[(status_index + 1)..]
+        penalty = after_status&.dig(0)
+        comments = after_status&.dig(1)
       else
-        # Standard format: [place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, lap2_time, status]
-        place, first_name, last_name, team_name, rider_number, plate, laps, total_time, *lap_times_status = result_data
-        status = lap_times_status.pop
-        lap_times = lap_times_status.compact
+        lap_times = remaining
+        status = nil
         penalty = nil
         comments = nil
       end
-      
-      [place, first_name, last_name, team_name, rider_number, plate, laps, total_time, *lap_times, status, penalty, comments]
+
+      [place, first_name, last_name, team_name, rider_number, plate, laps, total_time, *lap_times.compact, status, penalty, comments]
     end
 
     def find_team_with_error_handling(team_name, first_name, last_name)

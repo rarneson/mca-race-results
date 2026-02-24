@@ -876,7 +876,7 @@ lake_rebecca_jv3_boys_results = [
   [116, "Jason", "Andersen", "Osseo HS", "100389436", "1157", 3, "1:03:51.7", "20:34.9", "21:40.5", "21:36.2", nil, "finished", nil, nil],
   [117, "Lance", "Seifert", "Hutchinson Tigers", "100392571", "1098", 3, "1:04:05.9", "20:38.2", "22:01.8", "21:25.7", nil, "finished", nil, nil],
   [118, "Xavier", "Demarre", "Chaska HS", "100390124", "1045", 2, "39:17.3", "19:00.7", "20:16.5", nil, "DNF", nil, nil],
-  [119, "Josiah", "Nicholas", "Burnsville HS", "100391913", "1031", 2, "45:57.7", "21:46.8", "24:10.9", nil, "Rider Pulled", nil, nil],
+  [119, "Josiah", "Nicholas", "Burnsville HS", "100391913", "1031", 2, "45:57.7", "21:46.8", "24:10.9", nil, "DNF", nil, "Rider Pulled"],
   [120, "Silas", "Johnson", "Hopkins HS", "100391088", "1088", 1, "16:19.4", "16:19.4", nil, nil, "DNF", nil, nil],
   [121, "Micah", "Swanson", "Northwoods Cycling", "100510878", "1153", 1, "18:14.7", "18:14.7", nil, nil, "DNF", nil, nil],
   [122, "James", "Delahunt", "Woodbury HS", "100390122", "1234", 0, "", nil, nil, nil, "DNF", nil, nil]
