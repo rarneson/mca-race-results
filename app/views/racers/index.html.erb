@@ -7,21 +7,17 @@
     </div>
   <% end %>
 
-  <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-8">
-    <div>
-      <%= render "shared/page_header", title: "Racers",
-        subtitle: tag.span(render(partial: "racers/racers_count", locals: { count: @pagy.count, selected_year: @selected_year }), id: "racers_count") %>
-    </div>
+  <div class="flex flex-col gap-4 mb-8">
+    <h1 class="text-2xl md:text-3xl font-bold text-gray-900">Racers</h1>
 
-    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-4">
+    <div class="flex flex-row items-center gap-2 sm:gap-4 min-w-0">
       <!-- Search -->
       <div class="flex items-center gap-2" data-controller="racer-search" data-racer-search-url-value="<%= racers_path %>">
-        <label for="racer_search" class="text-sm font-medium text-gray-700">Name:</label>
         <input
           id="racer_search"
           type="text"
           placeholder="Search racers..."
-          class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 w-full sm:w-64"
+          class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 w-40 sm:w-64"
           data-racer-search-target="input"
           data-action="input->racer-search#search keydown->racer-search#handleKeydown"
           value="<%= @search_query %>"
@@ -31,7 +27,6 @@
       <!-- Year Filter -->
       <div class="flex items-center gap-2">
         <%= form_with url: racers_path, method: :get, local: true, class: "flex items-center gap-2" do |form| %>
-          <%= form.label :year, "Year:", class: "text-sm font-medium text-gray-700" %>
           <%= form.select :year,
               options_for_select([["All", "All"]] + @available_years.map { |year| [year, year] }, @selected_year),
               {},
@@ -46,14 +41,13 @@
 
       <!-- Team Filter -->
       <% if @team_counts.any? %>
-        <div class="flex items-center gap-2">
-          <%= form_with url: racers_path, method: :get, local: true, class: "flex items-center gap-2" do |form| %>
-            <%= form.label :team, "Team:", class: "text-sm font-medium text-gray-700" %>
+        <div class="flex items-center gap-2 min-w-0 flex-1 max-w-xs">
+          <%= form_with url: racers_path, method: :get, local: true, class: "flex items-center gap-2 min-w-0 w-full" do |form| %>
             <%= form.select :team,
                 options_for_select([["All Teams", ""]] + @team_counts.keys.map { |team| [team, team] }, @selected_team),
                 {},
                 {
-                  class: "border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500",
+                  class: "border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 min-w-0 w-full truncate",
                   onchange: "this.form.submit();"
                 } %>
             <%= form.hidden_field :search, value: @search_query if @search_query.present? %>
@@ -62,6 +56,10 @@
         </div>
       <% end %>
     </div>
+
+    <p class="text-gray-600" id="racers_count">
+      <%= render partial: "racers/racers_count", locals: { count: @pagy.count, selected_year: @selected_year } %>
+    </p>
   </div>
 
   <div id="racers_table">

@@ -1,5 +1,5 @@
 <% if selected_year == "All" %>
-  <%= pluralize(count, 'racer') %> total
+  <%= number_with_delimiter(count) %> <%= 'racer'.pluralize(count) %> total
 <% else %>
-  <%= pluralize(count, 'racer') %> competing in <%= selected_year %>
+  <%= number_with_delimiter(count) %> <%= 'racer'.pluralize(count) %> competing in <%= selected_year %>
 <% end %>

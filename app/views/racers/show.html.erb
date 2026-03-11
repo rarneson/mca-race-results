@@ -8,87 +8,61 @@
   <%= render "shared/back_navigation", path: @back_path, text: @back_text %>
 
   <!-- Header Section -->
-  <div class="bg-gray-100 rounded-lg p-4 md:p-6 mb-6 md:mb-8">
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-      <div class="flex items-center">
-        <!-- Profile Avatar -->
-        <div class="w-12 h-12 md:w-16 md:h-16 bg-green-500 rounded-full flex items-center justify-center text-white text-xl md:text-2xl font-bold mr-3 md:mr-6 shrink-0">
-          <%= @racer.first_name.first.upcase if @racer.first_name %>
-        </div>
-
-        <div>
-          <div class="flex flex-wrap items-center gap-2 mb-2">
-            <h1 class="text-2xl md:text-3xl font-bold"><%= @racer.name %></h1>
-            <% if @racer.number.present? %>
-              <span class="text-xl md:text-2xl text-gray-500">#<%= @racer.number %></span>
-            <% end %>
-          </div>
-          
-          <div class="flex flex-wrap items-center gap-2 md:gap-4">
-            <% if @racer.team %>
-              <%= link_to @racer.team_name, team_path(@racer.team), class: "text-gray-600 hover:text-gray-800 hover:underline" %>
-            <% else %>
-              <span class="text-gray-600"><%= @racer.team_name %></span>
-            <% end %>
-            <% if @current_category %>
-              <span class="<%= category_css_class(@current_category.name) %> px-3 py-1 rounded-full text-sm font-medium">
-                <%= @current_category.name %>
-              </span>
-            <% end %>
-          </div>
-          
-          <div class="flex items-center mt-2 text-orange-500">
-            🔥 <%= pluralize(@racer.race_results.where('place <= 5').count, 'podium finish') %>
-            <% if @racer.race_results.where('place = 1').any? %>
-              ⭐
-            <% end %>
-          </div>
-        </div>
-      </div>
-      
-      <div class="flex gap-2">
-        <%= link_to "Edit", edit_racer_path(@racer), class: "btn btn-primary btn-sm" %>
-        <%= link_to @back_text, @back_path, class: "btn btn-outline btn-sm" %>
-      </div>
+  <div class="mb-8">
+    <div class="flex flex-wrap items-center gap-2 mb-2">
+      <h1 class="text-2xl md:text-3xl font-bold text-gray-900"><%= @racer.name %></h1>
+      <% if @racer.number.present? %>
+        <span class="text-xl md:text-2xl text-gray-500">#<%= @racer.number %></span>
+      <% end %>
+      <% if @current_category %>
+        <span class="<%= category_css_class(@current_category.name) %> px-3 py-1 rounded-full text-sm font-medium">
+          <%= @current_category.name %>
+        </span>
+      <% end %>
     </div>
+    <p class="text-gray-600">
+      <% if @racer.team %>
+        <%= link_to @racer.team_name, team_path(@racer.team), class: "text-gray-600 hover:text-gray-800 hover:underline" %>
+      <% else %>
+        <%= @racer.team_name %>
+      <% end %>
+    </p>
   </div>
 
   <!-- Performance Overview Section -->
   <div class="mb-8">
-    <h2 class="text-2xl font-bold mb-6">Performance Overview</h2>
-    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+    <h2 class="text-xl md:text-2xl font-bold mb-4 md:mb-6">Performance Overview</h2>
+    <div class="grid grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
       <!-- Total Races -->
-      <div class="bg-white rounded-lg border p-4 text-center">
-        <div class="text-gray-500 text-sm mb-1">📅</div>
-        <div class="text-3xl font-bold mb-1"><%= @racer.race_results.count %></div>
-        <div class="text-gray-600 text-sm">Total Races</div>
+      <div class="bg-white rounded-lg border p-3 md:p-4 text-center">
+        <div class="text-2xl md:text-3xl font-bold mb-1"><%= @racer.race_results.count %></div>
+        <div class="text-gray-600 text-xs md:text-sm">Total Races</div>
       </div>
-      
+
       <!-- Podiums -->
-      <div class="bg-orange-50 border border-orange-200 rounded-lg p-4 text-center">
-        <div class="text-orange-600 text-sm mb-1">🥇</div>
-        <div class="text-3xl font-bold text-orange-600 mb-1"><%= @racer.race_results.where('place <= 5').count %></div>
-        <div class="text-gray-600 text-sm">Podiums</div>
+      <div class="bg-orange-50 border border-orange-200 rounded-lg p-3 md:p-4 text-center">
+        <div class="text-2xl md:text-3xl font-bold text-orange-600 mb-1"><%= @racer.race_results.where('place <= 5').count %></div>
+        <div class="text-gray-600 text-xs md:text-sm">Podiums</div>
       </div>
-      
+
       <!-- Average Position -->
-      <div class="bg-white rounded-lg border p-4 text-center">
-        <div class="text-gray-500 text-sm mb-1">🎯</div>
-        <div class="text-3xl font-bold mb-1">
-          <%= @racer.race_results.any? ? number_with_precision(@racer.race_results.average(:place) || 0, precision: 1) : '0' %>
+      <div class="bg-white rounded-lg border p-3 md:p-4 text-center">
+        <div class="text-2xl md:text-3xl font-bold mb-1">
+          <% with_place = @racer.race_results.where.not(place: nil) %>
+          <%= with_place.any? ? number_with_precision(with_place.average(:place) || 0, precision: 1) : '0' %>
         </div>
-        <div class="text-gray-600 text-sm">Avg Position</div>
+        <div class="text-gray-600 text-xs md:text-sm">Avg Position</div>
       </div>
     </div>
   </div>
 
   <!-- Career Statistics Section -->
   <div class="mb-8">
-    <h2 class="text-2xl font-bold mb-6">Career Statistics</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
+    <h2 class="text-xl md:text-2xl font-bold mb-4 md:mb-6">Career Statistics</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-6">
       
       <!-- Success Rates -->
-      <div class="bg-white rounded-lg border p-6">
+      <div class="bg-white rounded-lg border p-4 md:p-6">
         <div class="flex items-center mb-4">
           <div class="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center mr-3">
             🏆
@@ -116,7 +90,7 @@
           <div class="flex justify-between items-center">
             <span class="text-gray-600">Finish Rate</span>
             <span class="font-bold text-green-600">
-              <% finish_rate = @racer.race_results.count > 0 ? (@racer.race_results.where.not(place: nil).count.to_f / @racer.race_results.count * 100) : 0 %>
+              <% finish_rate = @racer.race_results.count > 0 ? (@racer.race_results.where(status: 'finished').count.to_f / @racer.race_results.count * 100) : 0 %>
               <%= number_with_precision(finish_rate, precision: 1) %>%
             </span>
           </div>
@@ -124,7 +98,7 @@
       </div>
       
       <!-- Time Statistics -->
-      <div class="bg-white rounded-lg border p-6">
+      <div class="bg-white rounded-lg border p-4 md:p-6">
         <div class="flex items-center mb-4">
           <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
             ⏱️
@@ -168,7 +142,7 @@
       </div>
       
       <!-- Position Stats -->
-      <div class="bg-white rounded-lg border p-6">
+      <div class="bg-white rounded-lg border p-4 md:p-6">
         <div class="flex items-center mb-4">
           <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mr-3">
             🎯
@@ -177,24 +151,25 @@
         </div>
         
         <div class="space-y-4">
+          <% placed_results = @racer.race_results.where.not(place: nil) %>
           <div class="flex justify-between items-center">
             <span class="text-gray-600">Best Position</span>
             <span class="font-bold">
-              <%= @racer.race_results.minimum(:place) || 'N/A' %>
+              <%= placed_results.minimum(:place) || 'N/A' %>
             </span>
           </div>
-          
+
           <div class="flex justify-between items-center">
             <span class="text-gray-600">Average Position</span>
             <span class="font-bold">
-              <%= @racer.race_results.any? ? number_with_precision(@racer.race_results.average(:place) || 0, precision: 1) : 'N/A' %>
+              <%= placed_results.any? ? number_with_precision(placed_results.average(:place) || 0, precision: 1) : 'N/A' %>
             </span>
           </div>
-          
+
           <div class="flex justify-between items-center">
             <span class="text-gray-600">DNFs</span>
             <span class="font-bold">
-              <%= @racer.race_results.where(place: nil).count %>
+              <%= @racer.race_results.where(status: 'DNF').count %>
             </span>
           </div>
         </div>
@@ -205,7 +180,7 @@
 
   <!-- Race History & Lap Analysis Section -->
   <div class="mb-8">
-    <h2 class="text-2xl font-bold mb-6">Race History & Lap Analysis</h2>
+    <h2 class="text-xl md:text-2xl font-bold mb-4 md:mb-6">Race History & Lap Analysis</h2>
     <% if @race_results_by_year.any? %>
       <div class="space-y-4 md:space-y-8">
         <% @race_results_by_year.each do |year, results| %>
@@ -220,38 +195,25 @@
             <div class="space-y-4">
               <% results.each_with_index do |result, index| %>
                 <% is_latest_overall = year == @race_results_by_year.keys.first && index == 0 %>
-                <div class="bg-white rounded-lg border">
+                <div class="bg-white rounded-lg border overflow-hidden">
                   <!-- Race Header -->
-                  <div class="p-4 border-b">
-                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                      <div class="flex items-center">
-                        <h4 class="text-base md:text-lg font-semibold mr-4">
-                          <% if result.race %>
-                            <%= link_to result.race.name, race_path(result.race, category: result.category&.name), class: "text-blue-600 hover:text-blue-800 hover:underline" %>
-                          <% else %>
-                            Unknown Race
-                          <% end %>
-                          <% if is_latest_overall %>
-                            <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full ml-2">Latest</span>
-                          <% end %>
-                        </h4>
-                      </div>
-                      
-                      <button 
-                        class="text-gray-500 hover:text-gray-700"
-                        onclick="toggleLapTimes('race-<%= result.id %>')"
-                      >
-                        <span id="race-<%= result.id %>-toggle">Show Lap Times</span>
-                        <svg class="w-4 h-4 inline ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                        </svg>
-                      </button>
+                  <div class="p-4">
+                    <div class="flex items-center justify-between">
+                      <h4 class="text-base md:text-lg font-semibold mr-4">
+                        <% if result.race %>
+                          <%= link_to result.race.name, race_path(result.race, category: result.category&.name), class: "text-blue-600 hover:text-blue-800 hover:underline" %>
+                        <% else %>
+                          Unknown Race
+                        <% end %>
+                        <% if is_latest_overall %>
+                          <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full ml-2">Latest</span>
+                        <% end %>
+                      </h4>
                     </div>
                     
                     <div class="flex flex-wrap items-center gap-2 md:gap-6 mt-2 text-sm text-gray-600">
                       <span>📅 <%= result.race&.race_date&.strftime('%m/%d/%Y') || 'Unknown Date' %></span>
                       <span>📍 <%= result.race&.location || 'Unknown Location' %></span>
-                      <span>📏 <%= "32.5 km" %></span>
                       <% if result.category %>
                         <span class="<%= category_css_class(result.category.name) %> px-2 py-1 rounded text-xs font-medium">
                           <%= result.category.name %>
@@ -261,7 +223,9 @@
                     
                     <div class="flex items-center mt-3">
                       <span class="text-sm text-gray-600 mr-2">Position:</span>
-                      <% if result.place == 1 %>
+                      <% if result.status == 'DNF' %>
+                        <span class="bg-red-100 text-red-800 px-2 py-1 rounded text-sm font-medium">DNF</span>
+                      <% elsif result.place == 1 %>
                         <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-sm font-medium">1st</span>
                       <% elsif result.place && result.place <= 5 %>
                         <span class="bg-orange-100 text-orange-800 px-2 py-1 rounded text-sm font-medium"><%= result.place.ordinalize %></span>
@@ -279,10 +243,20 @@
                         <% end %>
                       </span>
                     </div>
+
+                    <button
+                      class="text-sm text-gray-500 hover:text-gray-700 mt-3 md:hidden"
+                      onclick="toggleLapTimes('race-<%= result.id %>')"
+                    >
+                      <span id="race-<%= result.id %>-toggle">Show Lap Times</span>
+                      <svg class="w-4 h-4 inline ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                      </svg>
+                    </button>
                   </div>
-                  
+
                   <!-- Expandable Lap Times -->
-                  <div id="race-<%= result.id %>-laps" class="hidden p-4 bg-gray-50">
+                  <div id="race-<%= result.id %>-laps" class="hidden md:block p-4 bg-gray-50">
                     <% if result.race_result_laps.any? %>
                       <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
                         <% result.race_result_laps.order(:lap_number).each do |lap| %>
