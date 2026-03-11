@@ -6,7 +6,7 @@
   <%= render "shared/page_header", title: "Race Results", subtitle: "Browse all race results by season" %>
 
   <!-- Race Title -->
-  <div class="p-6 bg-white border-b">
+  <div class="p-3 md:p-6 bg-white border-b">
     <h2 class="text-2xl font-bold text-emerald-600 mb-2"><%= @race.name %></h2>
     <div class="flex flex-wrap items-center gap-3 md:gap-6 text-gray-600 mb-2">
       <div class="flex items-center gap-2">
@@ -28,7 +28,7 @@
   </div>
 
   <!-- Main Content -->
-  <div class="p-6">
+  <div class="p-3 md:p-6">
     <!-- Filter by Category -->
     <div class="mb-6">
       <div class="flex items-center gap-2 mb-4">
@@ -74,114 +74,183 @@
     </div>
 
     <!-- Tab Content -->
-    <!-- Race Results Table -->
-    <div id="results-content" class="bg-white rounded-lg border border-gray-200 overflow-hidden">
-      <div class="px-2 md:px-6 py-3 md:py-4 border-b border-gray-200">
-        <div class="flex items-center gap-2">
-          <h3 class="text-lg font-semibold text-gray-900">Race Results</h3>
-        </div>
-      </div>
-      
-      <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
-            <tr>
-              <th class="px-2 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pos</th>
-              <th class="px-2 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Plate</th>
-              <th class="px-2 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-              <th class="px-2 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Team</th>
-              <% (1..@max_laps).each do |lap_num| %>
-                <th class="px-2 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lap <%= lap_num %></th>
-              <% end %>
-              <th class="px-2 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
-              <th class="px-2 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gap</th>
-              <th class="px-2 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-              <th class="px-2 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Comments</th>
-              <th class="px-2 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Penalty</th>
-            </tr>
-          </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-            <% @race_results.each_with_index do |result, index| %>
-              <tr class="<%= index.even? ? 'bg-white' : 'bg-gray-50' %> hover:bg-gray-100">
-                <td class="px-2 md:px-6 py-3 md:py-4 whitespace-nowrap">
-                  <div class="flex items-center">
-                    <span class="text-gray-900"><%= result.place || '-' %></span>
+    <!-- Race Results -->
+    <div id="results-content">
+      <!-- Mobile Card Layout -->
+      <div class="md:hidden space-y-3">
+        <% @race_results.each do |result| %>
+          <% category_leader = @race_results.first %>
+          <div class="bg-white rounded-lg border border-gray-200 p-3">
+            <!-- Header: Position, Name, Total Time -->
+            <div class="flex items-center justify-between mb-2">
+              <div class="flex items-center gap-2">
+                <span class="text-lg font-bold text-gray-900 w-8"><%= result.place || '-' %></span>
+                <div>
+                  <div class="text-sm font-semibold text-gray-900">
+                    <%= result.racer_season.racer.first_name.humanize %> <%= result.racer_season.racer.last_name.humanize %>
                   </div>
-                </td>
-                <td class="px-2 md:px-6 py-3 md:py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  <%= result.plate_number_snapshot %>
-                </td>
-                <td class="px-2 md:px-6 py-3 md:py-4 whitespace-nowrap">
-                  <div>
+                  <div class="text-xs text-gray-500"><%= result.racer_season.team&.name || 'Orphaned!' %></div>
+                </div>
+              </div>
+              <div class="text-right">
+                <div class="text-sm font-bold text-gray-900"><%= time_from_ms(result.total_time_ms) %></div>
+                <div class="text-xs text-gray-500">
+                  <% if result.place && result.place > 1 && category_leader && result.total_time_ms && category_leader.total_time_ms %>
+                    +<%= time_from_ms(result.total_time_ms - category_leader.total_time_ms) %>
+                  <% elsif result.place == 1 %>
+                    Leader
+                  <% end %>
+                </div>
+              </div>
+            </div>
+
+            <!-- Lap Times -->
+            <% if @max_laps > 0 %>
+              <div class="flex flex-wrap gap-1.5 text-xs mb-2">
+                <% (1..@max_laps).each do |lap_num| %>
+                  <% lap = result.race_result_laps.find { |l| l.lap_number == lap_num } %>
+                  <div class="bg-gray-50 rounded px-1.5 py-1">
+                    <span class="text-gray-500">L<%= lap_num %></span>
+                    <span class="font-medium text-gray-700 ml-0.5"><%= lap && lap.lap_time_ms ? time_from_ms(lap.lap_time_ms) : '-' %></span>
+                  </div>
+                <% end %>
+              </div>
+            <% end %>
+
+            <!-- Status / Plate / Comments / Penalty -->
+            <% has_extras = !result.finished? || result.plate_number_snapshot.present? || result.comments.present? || result.penalty.present? %>
+            <% if has_extras %>
+              <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 border-t border-gray-100 pt-2">
+                <% if result.plate_number_snapshot.present? %>
+                  <span>Plate: <span class="text-gray-700"><%= result.plate_number_snapshot %></span></span>
+                <% end %>
+                <% unless result.finished? %>
+                  <% status_class = if result.dnf?
+                                      'bg-red-100 text-red-800'
+                                    elsif result.dns?
+                                      'bg-yellow-100 text-yellow-800'
+                                    elsif result.dsq?
+                                      'bg-purple-100 text-purple-800'
+                                    else
+                                      'bg-gray-100 text-gray-800'
+                                    end %>
+                  <span class="inline-flex items-center px-1.5 py-0.5 rounded-full font-medium <%= status_class %>">
+                    <%= result.status.upcase %>
+                  </span>
+                <% end %>
+                <% if result.comments.present? %>
+                  <span><%= result.comments %></span>
+                <% end %>
+                <% if result.penalty.present? %>
+                  <span>Penalty: <span class="text-gray-700"><%= result.penalty %></span></span>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Desktop Table Layout -->
+      <div class="hidden md:block bg-white rounded-lg border border-gray-200 overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200">
+          <div class="flex items-center gap-2">
+            <h3 class="text-lg font-semibold text-gray-900">Race Results</h3>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pos</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Plate</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Team</th>
+                <% (1..@max_laps).each do |lap_num| %>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lap <%= lap_num %></th>
+                <% end %>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gap</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Comments</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Penalty</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <% @race_results.each_with_index do |result, index| %>
+                <tr class="<%= index.even? ? 'bg-white' : 'bg-gray-50' %> hover:bg-gray-100">
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="text-gray-900"><%= result.place || '-' %></span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    <%= result.plate_number_snapshot %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
                     <div class="text-sm font-medium text-gray-900">
                       <%= result.racer_season.racer.first_name.humanize %> <%= result.racer_season.racer.last_name.humanize %>
                     </div>
-                  </div>
-                </td>
-                <td class="px-2 md:px-6 py-3 md:py-4 whitespace-nowrap text-sm text-gray-500">
-                  <%= result.racer_season.team&.name || 'Orphaned!' %>
-                </td>
-                <% (1..@max_laps).each do |lap_num| %>
-                  <td class="px-2 md:px-6 py-3 md:py-4 whitespace-nowrap text-sm text-gray-500">
-                    <% lap = result.race_result_laps.find { |l| l.lap_number == lap_num } %>
-                    <% if lap && lap.lap_time_ms %>
-                      <%= time_from_ms(lap.lap_time_ms) %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <%= result.racer_season.team&.name || 'Orphaned!' %>
+                  </td>
+                  <% (1..@max_laps).each do |lap_num| %>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <% lap = result.race_result_laps.find { |l| l.lap_number == lap_num } %>
+                      <% if lap && lap.lap_time_ms %>
+                        <%= time_from_ms(lap.lap_time_ms) %>
+                      <% else %>
+                        -
+                      <% end %>
+                    </td>
+                  <% end %>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex items-center">
+                      <svg class="w-4 h-4 text-gray-400 mr-1" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z"/>
+                      </svg>
+                      <span class="text-sm font-medium text-gray-900">
+                        <%= time_from_ms(result.total_time_ms) %>
+                      </span>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <% category_leader = @race_results.first %>
+                    <% if result.place && result.place > 1 && category_leader && result.total_time_ms && category_leader.total_time_ms %>
+                      <% gap_ms = result.total_time_ms - category_leader.total_time_ms %>
+                      +<%= time_from_ms(gap_ms) %>
+                    <% else %>
+                      <%= result.place == 1 ? 'Leader' : '-' %>
+                    <% end %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <% unless result.finished? %>
+                      <% status_class = if result.dnf?
+                                          'bg-red-100 text-red-800'
+                                        elsif result.dns?
+                                          'bg-yellow-100 text-yellow-800'
+                                        elsif result.dsq?
+                                          'bg-purple-100 text-purple-800'
+                                        else
+                                          'bg-gray-100 text-gray-800'
+                                        end %>
+                      <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium <%= status_class %>">
+                        <%= result.status.upcase %>
+                      </span>
                     <% else %>
                       -
                     <% end %>
                   </td>
-                <% end %>
-                <td class="px-2 md:px-6 py-3 md:py-4 whitespace-nowrap">
-                  <div class="flex items-center">
-                    <svg class="w-4 h-4 text-gray-400 mr-1" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z"/>
-                    </svg>
-                    <span class="text-sm font-medium text-gray-900">
-                      <%= time_from_ms(result.total_time_ms) %>
-                    </span>
-                  </div>
-                </td>
-                <td class="px-2 md:px-6 py-3 md:py-4 whitespace-nowrap text-sm text-gray-500">
-                  <% category_leader = @race_results.first %>
-                  <% if result.place && result.place > 1 && category_leader && result.total_time_ms && category_leader.total_time_ms %>
-                    <% gap_ms = result.total_time_ms - category_leader.total_time_ms %>
-                    +<%= time_from_ms(gap_ms) %>
-                  <% else %>
-                    <%= result.place == 1 ? 'Leader' : '-' %>
-                  <% end %>
-                </td>
-                <td class="px-2 md:px-6 py-3 md:py-4 whitespace-nowrap text-sm text-gray-500">
-                  <% unless result.finished? %>
-                    <% status_class = if result.dnf?
-                                        'bg-red-100 text-red-800'
-                                      elsif result.dns?
-                                        'bg-yellow-100 text-yellow-800'
-                                      elsif result.dsq?
-                                        'bg-purple-100 text-purple-800'
-                                      else
-                                        'bg-gray-100 text-gray-800'
-                                      end %>
-                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium <%= status_class %>">
-                      <%= result.status.upcase %>
-                    </span>
-                  <% else %>
-                    -
-                  <% end %>
-                </td>
-                <td class="px-2 md:px-6 py-3 md:py-4 whitespace-nowrap">
-                  <div class="flex items-center">
+                  <td class="px-6 py-4 whitespace-nowrap">
                     <span class="text-gray-900"><%= result.comments || '-' %></span>
-                  </div>
-                </td>
-                <td class="px-2 md:px-6 py-3 md:py-4 whitespace-nowrap">
-                  <div class="flex items-center">
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
                     <span class="text-gray-900"><%= result.penalty || '-' %></span>
-                  </div>
-                </td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -216,18 +285,18 @@
         </div>
 
         <!-- Racer Info Header -->
-        <div id="racer-info" class="px-2 md:px-6 py-3 md:py-4 bg-gray-50 border-b border-gray-200">
-          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <div id="racer-info" class="px-3 md:px-6 py-3 md:py-4 bg-gray-50 border-b border-gray-200">
+          <div class="flex items-start justify-between gap-2">
             <div>
-              <h2 id="racer-name" class="text-xl md:text-2xl font-bold text-gray-900"></h2>
-              <div class="flex flex-wrap items-center gap-2 md:gap-6 text-gray-600 mt-1">
-                <span id="racer-team"></span>
+              <h2 id="racer-name" class="text-lg md:text-2xl font-bold text-gray-900"></h2>
+              <div class="flex flex-wrap items-center gap-1 md:gap-6 text-sm md:text-base text-gray-600 mt-0.5">
                 <span id="racer-category"></span>
+                <span id="racer-team"></span>
               </div>
             </div>
-            <div class="text-right">
-              <div class="text-2xl md:text-3xl font-bold text-gray-900" id="total-time"></div>
-              <div class="text-gray-600" id="position-info"></div>
+            <div class="text-right shrink-0">
+              <div class="text-lg md:text-3xl font-bold text-gray-900" id="total-time"></div>
+              <div class="text-xs md:text-base text-gray-600" id="position-info"></div>
             </div>
           </div>
         </div>
