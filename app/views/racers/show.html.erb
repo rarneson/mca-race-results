@@ -4,27 +4,27 @@
   </div>
 <% end %>
 
-<div class="container mx-auto max-w-6xl p-6">
+<div class="container mx-auto max-w-6xl p-3 md:p-6">
   <%= render "shared/back_navigation", path: @back_path, text: @back_text %>
 
   <!-- Header Section -->
-  <div class="bg-gray-100 rounded-lg p-6 mb-8">
-    <div class="flex items-center justify-between">
+  <div class="bg-gray-100 rounded-lg p-4 md:p-6 mb-6 md:mb-8">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
       <div class="flex items-center">
         <!-- Profile Avatar -->
-        <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center text-white text-2xl font-bold mr-6">
+        <div class="w-12 h-12 md:w-16 md:h-16 bg-green-500 rounded-full flex items-center justify-center text-white text-xl md:text-2xl font-bold mr-3 md:mr-6 shrink-0">
           <%= @racer.first_name.first.upcase if @racer.first_name %>
         </div>
-        
+
         <div>
-          <div class="flex items-center mb-2">
-            <h1 class="text-3xl font-bold mr-4"><%= @racer.name %></h1>
+          <div class="flex flex-wrap items-center gap-2 mb-2">
+            <h1 class="text-2xl md:text-3xl font-bold"><%= @racer.name %></h1>
             <% if @racer.number.present? %>
-              <span class="text-2xl text-gray-500">#<%= @racer.number %></span>
+              <span class="text-xl md:text-2xl text-gray-500">#<%= @racer.number %></span>
             <% end %>
           </div>
           
-          <div class="flex items-center gap-4">
+          <div class="flex flex-wrap items-center gap-2 md:gap-4">
             <% if @racer.team %>
               <%= link_to @racer.team_name, team_path(@racer.team), class: "text-gray-600 hover:text-gray-800 hover:underline" %>
             <% else %>
@@ -85,7 +85,7 @@
   <!-- Career Statistics Section -->
   <div class="mb-8">
     <h2 class="text-2xl font-bold mb-6">Career Statistics</h2>
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
       
       <!-- Success Rates -->
       <div class="bg-white rounded-lg border p-6">
@@ -207,9 +207,9 @@
   <div class="mb-8">
     <h2 class="text-2xl font-bold mb-6">Race History & Lap Analysis</h2>
     <% if @race_results_by_year.any? %>
-      <div class="space-y-8">
+      <div class="space-y-4 md:space-y-8">
         <% @race_results_by_year.each do |year, results| %>
-          <div class="bg-gray-50 rounded-lg p-6">
+          <div class="bg-gray-50 rounded-lg p-3 md:p-6">
             <!-- Year Header -->
             <div class="flex items-center justify-between mb-4">
               <h3 class="text-xl font-bold text-gray-800"><%= year %> Season</h3>
@@ -223,9 +223,9 @@
                 <div class="bg-white rounded-lg border">
                   <!-- Race Header -->
                   <div class="p-4 border-b">
-                    <div class="flex items-center justify-between">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                       <div class="flex items-center">
-                        <h4 class="text-lg font-semibold mr-4">
+                        <h4 class="text-base md:text-lg font-semibold mr-4">
                           <% if result.race %>
                             <%= link_to result.race.name, race_path(result.race, category: result.category&.name), class: "text-blue-600 hover:text-blue-800 hover:underline" %>
                           <% else %>
@@ -248,7 +248,7 @@
                       </button>
                     </div>
                     
-                    <div class="flex items-center gap-6 mt-2 text-sm text-gray-600">
+                    <div class="flex flex-wrap items-center gap-2 md:gap-6 mt-2 text-sm text-gray-600">
                       <span>📅 <%= result.race&.race_date&.strftime('%m/%d/%Y') || 'Unknown Date' %></span>
                       <span>📍 <%= result.race&.location || 'Unknown Location' %></span>
                       <span>📏 <%= "32.5 km" %></span>

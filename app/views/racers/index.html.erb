@@ -7,13 +7,13 @@
     </div>
   <% end %>
 
-  <div class="flex justify-between items-center mb-8">
+  <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-8">
     <div>
       <%= render "shared/page_header", title: "Racers",
         subtitle: tag.span(render(partial: "racers/racers_count", locals: { count: @pagy.count, selected_year: @selected_year }), id: "racers_count") %>
     </div>
 
-    <div class="flex items-center gap-4">
+    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-4">
       <!-- Search -->
       <div class="flex items-center gap-2" data-controller="racer-search" data-racer-search-url-value="<%= racers_path %>">
         <label for="racer_search" class="text-sm font-medium text-gray-700">Name:</label>
@@ -21,7 +21,7 @@
           id="racer_search"
           type="text"
           placeholder="Search racers..."
-          class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 w-64"
+          class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 w-full sm:w-64"
           data-racer-search-target="input"
           data-action="input->racer-search#search keydown->racer-search#handleKeydown"
           value="<%= @search_query %>"

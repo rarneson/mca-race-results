@@ -8,13 +8,13 @@
   <% end %>
 
   <!-- Page Header -->
-  <div class="flex justify-between items-center mb-8">
+  <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-8">
     <div>
       <%= render "shared/page_header", title: "Teams",
         subtitle: tag.span(render(partial: "teams/teams_count", locals: { total_teams: @total_teams, total_racers: @total_racers, selected_year: @selected_year }), id: "teams_count") %>
     </div>
 
-    <div class="flex items-center gap-4">
+    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-4">
       <!-- Search -->
       <div class="flex items-center gap-2" data-controller="team-search" data-team-search-url-value="<%= teams_path %>">
         <label for="team_search" class="text-sm font-medium text-gray-700">Team:</label>
@@ -22,7 +22,7 @@
           id="team_search"
           type="text"
           placeholder="Search teams..."
-          class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 w-64"
+          class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 w-full sm:w-64"
           data-team-search-target="input"
           data-action="input->team-search#search keydown->team-search#handleKeydown"
           value="<%= @search_query %>"

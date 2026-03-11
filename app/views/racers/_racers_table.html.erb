@@ -1,15 +1,15 @@
 <% if racers.any? %>
-  <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+  <div class="bg-white rounded-lg border border-gray-200 overflow-hidden overflow-x-auto">
     <table class="min-w-full divide-y divide-gray-200">
       <thead class="bg-gray-50">
         <tr>
-          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          <th scope="col" class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
             Racer Name
           </th>
-          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          <th scope="col" class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
             Team
           </th>
-          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          <th scope="col" class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
             Races
           </th>
         </tr>
@@ -17,15 +17,15 @@
       <tbody class="bg-white divide-y divide-gray-200">
         <% racers.each do |racer| %>
           <tr class="hover:bg-gray-50">
-            <td class="px-6 py-4 whitespace-nowrap">
+            <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap">
               <div class="text-sm font-medium text-gray-900">
                 <%= link_to racer.name, racer_path(racer), class: "text-green-600 hover:text-green-900" %>
               </div>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+            <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-sm text-gray-900">
               <%= racer.team_name %>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+            <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-sm text-gray-900">
               <%= racer.race_results.count %>
             </td>
           </tr>

@@ -2,12 +2,29 @@
   <!-- Logo and Title -->
   <div class="navbar-start">
     <%= link_to root_path, class: "flex items-center gap-3 text-xl hover:text-emerald-600 transition-colors" do %>
-      <span class="text-emerald-600 font-semibold">MCA Race & Team Data</span>
+      <span class="text-emerald-600 font-semibold text-sm md:text-base">MCA Race & Team Data</span>
     <% end %>
   </div>
 
-  <!-- Navigation Menu -->
-  <div class="navbar-end">
+  <!-- Mobile Menu Button -->
+  <div class="navbar-end md:hidden">
+    <div class="dropdown dropdown-end">
+      <div tabindex="0" role="button" class="btn btn-ghost btn-square">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </div>
+      <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-10 w-52 p-2 shadow">
+        <li><%= link_to "Home", root_path, class: "hover:text-emerald-600 #{'text-emerald-600 font-medium' if current_page?(root_path)}" %></li>
+        <li><%= link_to "Races", races_path, class: "hover:text-emerald-600 #{'text-emerald-600 font-medium' if current_page?(races_path)}" %></li>
+        <li><%= link_to "Teams", teams_path, class: "hover:text-emerald-600 #{'text-emerald-600 font-medium' if current_page?(teams_path)}" %></li>
+        <li><%= link_to "Racers", racers_path, class: "hover:text-emerald-600 #{'text-emerald-600 font-medium' if current_page?(racers_path)}" %></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Desktop Navigation Menu -->
+  <div class="navbar-end hidden md:flex">
     <ul class="menu menu-horizontal px-1 gap-2">
       <li>
         <%= link_to "Home", root_path, class: "hover:text-emerald-600 transition-colors #{'text-emerald-600 font-medium' if current_page?(root_path)}" %>
