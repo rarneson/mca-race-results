@@ -7,14 +7,13 @@
 <div class="container mx-auto max-w-6xl p-3 md:p-6">
   <%= render "shared/back_navigation", path: @back_path, text: @back_text %>
 
-  <%= render "shared/page_header", title: @team.name, subtitle: "Complete roster and performance for #{@selected_year}" %>
+  <%= render "shared/page_header", title: @team.name %>
 
   <!-- Statistics Cards -->
   <div class="mb-6">
     <div class="flex items-center justify-between mb-4">
       <h2 class="text-xl font-bold text-gray-900"><%= @selected_year %> Team Statistics</h2>
       <div class="flex items-center space-x-2">
-        <label for="year-filter-stats" class="text-sm font-medium text-gray-700">Year:</label>
         <%= form_with url: team_path(@team), method: :get, local: true, data: { turbo_frame: "_top" }, class: "inline-flex items-center space-x-2" do |form| %>
           <%= form.select :year, options_from_collection_for_select(@available_years, :itself, :itself, @selected_year), 
                         { prompt: "Select Year" }, 
@@ -95,8 +94,6 @@
                   <tr class="border-b border-gray-200">
                     <th class="px-2 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Plate #</th>
                     <th class="px-2 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                    <th class="px-2 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Team</th>
-                    <th class="px-2 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
@@ -106,14 +103,8 @@
                       <td class="px-2 md:px-4 py-2 md:py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                         <%= plate_number %>
                       </td>
-                      <td class="px-2 md:px-4 py-2 md:py-4 whitespace-nowrap text-sm text-gray-900">
-                        <%= racer.name %>
-                      </td>
-                      <td class="px-2 md:px-4 py-2 md:py-4 whitespace-nowrap text-sm text-gray-500">
-                        <%= @team.name %>
-                      </td>
-                      <td class="px-2 md:px-4 py-2 md:py-4 whitespace-nowrap text-sm text-gray-500">
-                        <%= link_to "View Profile", racer, class: "text-blue-600 hover:text-blue-900" %>
+                      <td class="px-2 md:px-4 py-2 md:py-4 whitespace-nowrap text-sm text-green-600">
+                        <%= link_to racer.name, racer_path(racer), class: "text-green-600 hover:text-green-900" %>
                       </td>
                     </tr>
                   <% end %>
@@ -138,8 +129,6 @@
                 <tr class="border-b border-gray-200">
                   <th class="px-2 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Plate #</th>
                   <th class="px-2 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                  <th class="px-2 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Team</th>
-                  <th class="px-2 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-gray-200">
@@ -149,14 +138,8 @@
                     <td class="px-2 md:px-4 py-2 md:py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                       <%= plate_number %>
                     </td>
-                    <td class="px-2 md:px-4 py-2 md:py-4 whitespace-nowrap text-sm text-gray-900">
-                      <%= racer.name %>
-                    </td>
-                    <td class="px-2 md:px-4 py-2 md:py-4 whitespace-nowrap text-sm text-gray-500">
-                      <%= @team.name %>
-                    </td>
-                    <td class="px-2 md:px-4 py-2 md:py-4 whitespace-nowrap text-sm text-gray-500">
-                      <%= link_to "View Profile", racer, class: "text-blue-600 hover:text-blue-900" %>
+                    <td class="px-2 md:px-4 py-2 md:py-4 whitespace-nowrap text-sm text-green-600">
+                      <%= link_to racer.name, racer_path(racer), class: "text-green-600 hover:text-green-900" %>
                     </td>
                   </tr>
                 <% end %>
@@ -207,9 +190,7 @@
                   <!-- Category Header -->
                   <div class="flex items-center justify-between mb-3 p-3 bg-amber-50 rounded-lg border border-amber-200">
                     <h4 class="text-md font-semibold text-amber-800"><%= category_name %></h4>
-                    <span class="text-sm font-medium text-amber-700">
-                      <%= pluralize(category_results.count, 'result') %>
-                    </span>
+                    <%= link_to "View Race →", race_path(race, category: category_name), class: "text-sm font-medium text-amber-700 hover:text-amber-900" %>
                   </div>
                   
                   <!-- Category Results Table -->
@@ -220,7 +201,6 @@
                           <th class="px-2 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Racer</th>
                           <th class="px-2 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Place</th>
                           <th class="px-2 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
-                          <th class="px-2 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                         </tr>
                       </thead>
                       <tbody class="divide-y divide-gray-200">
@@ -246,9 +226,6 @@
                               <% else %>
                                 —
                               <% end %>
-                            </td>
-                            <td class="px-2 md:px-4 py-2 md:py-4 whitespace-nowrap text-sm text-gray-500">
-                              <%= link_to "View Result", result, class: "text-blue-600 hover:text-blue-900" %>
                             </td>
                           </tr>
                         <% end %>
