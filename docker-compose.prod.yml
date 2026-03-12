@@ -1,0 +1,17 @@
+services:
+  web:
+    image: ghcr.io/rarneson/mca-race-results:latest
+    container_name: mca-race-results
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    environment:
+      - TZ=America/Chicago
+      - RAILS_MASTER_KEY=${RAILS_MASTER_KEY}
+      - SOLID_QUEUE_IN_PUMA=true
+    volumes:
+      - mca_storage:/rails/storage
+
+volumes:
+  mca_storage:
+    driver: local
