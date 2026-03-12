@@ -159,7 +159,7 @@ puts "\nLoading race data from seed files..."
 Dir[Rails.root.join('db', 'seeds', '*.rb')].sort.each do |file|
   filename = File.basename(file)
   next if filename == '_template.rb'
-  
+
   puts "Loading #{filename}..."
   require file
 end
@@ -168,6 +168,6 @@ puts "\n" + "="*60
 puts "FINAL DATABASE SUMMARY"
 puts "="*60
 puts "#{Race.count} races in database"
-puts "#{RaceResult.count} race results in database" 
+puts "#{RaceResult.count} race results in database"
 puts "#{RaceResultLap.count} lap times in database"
 puts "="*60

@@ -64,17 +64,17 @@ class RacersController < ApplicationController
   # GET /racers/1 or /racers/1.json
   def show
     @selected_race = params[:race_id] ? @racer.race_results.find(params[:race_id]) : @racer.race_results.first
-    
+
     # Get current category from the most recent race result or current season
     @current_category = get_current_category
-    
+
     # Group race results by year for organized display
     @race_results_by_year = @racer.race_results
                                   .includes(:race, :race_result_laps, :category)
                                   .joins(:race)
-                                  .order('races.race_date DESC')
+                                  .order("races.race_date DESC")
                                   .group_by { |result| result.race.race_date.year }
-    
+
     @back_path, @back_text = determine_back_path(default_path: racers_path, default_text: "Back to Racers")
   end
 
@@ -139,8 +139,8 @@ class RacersController < ApplicationController
     def get_current_category
       # Get most recent category from race results
       @racer.racer_seasons
-            .joins(race_results: [:race, :category])
-            .order('races.race_date DESC')
+            .joins(race_results: [ :race, :category ])
+            .order("races.race_date DESC")
             .first&.race_results&.first&.category
     end
 
@@ -172,5 +172,4 @@ class RacersController < ApplicationController
 
       counts.sort_by { |name, _| name }.to_h
     end
-
 end

@@ -10,17 +10,17 @@ module BackNavigable
       case referer
       when /\/teams\/([\w-]+)/
         team_slug = referer.match(/\/teams\/([\w-]+)/)[1]
-        [team_path(team_slug), "Back to Team"]
+        [ team_path(team_slug), "Back to Team" ]
       when /\/races\/([\w-]+)/
         race_slug = referer.match(/\/races\/([\w-]+)/)[1]
-        [race_path(race_slug), "Back to Race"]
+        [ race_path(race_slug), "Back to Race" ]
       when /\/racers/
-        [racers_path, "Back to Racers"]
+        [ racers_path, "Back to Racers" ]
       else
-        [default_path, default_text]
+        [ default_path, default_text ]
       end
     else
-      [default_path, default_text]
+      [ default_path, default_text ]
     end
   end
 end

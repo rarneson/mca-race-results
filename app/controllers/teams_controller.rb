@@ -30,9 +30,9 @@ class TeamsController < ApplicationController
     @teams = Team.where(id: filtered_team_ids)
                  .left_joins(racers: { racer_seasons: { race_results: :race } })
                  .merge(Race.in_year(@selected_year))
-                 .group('teams.id')
-                 .select('teams.*, COUNT(DISTINCT racers.id) as racers_count')
-                 .order('teams.name')
+                 .group("teams.id")
+                 .select("teams.*, COUNT(DISTINCT racers.id) as racers_count")
+                 .order("teams.name")
 
     # Calculate overall statistics for the selected year - use simpler approach
     @total_teams = filtered_team_ids.count

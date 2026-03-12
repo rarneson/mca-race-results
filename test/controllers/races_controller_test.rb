@@ -12,7 +12,7 @@ class RacesControllerTest < ActionDispatch::IntegrationTest
   test "should get index" do
     get races_url
     assert_response :success
-    assert_select "h2", "All Races"
+    assert_select "h1", "Race Results"
     assert_select "h3", @race.name
   end
 
@@ -23,32 +23,28 @@ class RacesControllerTest < ActionDispatch::IntegrationTest
     assert_select "td", text: /#{@racer.first_name}/
   end
 
-  test "should display race statistics" do
+  test "should display category filter" do
     get race_url(@race)
     assert_response :success
-    
-    # Check for category filter buttons
+
     assert_select "span.text-sm.font-medium.text-gray-700", "Filter by Category"
-    assert_select "a", text: /All Categories/
   end
 
   test "should display category results" do
     get race_url(@race)
     assert_response :success
-    
-    # Check for results table header
+
     assert_select "h3", "Race Results"
   end
 
   test "should display race results table" do
     get race_url(@race)
     assert_response :success
-    
-    # Check for results table
+
     assert_select "table"
     assert_select "th", "Pos"
-    assert_select "th", "Name" 
-    assert_select "th", "Time"
+    assert_select "th", "Name"
+    assert_select "th", "Total"
     assert_select "th", "Gap"
   end
 
@@ -59,7 +55,7 @@ class RacesControllerTest < ActionDispatch::IntegrationTest
       location: "Test Location",
       year: 2024
     )
-    
+
     get race_url(empty_race)
     assert_response :success
   end

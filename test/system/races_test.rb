@@ -26,10 +26,10 @@ class RacesTest < ApplicationSystemTestCase
 
     # Check overall winner card
     assert_selector ".text-amber-600", text: /Alex Rodriguez/
-    
+
     # Check participants count
     assert_selector ".text-gray-900", text: /2/
-    
+
     # Check results table exists
     assert_selector "table"
     assert_selector "th", text: /Pos/i
@@ -39,7 +39,7 @@ class RacesTest < ApplicationSystemTestCase
 
   test "displays category filter buttons" do
     visit race_url(@race)
-    
+
     # Check for category filter section
     assert_selector ".text-gray-700", text: "Filter by Category"
     assert_selector ".bg-emerald-100", text: "All Categories"
@@ -47,12 +47,12 @@ class RacesTest < ApplicationSystemTestCase
 
   test "displays race results in table format" do
     visit race_url(@race)
-    
+
     # Check table structure
     assert_selector "thead"
     assert_selector "tbody"
     assert_selector "tr"
-    
+
     # Check for specific racer data
     assert_selector "td", text: "Alex Rodriguez"
     assert_selector ".bg-green-100", text: "FINISHED"
@@ -60,7 +60,7 @@ class RacesTest < ApplicationSystemTestCase
 
   test "shows navigation tabs" do
     visit race_url(@race)
-    
+
     assert_selector ".border-emerald-500", text: "Results"
     assert_selector ".text-gray-500", text: "Lap Analysis"
     assert_selector ".text-gray-500", text: "Statistics"
@@ -68,9 +68,9 @@ class RacesTest < ApplicationSystemTestCase
 
   test "can navigate from index to race show" do
     visit races_url
-    
+
     click_link @race.name
-    
+
     assert_current_path race_path(@race)
     assert_selector "h2", text: @race.name
   end

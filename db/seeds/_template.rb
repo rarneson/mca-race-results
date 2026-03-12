@@ -29,99 +29,99 @@ puts "✓ Race: #{race.name} (#{race.race_date})"
 # RACE RESULTS DATA
 # ===============================================================================
 
-#6th Grade Girls Results
+# 6th Grade Girls Results
 results_6th_grade_girls = [
   # TODO: Add actual race results data here
   # Format: [place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, lap2_time, status]
   # Example: [1, "Firstname", "Lastname", "Team Name", "100512776", "6524", 1, "00:19:20.0", "00:19:20.0", "finished"],
 ]
 
-#6th Grade Boys D2 Results
+# 6th Grade Boys D2 Results
 results_6th_grade_boys_d2 = [
   # TODO: Add actual race results data here
 ]
 
-#6th Grade Boys D1 Results
+# 6th Grade Boys D1 Results
 results_6th_grade_boys_d1 = [
   # TODO: Add actual race results data here
 ]
 
-#7th Grade Girls Results
+# 7th Grade Girls Results
 results_7th_grade_girls = [
   # TODO: Add actual race results data here
 ]
 
-#7th Grade Boys D2 Results
+# 7th Grade Boys D2 Results
 results_7th_grade_boys_d2 = [
   # TODO: Add actual race results data here
 ]
 
-#7th Grade Boys D1 Results
+# 7th Grade Boys D1 Results
 results_7th_grade_boys_d1 = [
   # TODO: Add actual race results data here
 ]
 
-#8th Grade Girls Results
+# 8th Grade Girls Results
 results_8th_grade_girls = [
   # TODO: Add actual race results data here
 ]
 
-#8th Grade Boys D2 Results
+# 8th Grade Boys D2 Results
 results_8th_grade_boys_d2 = [
   # TODO: Add actual race results data here
 ]
 
-#8th Grade Boys D1 Results
+# 8th Grade Boys D1 Results
 results_8th_grade_boys_d1 = [
   # TODO: Add actual race results data here
 ]
 
-#Freshman Boys D2 Results
+# Freshman Boys D2 Results
 results_freshman_boys_d2 = [
   # TODO: Add actual race results data here
 ]
 
-#Freshman Boys D1 Results
+# Freshman Boys D1 Results
 results_freshman_boys_d1 = [
   # TODO: Add actual race results data here
 ]
 
-#Freshman Girls Results
+# Freshman Girls Results
 results_freshman_girls = [
   # TODO: Add actual race results data here
 ]
 
-#JV2 Girls Results
+# JV2 Girls Results
 results_jv2_girls = [
   # TODO: Add actual race results data here
 ]
 
-#JV3 Boys Results
+# JV3 Boys Results
 results_jv3_boys = [
   # TODO: Add actual race results data here
 ]
 
-#Varsity Boys Results
+# Varsity Boys Results
 results_varsity_boys = [
   # TODO: Add actual race results data here
 ]
 
-#JV3 Girls Results
+# JV3 Girls Results
 results_jv3_girls = [
   # TODO: Add actual race results data here
 ]
 
-#Varsity Girls Results
+# Varsity Girls Results
 results_varsity_girls = [
   # TODO: Add actual race results data here
 ]
 
-#JV2 Boys D2 Results
+# JV2 Boys D2 Results
 results_jv2_boys_d2 = [
   # TODO: Add actual race results data here
 ]
 
-#JV2 Boys D1 Results
+# JV2 Boys D1 Results
 results_jv2_boys_d1 = [
   # TODO: Add actual race results data here
 ]

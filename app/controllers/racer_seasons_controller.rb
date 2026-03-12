@@ -65,6 +65,6 @@ class RacerSeasonsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def racer_season_params
-      params.fetch(:racer_season, {})
+      params.fetch(:racer_season, {}).permit(:racer_id, :year, :plate_number)
     end
 end

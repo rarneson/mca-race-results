@@ -60,7 +60,7 @@ class RaceResultsController < ApplicationController
   # GET /race_results/1/lap_data.json
   def lap_data
     laps = @race_result.race_result_laps.order(:lap_number)
-    
+
     render json: {
       laps: laps.map do |lap|
         {

@@ -29,7 +29,7 @@ module ApplicationHelper
       html << '<button class="join-item btn btn-sm btn-disabled">»</button>'
     end
 
-    html << '</div>'
+    html << "</div>"
     html.html_safe
   end
 
@@ -93,5 +93,4 @@ module ApplicationHelper
       "bg-gray-100 text-gray-800"
     end
   end
-
 end
