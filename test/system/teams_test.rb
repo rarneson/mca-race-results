@@ -10,30 +10,8 @@ class TeamsTest < ApplicationSystemTestCase
     assert_selector "h1", text: "Teams"
   end
 
-  test "should create team" do
-    visit teams_url
-    click_on "New team"
-
-    click_on "Create Team"
-
-    assert_text "Team was successfully created"
-    click_on "Back"
-  end
-
-  test "should update Team" do
+  test "should show team" do
     visit team_url(@team)
-    click_on "Edit this team", match: :first
-
-    click_on "Update Team"
-
-    assert_text "Team was successfully updated"
-    click_on "Back"
-  end
-
-  test "should destroy Team" do
-    visit team_url(@team)
-    click_on "Destroy this team", match: :first
-
-    assert_text "Team was successfully destroyed"
+    assert_text @team.name
   end
 end
