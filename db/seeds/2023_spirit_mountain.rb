@@ -12,11 +12,11 @@ end
 # RACE DATA - RACE 4 - SPIRIT MOUNTAIN (2023-09-16)
 # ===============================================================================
 
-puts "Creating Race 4 - Spirit Mountain results..."
+puts "Creating Race 4N - Spirit Mountain results..."
 
 # Create the race
 race = Race.find_or_create_by!(
-  name: "Race 4 - Spirit Mountain",
+  name: "Race 4N - Spirit Mountain",
   race_date: Date.parse("2023-09-23")
 ) do |race|
   race.location = "Duluth, MN"
