@@ -11,6 +11,10 @@
 
     <%= yield :head %>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <%= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
 
     <link rel="icon" href="/favicon.png" type="image/png">
@@ -26,6 +30,12 @@
     <main>
       <%= yield %>
     </main>
+
+    <footer class="py-6 px-4 mt-12 border-t border-gray-200">
+      <p class="text-center text-xs text-gray-400">
+        This site is not affiliated with <a href="https://minnesotacycling.org" class="underline hover:text-gray-600" target="_blank" rel="noopener noreferrer">minnesotacycling.org</a> or the Minnesota Cycling Association.
+      </p>
+    </footer>
 
     <script>
       if ("serviceWorker" in navigator) {

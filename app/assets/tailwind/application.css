@@ -2,3 +2,7 @@
 @plugin "daisyui" {
   themes: all;
 }
+
+@theme {
+  --font-sans: "Outfit", sans-serif;
+}
