@@ -415,7 +415,7 @@ results_8th_grade_boys_d1 = [
   [ 4, "Asher", "Prevost", "Hopkins HS", "100461654", "5635", 1, "00:18:59.6", "00:18:59.6", nil, "finished", nil, nil ],
   [ 5, "Mason", "Glynn", "Edina Cycling", "100480235", "5599", 1, "00:19:01.8", "00:19:01.8", nil, "finished", nil, nil ],
   [ 6, "Finneas", "Wilson", "Stillwater Mountain Bike", "100558041", "5846", 1, "00:19:02.2", "00:19:02.2", nil, "finished", nil, nil ],
-  [ 7, "Benjamin (Benji)", "Stoebner", "Edina Cycling", "100473764", "5613", 1, "00:19:31.4", "00:19:31.4", nil, "finished", nil, nil ],
+  [ 7, "Benjamin", "Stoebner", "Edina Cycling", "100473764", "5613", 1, "00:19:31.4", "00:19:31.4", nil, "finished", nil, nil ],
   [ 8, "Eamon", "Hughey", "Edina Cycling", "100479728", "5602", 1, "00:19:33.5", "00:19:33.5", nil, "finished", nil, nil ],
   [ 9, "Beckham", "Trigger", "Edina Cycling", "100467497", "5614", 1, "00:19:36.3", "00:19:36.3", nil, "finished", nil, nil ],
   [ 10, "Chanwoo", "Earley", "Stillwater Mountain Bike", "100468213", "5839", 1, "00:19:38.4", "00:19:38.4", nil, "finished", nil, nil ],
@@ -626,7 +626,7 @@ results_freshman_girls = [
   [ 11, "Clara", "Oachs", "Woodbury HS", "100406281", "3096", 2, "00:43:31.5", "00:20:56.6", "00:22:34.8", nil, nil, "finished", nil, nil ],
   [ 12, "Hazel", "Bruns", "St Croix", "100407661", "3080", 2, "00:43:34.0", "00:20:59.9", "00:22:34.1", nil, nil, "finished", nil, nil ],
   [ 13, "Hazel", "March", "Stillwater Mountain Bike", "100405762", "3089", 2, "00:43:36.5", "00:21:09.9", "00:22:26.6", nil, nil, "finished", nil, nil ],
-  [ 14, "Eliis", "Dwyer", "Rosemount HS", "100484001", "3074", 2, "00:44:05.9", "00:20:57.7", "00:23:08.1", nil, nil, "finished", nil, nil ],
+  [ 14, "Ellis", "Dwyer", "Rosemount HS", "100484001", "3074", 2, "00:44:05.9", "00:20:57.7", "00:23:08.1", nil, nil, "finished", nil, nil ],
   [ 15, "Sylvia", "Fehr", "Minneapolis Roosevelt HS", "100422029", "3049", 2, "00:44:08.6", "00:21:17.9", "00:22:50.7", nil, nil, "finished", nil, nil ],
   [ 16, "Megan", "Fritzen", "Prior Lake HS", "100412430", "3068", 2, "00:44:36.5", "00:21:17.8", "00:23:18.6", nil, nil, "finished", nil, nil ],
   [ 17, "Grace", "Berseth", "Minneapolis Roosevelt HS", "100420622", "3047", 2, "00:45:21.4", "00:21:43.5", "00:23:37.9", nil, nil, "finished", nil, nil ],
@@ -643,7 +643,7 @@ results_freshman_girls = [
   [ 28, "Olivia", "Macgregor Farris", "St Paul Central", "100534586", "3083", 2, "00:56:08.9", "00:26:38.9", "00:29:30.0", nil, nil, "finished", nil, nil ],
   [ 29, "Megan", "Murphy", "Edina Cycling", "100565512", "3032", 2, "00:58:56.6", "00:26:14.4", "00:32:42.1", nil, nil, "finished", nil, nil ],
   [ 30, "Elle", "Simner", "Rochester Mayo", "100574894", "3072", 2, "00:59:47.6", "00:26:39.7", "00:33:07.9", nil, nil, "finished", nil, nil ],
-  [ 31, "Ruth Christelle", "Gutierrez", "Edina Cycling", "100525726", "3030", 2, "00:59:59.1", "00:28:02.8", "00:31:56.3", nil, nil, "finished", nil, nil ],
+  [ 31, "Ruth", "Gutierrez", "Edina Cycling", "100525726", "3030", 2, "00:59:59.1", "00:28:02.8", "00:31:56.3", nil, nil, "finished", nil, nil ],
   [ 32, "Reese", "Jeremiason", "Orono HS", "100405929", "3065", 2, "01:05:22.8", "00:31:03.4", "00:34:19.3", nil, nil, "finished", nil, nil ]
 ]
 
@@ -1027,7 +1027,7 @@ results_jv2_boys_d1 = [
   [ 56, "Josh", "Mohr", "Wayzata Mountain Bike", "100426269", "2845", 2, "00:43:23.5", "00:20:17.7", "00:23:05.8", nil, nil, "finished", nil, nil ],
   [ 57, "Grant", "Johnson", "Stillwater Mountain Bike", "100468146", "2814", 2, "00:43:25.3", "00:21:10.0", "00:22:15.2", nil, nil, "finished", nil, nil ],
   [ 58, "Colton", "Simpson", "Edina Cycling", "100432580", "2524", 2, "00:43:28.4", "00:20:59.8", "00:22:28.6", nil, nil, "finished", nil, nil ],
-  [ 59, "Sevien", "Lewandowski", "St Paul Central", "100421063", "2792", 2, "00:43:28.7", "00:20:56.4", "00:22:32.3", nil, nil, "finished", nil, nil ],
+  [ 59, "Seven", "Lewandowski", "St Paul Central", "100421063", "2792", 2, "00:43:28.7", "00:20:56.4", "00:22:32.3", nil, nil, "finished", nil, nil ],
   [ 60, "Owen", "Skeate", "Shakopee HS", "100482916", "2767", 2, "00:43:29.7", "00:20:32.3", "00:22:57.4", nil, nil, "finished", nil, nil ],
   [ 61, "Camden", "Schmid", "Wayzata Mountain Bike", "100488955", "2847", 2, "00:44:11.4", "00:21:22.3", "00:22:49.1", nil, nil, "finished", nil, nil ],
   [ 62, "Conner", "Hawks", "Prior Lake HS", "100390758", "2686", 2, "00:44:13.9", "00:21:01.2", "00:23:12.6", nil, nil, "finished", nil, nil ],

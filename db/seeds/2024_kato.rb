@@ -191,7 +191,7 @@ results_7th_grade_boys_d2 = [
   [ 42, "Evan", "Olmscheid", "St Cloud", "100535948", "5269", 1, "00:23:42.8", "00:23:42.8", nil, nil, nil, "finished", nil, nil ],
   [ 43, "Cannon", "Wright", "Minneapolis Roosevelt HS", "100475948", "5175", 1, "00:24:56.8", "00:24:56.8", nil, nil, nil, "finished", nil, nil ],
   [ 44, "Austin", "Stapleton", "St Paul Composite - North", "100521375", "5287", 1, "00:24:57.9", "00:24:57.9", nil, nil, nil, "finished", nil, nil ],
-  [ 45, "Finnagan", "Triebenbach", "Minneapolis Roosevelt HS", "100473080", "5174", 1, "00:30:23.3", "00:30:23.3", nil, nil, nil, "finished", nil, nil ]
+  [ 45, "Finnegan", "Triebenbach", "Minneapolis Roosevelt HS", "100473080", "5174", 1, "00:30:23.3", "00:30:23.3", nil, nil, nil, "finished", nil, nil ]
 ]
 
 # 7th Grade Boys D1 Results
@@ -353,7 +353,7 @@ results_freshman_boys_d2 = [
   [ 2, "Owen", "Lawson", "East Ridge HS", "100411092", "3084", 2, "00:31:13.4", "00:15:18.4", "00:15:54.9", nil, nil, "finished", nil, nil ],
   [ 3, "Jack", "Milton", "St Louis Park HS", "100391759", "3273", 2, "00:31:37.4", "00:15:32.3", "00:16:05.0", nil, nil, "finished", nil, nil ],
   [ 4, "Eli", "Meiser", "Minneapolis Roosevelt HS", "100410036", "3136", 2, "00:31:50.3", "00:15:32.2", "00:16:18.0", nil, nil, "finished", nil, nil ],
-  [ 5, "Charlie", "Williamson", "St Paul Composite - North", "100434885", "3291", 2, "00:31:50.7", "00:15:32.3", "00:16:18.3", nil, nil, "finished", nil, nil ],
+  [ 5, "Charles", "Williamson", "St Paul Composite - North", "100434885", "3291", 2, "00:31:50.7", "00:15:32.3", "00:16:18.3", nil, nil, "finished", nil, nil ],
   [ 6, "Kai", "Nelson", "Champlin Park HS", "100429897", "3047", 2, "00:32:43.1", "00:15:34.7", "00:17:08.4", nil, nil, "finished", nil, nil ],
   [ 7, "Colin", "Borgen", "St Paul Highland Park", "100389731", "3303", 2, "00:33:20.7", "00:16:20.2", "00:17:00.5", nil, nil, "finished", nil, nil ],
   [ 8, "Sullivan", "Born", "Woodbury HS", "100408784", "3350", 2, "00:33:34.5", "00:16:10.4", "00:17:24.1", nil, nil, "finished", nil, nil ],
@@ -408,7 +408,7 @@ results_freshman_boys_d1 = [
   [ 1, "Nolan", "Hendrickson", "Cloquet-Esko-Carlton", "100405947", "3066", 2, "00:31:56.4", "00:15:38.2", "00:16:18.2", nil, nil, "finished", nil, nil ],
   [ 2, "Steffan", "Drekonja", "Minneapolis Washburn HS", "100390203", "3147", 2, "00:31:57.1", "00:15:38.7", "00:16:18.3", nil, nil, "finished", nil, nil ],
   [ 3, "Aedan", "Roach", "Stillwater Mountain Bike", "100392336", "3310", 2, "00:33:11.7", "00:16:31.2", "00:16:40.4", nil, nil, "finished", nil, nil ],
-  [ 4, "Conrad", "Widenbrant", "Stillwater Mountain Bike", "100432376", "3312", 2, "00:33:12.6", "00:16:32.2", "00:16:40.4", nil, nil, "finished", nil, nil ],
+  [ 4, "Konrad", "Widenbrant", "Stillwater Mountain Bike", "100432376", "3312", 2, "00:33:12.6", "00:16:32.2", "00:16:40.4", nil, nil, "finished", nil, nil ],
   [ 5, "Isaac", "Trachtenberg", "Minneapolis Southwest HS", "100409323", "3145", 2, "00:33:24.6", "00:16:03.4", "00:17:21.2", nil, nil, "finished", nil, "Warning: Improper Race Apparel" ],
   [ 6, "Daniel", "Dewey", "Cloquet-Esko-Carlton", "100388196", "3063", 2, "00:33:36.2", "00:16:30.9", "00:17:05.2", nil, nil, "finished", nil, nil ],
   [ 7, "Logan", "Gamache", "Cloquet-Esko-Carlton", "100390494", "3065", 2, "00:33:54.2", "00:16:32.8", "00:17:21.4", nil, nil, "finished", nil, nil ],
@@ -473,7 +473,7 @@ results_freshman_girls = [
   [ 22, "Eva", "Folger", "Prior Lake HS", "100390402", "3565", 2, "00:44:51.8", "00:21:33.6", "00:23:18.2", nil, nil, "finished", nil, nil ],
   [ 23, "Monique", "Konotopka", "Chaska HS", "100391250", "3509", 2, "00:44:58.7", "00:21:50.0", "00:23:08.7", nil, nil, "finished", nil, nil ],
   [ 24, "Dublin", "Sullivan", "Stillwater Mountain Bike", "100416023", "3589", 2, "00:45:40.1", "00:21:40.9", "00:23:59.1", nil, nil, "finished", nil, nil ],
-  [ 25, "Sidce", "Sprout", "Champlin Park HS", "100482290", "3601", 2, "00:46:26.4", "00:22:41.1", "00:23:45.2", nil, nil, "finished", nil, nil ],
+  [ 25, "Sidse", "Sprout", "Champlin Park HS", "100482290", "3601", 2, "00:46:26.4", "00:22:41.1", "00:23:45.2", nil, nil, "finished", nil, nil ],
   [ 26, "Anneliese", "Lindfors", "St Paul Central", "100532687", "3583", 2, "00:47:41.2", "00:18:29.0", "00:24:12.1", nil, nil, "finished", "5 Min", "Bike Swap" ],
   [ 27, "Sophia", "Beaudin", "Osseo HS", "100431226", "3564", 2, "00:49:00.9", "00:23:57.4", "00:25:03.4", nil, nil, "finished", nil, nil ],
   [ 28, "Adeline", "Wrecza", "Hopkins HS", "100432688", "3532", 2, "00:50:50.6", "00:24:12.3", "00:26:38.3", nil, nil, "finished", nil, nil ],
@@ -674,7 +674,7 @@ results_varsity_girls = [
   [ 2, "Layla", "Hagelin", "Independent HS", "100390657", "207", 4, "01:10:08.0", "00:17:06.4", "00:17:45.1", "00:17:41.5", "00:17:34.9", "finished", nil, nil ],
   [ 3, "Kate", "Ritzenbender", "Cannon Valley", "100486656", "202", 4, "01:12:54.1", "00:17:07.0", "00:18:02.1", "00:18:44.9", "00:18:59.9", "finished", nil, nil ],
   [ 4, "Stella", "Powell", "Stillwater Mountain Bike", "100392216", "223", 4, "01:15:10.3", "00:17:08.2", "00:19:03.3", "00:19:30.2", "00:19:28.4", "finished", nil, nil ],
-  [ 5, "Cara", "Thatcher", "Minneapolis Washburn HS", "100407460", "212", 4, "01:15:10.7", "00:17:18.8", "00:18:52.2", "00:19:31.2", "00:19:28.4", "finished", nil, nil ],
+  [ 5, "Ciara", "Thatcher", "Minneapolis Washburn HS", "100407460", "212", 4, "01:15:10.7", "00:17:18.8", "00:18:52.2", "00:19:31.2", "00:19:28.4", "finished", nil, nil ],
   [ 6, "Coralie", "Jones", "St Paul Highland Park", "100391099", "225", 4, "01:16:03.8", "00:17:32.0", "00:18:59.3", "00:19:35.3", "00:19:57.1", "finished", nil, nil ],
   [ 7, "Cate", "Koelzer", "Stillwater Mountain Bike", "100391236", "221", 4, "01:16:05.9", "00:18:16.4", "00:19:16.9", "00:19:36.0", "00:18:56.4", "finished", nil, nil ],
   [ 8, "Ani", "McQuillen", "Minneapolis Roosevelt HS", "100391684", "208", 4, "01:16:50.2", "00:17:59.4", "00:19:31.8", "00:19:36.2", "00:19:42.6", "finished", nil, nil ],
@@ -699,7 +699,7 @@ results_jv2_boys_d2 = [
   [ 8, "Eugene", "Nelson", "Osseo Composite", "100391883", "2303", 2, "00:35:35.4", "00:17:20.4", "00:18:15.0", nil, nil, "finished", nil, nil ],
   [ 9, "Gerik", "Nowlin", "BBBikers", "100391956", "2037", 2, "00:35:59.3", "00:17:32.0", "00:18:27.2", nil, nil, "finished", nil, nil ],
   [ 10, "Olin", "Rahn", "BBBikers", "100477694", "2038", 2, "00:36:12.6", "00:17:42.0", "00:18:30.6", nil, nil, "finished", nil, nil ],
-  [ 11, "Mikkel", "Yost", "Bemidji", "100393220", "2043", 2, "00:36:14.5", "00:16:53.4", "00:19:21.0", nil, nil, "finished", nil, nil ],
+  [ 11, "Mikkol", "Yost", "Bemidji", "100393220", "2043", 2, "00:36:14.5", "00:16:53.4", "00:19:21.0", nil, nil, "finished", nil, nil ],
   [ 12, "Andrew", "Goehler", "Woodbury HS", "100390557", "2527", 2, "00:36:22.2", "00:17:39.7", "00:18:42.5", nil, nil, "finished", nil, nil ],
   [ 13, "Max", "Zorman", "Bemidji", "100488385", "2045", 2, "00:36:43.8", "00:17:26.8", "00:19:16.9", nil, nil, "finished", nil, nil ],
   [ 14, "Micah", "Strickland", "Kerkhoven", "100427219", "2168", 2, "00:36:53.3", "00:17:41.2", "00:19:12.0", nil, nil, "finished", nil, nil ],

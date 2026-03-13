@@ -326,7 +326,7 @@ schindlers_way_8th_grade_girls_results = [
   [ 27, "Adria", "Hanson", "Chaska HS", "100485628", "5017", 2, "26:38.8", "12:49.6", "13:49.2", nil, nil, "finished", nil, nil ],
   [ 28, "Emma", "Daman", "Edina Cycling", "100478630", "5033", 2, "26:51.3", "12:39.3", "14:11.9", nil, nil, "finished", nil, nil ],
   [ 29, "Gemma", "Cook", "Hudson HS", "100460093", "5040", 2, "28:36.1", "12:57.1", "15:39.0", nil, nil, "finished", nil, nil ],
-  [ 30, "Luxie", "Schiller", "Rock Ridge", "100524483", "5074", 2, "29:05.7", "13:53.6", "15:12.0", nil, nil, "finished", nil, nil ]
+  [ 30, "Lucie", "Schiller", "Rock Ridge", "100524483", "5074", 2, "29:05.7", "13:53.6", "15:12.0", nil, nil, "finished", nil, nil ]
 ]
 
 # 8th Grade Boys D2 Results
@@ -411,7 +411,7 @@ schindlers_way_8th_grade_boys_d1_results = [
   [ 7, "Lee", "Evans", "Rock Ridge", "100460343", "5776", 2, "20:51.8", "10:13.5", "10:38.2", nil, nil, "finished", nil, nil ],
   [ 8, "Asher", "Prevost", "Hopkins HS", "100461654", "5635", 2, "21:03.9", "10:12.5", "10:51.3", nil, nil, "finished", nil, nil ],
   [ 9, "Brock", "Peterson", "Cloquet-Esko-Carlton", "100460477", "5566", 2, "21:24.3", "10:21.1", "11:03.2", nil, nil, "finished", nil, nil ],
-  [ 10, "Benjamin (Benji)", "Stoebner", "Edina Cycling", "100473764", "5613", 2, "21:26.7", "10:23.1", "11:03.6", nil, nil, "finished", nil, nil ],
+  [ 10, "Benjamin", "Stoebner", "Edina Cycling", "100473764", "5613", 2, "21:26.7", "10:23.1", "11:03.6", nil, nil, "finished", nil, nil ],
   [ 11, "Sebastian", "Yanz", "Minneapolis Roosevelt HS", "100472100", "5685", 2, "21:26.7", "10:35.2", "10:51.5", nil, nil, "finished", nil, nil ],
   [ 12, "Elliott", "Wasmer", "Minneapolis Washburn HS", "100518592", "5702", 2, "21:27.3", "10:23.0", "11:04.2", nil, nil, "finished", nil, nil ],
   [ 13, "Elliot", "Candy", "Prior Lake HS", "100477563", "5740", 2, "21:28.9", "10:20.7", "11:08.1", nil, nil, "finished", nil, nil ],
@@ -612,7 +612,7 @@ schindlers_way_freshman_girls_results = [
   [ 21, "Lara", "Mueller", "Bemidji", "100434585", "3006", 4, "48:11.8", "11:59.5", "11:58.5", "12:01.4", "12:12.2", nil, "finished", nil, nil ],
   [ 22, "Elaine", "Vanderziel", "Mounds View HS", "100485257", "3062", 4, "48:18.2", "12:09.3", "12:09.3", "12:07.9", "11:51.5", nil, "finished", nil, nil ],
   [ 23, "Grace", "Berseth", "Minneapolis Roosevelt HS", "100420622", "3047", 4, "48:54.5", "11:10.3", "12:08.6", "11:46.3", "13:49.1", nil, "finished", nil, nil ],
-  [ 24, "Eliis", "Dwyer", "Rosemount HS", "100484001", "3074", 4, "49:01.7", "11:26.4", "12:09.9", "12:19.4", "13:05.8", nil, "finished", nil, nil ],
+  [ 24, "Ellis", "Dwyer", "Rosemount HS", "100484001", "3074", 4, "49:01.7", "11:26.4", "12:09.9", "12:19.4", "13:05.8", nil, "finished", nil, nil ],
   [ 25, "Meribelle", "Parks", "Austin HS", "100427563", "3004", 4, "49:14.9", "11:49.7", "12:14.5", "12:23.5", "12:47.1", nil, "finished", nil, nil ],
   [ 26, "Jacey", "Baron", "Austin HS", "100483767", "3003", 3, "35:59.8", "11:16.7", "12:25.0", "12:18.1", nil, nil, "finished", nil, nil ],
   [ 27, "Makena", "Furman", "Waconia HS", "100559963", "3090", 3, "36:16.6", "12:05.8", "12:15.7", "11:55.0", nil, nil, "finished", nil, nil ],

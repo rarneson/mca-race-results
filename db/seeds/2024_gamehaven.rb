@@ -593,7 +593,7 @@ results_jv3_girls = [
   [ 7, "Milla", "Dufresne", "St Paul Central", "100422656", "1634", 3, "00:57:41.1", "00:18:27.6", "00:19:39.3", "00:19:34.1", nil, "finished", nil, nil ],
   [ 8, "Lexi", "Halvorson", "Wayzata Mountain Bike", "100422289", "1638", 3, "00:58:07.6", "00:18:09.6", "00:20:05.0", "00:19:52.9", nil, "finished", nil, nil ],
   [ 9, "Sarah", "Rich", "Prior Lake HS", "100392307", "1627", 3, "00:58:39.1", "00:19:02.2", "00:19:44.9", "00:19:51.9", nil, "finished", nil, nil ],
-  [ 10, "Annelise", "Metzger", "Burnsville HS", "100391721", "1606", 3, "00:59:20.5", "00:18:29.8", "00:20:38.0", "00:20:12.5", nil, "finished", nil, nil ],
+  [ 10, "Anneliese", "Metzger", "Burnsville HS", "100391721", "1606", 3, "00:59:20.5", "00:18:29.8", "00:20:38.0", "00:20:12.5", nil, "finished", nil, nil ],
   [ 11, "Addison", "Ridgeway", "New Prague MS and HS", "100420801", "1625", 3, "00:59:46.2", "00:19:32.7", "00:20:34.4", "00:19:38.9", nil, "finished", nil, nil ],
   [ 12, "Arabella", "Fritzen", "Prior Lake HS", "100412424", "1626", 3, "01:00:10.5", "00:19:11.5", "00:20:57.8", "00:20:01.2", nil, "finished", nil, nil ],
   [ 13, "Elizabeth", "Fackert", "Wayzata Mountain Bike", "100431150", "1643", 3, "01:00:30.2", "00:19:43.2", "00:20:28.8", "00:20:18.1", nil, "finished", nil, nil ],

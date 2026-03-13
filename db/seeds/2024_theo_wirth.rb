@@ -80,7 +80,7 @@ theo_wirth_6th_grade_boys_d2_results = [
   [ 12, "Silas", "Boden", "St Croix", "100513016", "6212", 1, "00:19:08.0", "00:19:08.0", nil, "finished", nil, nil ],
   [ 13, "Vincent", "Howe", "St Louis Park HS", "100534616", "6217", 1, "00:19:34.0", "00:19:34.0", nil, "finished", nil, nil ],
   [ 14, "Gil", "Horkey", "Minneapolis Roosevelt HS", "100516076", "6111", 1, "00:19:38.2", "00:19:38.2", nil, "finished", nil, nil ],
-  [ 15, "Tristen", "Peters", "Armstrong Cycle", "100522931", "6009", 1, "00:19:39.4", "00:19:39.4", nil, "finished", nil, nil ],
+  [ 15, "Tristan", "Peters", "Armstrong Cycle", "100522931", "6009", 1, "00:19:39.4", "00:19:39.4", nil, "finished", nil, nil ],
   [ 16, "Elliot", "Freeman", "Roseville", "100530582", "6199", 1, "00:19:41.2", "00:19:41.2", nil, "finished", nil, nil ],
   [ 17, "Charlie", "Dixon", "Roseville", "100521844", "6198", 1, "00:19:50.5", "00:19:50.5", nil, "finished", nil, nil ],
   [ 18, "Greylin", "Cline", "Breck", "100535312", "6036", 1, "00:20:08.8", "00:20:08.8", nil, "finished", nil, nil ],
@@ -294,7 +294,7 @@ theo_wirth_7th_grade_boys_d1_results = [
   [ 10, "Korbin", "Kriel", "Alexandria Youth Cycling", "100473165", "5002", 1, "00:17:27.8", "00:17:27.8", nil, "finished", nil, nil ],
   [ 11, "George", "Lego", "Minneapolis Southwest HS", "100516808", "5184", 1, "00:17:28.6", "00:17:28.6", nil, "finished", nil, nil ],
   [ 12, "Benjamin", "Kessen", "Minnetonka HS", "100470394", "5196", 1, "00:17:35.6", "00:17:35.6", nil, "finished", nil, nil ],
-  [ 13, "Benjamin (Benji)", "Stoebner", "Edina Cycling", "100473764", "5110", 1, "00:17:46.1", "00:17:46.1", nil, "finished", nil, nil ],
+  [ 13, "Benjamin", "Stoebner", "Edina Cycling", "100473764", "5110", 1, "00:17:46.1", "00:17:46.1", nil, "finished", nil, nil ],
   [ 14, "Andrew", "Metzger", "Edina Cycling", "100482793", "5100", 1, "00:17:47.6", "00:17:47.6", nil, "finished", nil, nil ],
   [ 15, "Jaeger", "Fryxell", "Brainerd HS", "100534747", "5033", 1, "00:17:47.9", "00:17:47.9", nil, "finished", nil, nil ],
   [ 16, "Asher", "Plante", "Hopkins HS", "100480802", "5130", 1, "00:17:48.6", "00:17:48.6", nil, "finished", nil, nil ],
@@ -379,9 +379,9 @@ theo_wirth_8th_grade_girls_results = [
   [ 36, "Lilly", "Squires", "Bloomington Jefferson", "100482926", "4511", 1, "00:23:36.4", "00:23:36.4", nil, "finished", nil, nil ],
   [ 37, "Mena", "Severt", "Breck", "100529978", "4516", 1, "00:24:03.9", "00:24:03.9", nil, "finished", nil, nil ],
   [ 38, "Paige", "Sundberg", "Hudson HS", "100405954", "4546", 1, "00:24:05.5", "00:24:05.5", nil, "finished", nil, nil ],
-  [ 39, "Ruth Christelle", "Gutierrez", "Edina Cycling", "100525726", "4533", 1, "00:24:56.5", "00:24:56.5", nil, "finished", nil, nil ],
+  [ 39, "Ruth", "Gutierrez", "Edina Cycling", "100525726", "4533", 1, "00:24:56.5", "00:24:56.5", nil, "finished", nil, nil ],
   [ 40, "Lucienne", "Hulson", "St Paul Composite - South", "100527469", "4588", 1, "00:25:36.6", "00:25:36.6", nil, "finished", nil, nil ],
-  [ 41, "Hawa Marie", "Bradley", "Edina Cycling", "100525720", "4532", 1, "00:25:57.5", "00:25:57.5", nil, "finished", nil, nil ]
+  [ 41, "Hawa", "Bradley", "Edina Cycling", "100525720", "4532", 1, "00:25:57.5", "00:25:57.5", nil, "finished", nil, nil ]
 ]
 
 # Theodore Wirth Park 8th Grade Boys D2 Results
@@ -523,7 +523,7 @@ theo_wirth_freshman_boys_d2_results = [
   [ 3, "Eli", "Meiser", "Minneapolis Roosevelt HS", "100410036", "3136", 2, "00:28:31.5", "00:14:12.0", "00:14:19.5", nil, "finished", nil, nil ],
   [ 4, "Reid", "Hamlin", "Lake Area Composite", "100428699", "3060", 2, "00:29:00.1", "00:14:19.0", "00:14:41.0", nil, "finished", nil, nil ],
   [ 5, "Jack", "Milton", "St Louis Park HS", "100391759", "3273", 2, "00:29:00.4", "00:14:26.4", "00:14:33.9", nil, "finished", nil, nil ],
-  [ 6, "Charlie", "Williamson", "St Paul Composite - North", "100434885", "3291", 2, "00:29:26.6", "00:14:34.5", "00:14:52.0", nil, "finished", nil, nil ],
+  [ 6, "Charles", "Williamson", "St Paul Composite - North", "100434885", "3291", 2, "00:29:26.6", "00:14:34.5", "00:14:52.0", nil, "finished", nil, nil ],
   [ 7, "Alex", "Chouanard", "Rockford", "100389947", "3241", 2, "00:29:27.2", "00:14:41.1", "00:14:46.1", nil, "finished", nil, nil ],
   [ 8, "Bennett", "Schmaltz", "Roseville", "100392503", "3255", 2, "00:29:41.8", "00:14:49.5", "00:14:52.2", nil, "finished", nil, nil ],
   [ 9, "Aidan", "Casey", "BBBikers", "100526680", "3016", 2, "00:29:58.1", "00:15:06.8", "00:14:51.3", nil, "finished", nil, nil ],
@@ -865,7 +865,7 @@ theo_wirth_varsity_boys_results = [
   [ 28, "Cooper", "Austin", "Edina Cycling", "100389506", "23", 4, "01:00:28.5", "00:14:51.4", "00:15:01.8", "00:15:07.7", "00:15:27.5", nil, "finished", nil, nil ],
   [ 29, "Scott", "Stephenson", "Hudson HS", "100392739", "32", 4, "01:01:24.4", "00:14:56.7", "00:15:08.7", "00:15:51.3", "00:15:27.6", nil, "finished", nil, nil ],
   [ 30, "Maxwell", "Chinn", "Alexandria Youth Cycling", "100389940", "1", 4, "01:01:30.5", "00:14:54.8", "00:15:25.5", "00:15:41.3", "00:15:28.7", nil, "finished", nil, nil ],
-  [ 31, "Jaret", "Soxman", "Brainerd HS", "100392691", "5", 4, "01:01:47.6", "00:14:57.5", "00:15:32.6", "00:15:36.1", "00:15:41.2", nil, "finished", nil, nil ],
+  [ 31, "Jared", "Soxman", "Brainerd HS", "100392691", "5", 4, "01:01:47.6", "00:14:57.5", "00:15:32.6", "00:15:36.1", "00:15:41.2", nil, "finished", nil, nil ],
   [ 32, "Eddie", "Binsfeld", "Rockford", "100389664", "60", 4, "01:02:45.0", "00:14:39.5", "00:15:55.6", "00:15:52.0", "00:16:17.6", nil, "finished", nil, nil ],
   [ 33, "Neil", "Bhargava", "Edina Cycling", "100389653", "25", 4, "01:02:45.0", "00:14:44.4", "00:15:50.5", "00:15:51.5", "00:16:18.4", nil, "finished", nil, nil ],
   [ 34, "Bishop", "Noetzel", "Brainerd HS", "100391937", "4", 4, "01:03:51.4", "00:14:50.2", "00:15:57.1", "00:16:13.4", "00:16:50.6", nil, "finished", nil, nil ]

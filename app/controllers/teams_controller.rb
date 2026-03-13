@@ -74,7 +74,7 @@ class TeamsController < ApplicationController
     @team_stats = calculate_team_stats(@team, @selected_year)
 
     # Group racers by category for roster display, filtered by year
-    @racers_by_category = group_racers_by_category(@team.racers, @selected_year)
+    @racers_by_category = group_racers_by_category(@team.racers.active_in_year(@selected_year), @selected_year)
 
     @back_path, @back_text = determine_back_path(default_path: teams_path, default_text: "Back to Teams")
   end

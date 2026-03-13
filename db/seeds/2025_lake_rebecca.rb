@@ -226,7 +226,7 @@ results_7th_grade_boys_d2 = [
   [ 15, "Caleb", "Maxwell", "Northwoods Cycling", "100576196", "6699", 1, "20:07.7", "20:07.7", "finished" ],
   [ 16, "Madden", "Lorenz", "Lake Area Composite", "100532574", "6620", 1, "20:17.0", "20:17.0", "finished" ],
   [ 17, "Aiden", "Sutherland", "Tioga Trailblazers", "100534292", "6786", 1, "20:20.1", "20:20.1", "finished" ],
-  [ 18, "Tristen", "Peters", "Armstrong Cycle", "100522931", "6515", 1, "20:21.9", "20:21.9", "finished" ],
+  [ 18, "Tristan", "Peters", "Armstrong Cycle", "100522931", "6515", 1, "20:21.9", "20:21.9", "finished" ],
   [ 19, "Elliot", "Freeman", "Roseville", "100530582", "6744", 1, "20:22.7", "20:22.7", "finished" ],
   [ 20, "Willem", "Sheldon", "Minneapolis Northside", "100538513", "6635", 1, "20:23.4", "20:23.4", "finished" ],
   [ 21, "Jack", "Bond", "Eden Prairie HS", "100534454", "6587", 1, "20:26.1", "20:26.1", "finished" ],

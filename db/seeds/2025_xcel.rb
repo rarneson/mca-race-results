@@ -217,7 +217,7 @@ results_7th_grade_boys_d2 = [
   [ 20, "Willem", "Sheldon", "Minneapolis Northside", "100538513", "6635", 1, "16:33.8", "16:33.8", "finished" ],
   [ 21, "Jax", "Schildgen", "Lake Area Composite", "100532634", "6621", 1, "16:35.7", "16:35.7", "finished" ],
   [ 22, "William", "Lohmeyer", "Winona", "100574006", "6806", 1, "16:37.1", "16:37.1", "finished" ],
-  [ 23, "Tristen", "Peters", "Armstrong Cycle", "100522931", "6515", 1, "16:38.2", "16:38.2", "finished" ],
+  [ 23, "Tristan", "Peters", "Armstrong Cycle", "100522931", "6515", 1, "16:38.2", "16:38.2", "finished" ],
   [ 24, "Gilbert", "Nelson", "Osseo Composite", "100528205", "6704", 1, "16:38.2", "16:38.2", "finished" ],
   [ 25, "Vincent", "Howe", "St Louis Park HS", "100534616", "6762", 1, "16:39.3", "16:39.3", "finished" ],
   [ 26, "Archer", "Braastad", "Champlin Park HS", "100569652", "6547", 1, "16:47.0", "16:47.0", "finished" ],
@@ -880,7 +880,7 @@ results_varsity_girls = [
   [ 5, "Lacey", "Siira", "Alexandria Youth Cycling", "100419075", "1", 4, "1:06:23.9", "15:32.3", "16:40.5", "16:59.4", "17:11.5", "finished" ],
   [ 6, "Jacee", "Erickson", "Winona", "100570799", "27", 4, "1:06:35.3", "15:40.9", "16:54.4", "17:31.3", "16:28.6", "finished" ],
   [ 7, "Greta", "Dickhausen", "Burnsville HS", "100390154", "28", 4, "1:06:38.4", "15:42.4", "17:05.2", "16:46.9", "17:03.8", "finished" ],
-  [ 8, "Annelise", "Metzger", "Burnsville HS", "100391721", "29", 4, "1:07:10.5", "15:42.9", "17:04.8", "17:01.7", "17:21.0", "finished" ],
+  [ 8, "Anneliese", "Metzger", "Burnsville HS", "100391721", "29", 4, "1:07:10.5", "15:42.9", "17:04.8", "17:01.7", "17:21.0", "finished" ],
   [ 9, "Abigail", "Thomes", "Brainerd HS", "100392848", "2", 4, "1:14:58.2", "15:32.6", "18:51.4", "20:19.8", "20:14.3", "finished" ]
 ]
 
