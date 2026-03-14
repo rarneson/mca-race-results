@@ -1,24 +1,59 @@
-# README
+# MCA Race Results
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+A Ruby on Rails application for managing and viewing Minnesota Cycling Association (MCA) mountain bike race results. The app imports race data, normalizes it across venues, and provides a web interface for browsing results by race, racer, team, and category.
 
-Things you may want to cover:
+## Tech Stack
 
-* Ruby version
+- Ruby 3.4.5
+- Rails 8.0
+- SQLite3
+- Hotwire (Turbo + Stimulus)
+- TailwindCSS + daisyUI
+- Deployed with Kamal + Docker
 
-* System dependencies
+## Setup
 
-* Configuration
+```bash
+# Install dependencies
+bundle install
 
-* Database creation
+# Create database and run migrations
+rails db:setup
 
-* Database initialization
+# Or, if the database already exists
+rails db:migrate
+```
 
-* How to run the test suite
+## Seeding Data
 
-* Services (job queues, cache servers, search engines, etc.)
+Race results are stored as individual seed files in `db/seeds/`. To seed everything (teams, categories, and all race data):
 
-* Deployment instructions
+```bash
+rails db:seed
+```
 
-* ...
+To run a single seed file (useful when adding new races incrementally):
+
+```bash
+rake db:seed:file[2023_detroit_lakes]
+```
+
+The filename is passed without the `.rb` extension and corresponds to a file in `db/seeds/`.
+
+## Running the App
+
+```bash
+rails server
+```
+
+## Tests
+
+```bash
+rails test
+```
+
+## Linting
+
+```bash
+rubocop
+```
