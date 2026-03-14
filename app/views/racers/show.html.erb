@@ -59,8 +59,8 @@
   <!-- Career Statistics Section -->
   <div class="mb-8">
     <h2 class="text-xl md:text-2xl font-bold mb-4 md:mb-6">Career Statistics</h2>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-6">
-      
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-6">
+
       <!-- Success Rates -->
       <div class="bg-white rounded-lg border p-4 md:p-6">
         <div class="flex items-center mb-4">
@@ -69,7 +69,7 @@
           </div>
           <h3 class="text-lg font-semibold">Success Rates</h3>
         </div>
-        
+
         <div class="space-y-4">
           <div class="flex justify-between items-center">
             <span class="text-gray-600">Win Rate</span>
@@ -78,7 +78,7 @@
               <%= number_with_precision(win_rate, precision: 1) %>%
             </span>
           </div>
-          
+
           <div class="flex justify-between items-center">
             <span class="text-gray-600">Podium Rate</span>
             <span class="font-bold text-orange-600">
@@ -86,7 +86,7 @@
               <%= number_with_precision(podium_rate, precision: 1) %>%
             </span>
           </div>
-          
+
           <div class="flex justify-between items-center">
             <span class="text-gray-600">Finish Rate</span>
             <span class="font-bold text-green-600">
@@ -96,51 +96,7 @@
           </div>
         </div>
       </div>
-      
-      <!-- Time Statistics -->
-      <div class="bg-white rounded-lg border p-4 md:p-6">
-        <div class="flex items-center mb-4">
-          <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
-            ⏱️
-          </div>
-          <h3 class="text-lg font-semibold">Time Statistics</h3>
-        </div>
-        
-        <div class="space-y-4">
-          <div class="flex justify-between items-center">
-            <span class="text-gray-600">Best Time</span>
-            <span class="font-bold">
-              <% best_time = @racer.race_results.minimum(:total_time_ms) %>
-              <% if best_time %>
-                <%= Time.at(best_time / 1000.0).utc.strftime('%M:%S') %>
-              <% else %>
-                --:--
-              <% end %>
-            </span>
-          </div>
-          
-          <div class="flex justify-between items-center">
-            <span class="text-gray-600">Average Time</span>
-            <span class="font-bold">
-              <% avg_time = @racer.race_results.average(:total_time_ms) %>
-              <% if avg_time %>
-                <%= Time.at(avg_time / 1000.0).utc.strftime('%M:%S') %>
-              <% else %>
-                --:--
-              <% end %>
-            </span>
-          </div>
-          
-          <div class="flex justify-between items-center">
-            <span class="text-gray-600">Total Race Time</span>
-            <span class="font-bold">
-              <% total_time = @racer.race_results.sum(:total_time_ms) || 0 %>
-              <%= Time.at(total_time / 1000.0).utc.strftime('%H:%M:%S') %>
-            </span>
-          </div>
-        </div>
-      </div>
-      
+
       <!-- Position Stats -->
       <div class="bg-white rounded-lg border p-4 md:p-6">
         <div class="flex items-center mb-4">
