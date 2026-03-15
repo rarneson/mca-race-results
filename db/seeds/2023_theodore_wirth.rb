@@ -64,7 +64,7 @@ results_6th_grade_girls = [
   [ 31, "Lily", "Morgan", "Edina Cycling", "100472078", "7033", 1, "00:24:19.228", "00:24:19.228", "finished" ],
   [ 32, "Samantha", "Plantz", "Eastview HS", "100472355", "7031", 1, "00:24:41.270", "00:24:41.270", "finished" ],
   [ 33, "Poppy", "Kreykes", "Breck", "100485011", "7014", 0, "", "", "DNF" ],
-  [ 34, "Molly", "McGuire", "Shakopee HS", "100483867", "7070", 0, "", "", "DNF" ],
+  [ 34, "Molly", "McGuire", "Shakopee HS", "100483867", "7070", 0, "", "", "DNF" ]
 ]
 
 # 6th Grade Boys D2 Results
@@ -99,7 +99,7 @@ results_6th_grade_boys_d2 = [
   [ 28, "Franklin", "Fernandez", "Mahtomedi HS", "100486862", "7603", 1, "00:22:00.879", "00:22:00.879", "finished" ],
   [ 29, "Matthew", "Storkamp", "Hastings", "100482885", "7585", 1, "00:22:35.853", "00:22:35.853", "finished" ],
   [ 30, "Dexter", "Thao", "Mahtomedi HS", "100462539", "7606", 1, "00:24:16.443", "00:24:16.443", "finished" ],
-  [ 31, "Foster", "Vosooney", "Mahtomedi HS", "100483257", "7607", 1, "00:26:33.631", "00:26:33.631", "finished" ],
+  [ 31, "Foster", "Vosooney", "Mahtomedi HS", "100483257", "7607", 1, "00:26:33.631", "00:26:33.631", "finished" ]
 ]
 
 # 6th Grade Boys D1 Results
@@ -132,7 +132,7 @@ results_6th_grade_boys_d1 = [
   [ 26, "Karl", "Knudson", "Edina Cycling", "100476719", "7566", 1, "00:23:12.373", "00:23:12.373", "finished" ],
   [ 27, "Robert", "Stinchcombe III", "Edina Cycling", "100471075", "7574", 1, "00:24:57.962", "00:24:57.962", "finished" ],
   [ 28, "Mackinley", "Northenscold", "Edina Cycling", "100474040", "7569", 1, "00:25:19.649", "00:25:19.649", "finished" ],
-  [ 29, "Benjamin", "Skanse", "Edina Cycling", "100473812", "7573", 1, "00:25:43.696", "00:25:43.696", "finished" ],
+  [ 29, "Benjamin", "Skanse", "Edina Cycling", "100473812", "7573", 1, "00:25:43.696", "00:25:43.696", "finished" ]
 ]
 
 # 7th Grade Girls Results
@@ -169,7 +169,7 @@ results_7th_grade_girls = [
   [ 30, "Katelyn", "Burtyk", "Shakopee HS", "100483514", "6090", 1, "00:23:04.157", "00:23:04.157", "finished" ],
   [ 31, "Linnea", "Carlson", "Shakopee HS", "100484236", "6091", 1, "00:23:22.630", "00:23:22.630", "finished" ],
   [ 32, "Reese", "Jeremiason", "Orono HS", "100405929", "6073", 1, "00:23:26.950", "00:23:26.950", "finished" ],
-  [ 33, "Scarlet", "Eder", "Mound Westonka", "100469619", "6056", 1, "00:23:30.477", "00:23:30.477", "finished" ],
+  [ 33, "Scarlet", "Eder", "Mound Westonka", "100469619", "6056", 1, "00:23:30.477", "00:23:30.477", "finished" ]
 ]
 
 # 7th Grade Boys D2 Results
@@ -218,7 +218,7 @@ results_7th_grade_boys_d2 = [
   [ 42, "Tristan", "Thomas", "Rosemount HS", "100478245", "6723", 1, "00:25:24.894", "00:25:24.894", "finished" ],
   [ 43, "Odin", "Thompson", "Mound Westonka", "100482193", "6634", 1, "00:25:32.400", "00:25:32.400", "finished" ],
   [ 44, "Lucius", "Robb", "Rosemount HS", "100430313", "6722", 0, "", "", "DNF" ],
-  [ 45, "Avery", "Barbeau", "Mankato West HS", "100428695", "6611", 0, "", "", "DNF" ],
+  [ 45, "Avery", "Barbeau", "Mankato West HS", "100428695", "6611", 0, "", "", "DNF" ]
 ]
 
 # 7th Grade Boys D1 Results
@@ -266,7 +266,7 @@ results_7th_grade_boys_d1 = [
   [ 41, "Luke", "Hassell", "Minneapolis Washburn HS", "100472171", "6664", 1, "00:21:16.061", "00:21:16.061", "finished" ],
   [ 42, "Carter", "Havlicek", "Shakopee HS", "100486028", "6726", 1, "00:21:27.550", "00:21:27.550", "finished" ],
   [ 43, "Carson", "Shopbell", "Minnetonka HS", "100417188", "6627", 1, "00:22:57.985", "00:22:57.985", "finished" ],
-  [ 44, "David", "Healy", "Minnetonka HS", "100484612", "6618", 1, "00:23:38.683", "00:23:38.683", "finished" ],
+  [ 44, "David", "Healy", "Minnetonka HS", "100484612", "6618", 1, "00:23:38.683", "00:23:38.683", "finished" ]
 ]
 
 # 8th Grade Girls Results
@@ -297,7 +297,7 @@ results_8th_grade_girls = [
   [ 24, "Adeline", "Wrecza", "Hopkins HS", "100432688", "5034", 1, "00:19:50.327", "00:19:50.327", "finished" ],
   [ 25, "Mikka", "Schaefer", "Edina Cycling", "100478190", "5028", 1, "00:23:11.184", "00:23:11.184", "finished" ],
   [ 26, "Addison", "Deutsch", "Shakopee HS", "100427539", "5078", 1, "00:24:15.020", "00:24:15.020", "finished" ],
-  [ 27, "Sylvia", "Klein", "Shakopee HS", "100391219", "5079", 1, "00:36:11.013", "00:36:11.013", "finished" ],
+  [ 27, "Sylvia", "Klein", "Shakopee HS", "100391219", "5079", 1, "00:36:11.013", "00:36:11.013", "finished" ]
 ]
 
 # 8th Grade Boys D2 Results
@@ -353,7 +353,7 @@ results_8th_grade_boys_d2 = [
   [ 49, "Noah", "Siekert", "Eagan HS", "100465960", "5377", 1, "00:21:33.958", "00:21:33.958", "finished" ],
   [ 50, "Reid", "Berntsen", "Rosemount HS", "100484473", "5545", 1, "00:21:51.332", "00:21:51.332", "finished" ],
   [ 51, "Erik", "Vanminsel", "Apple Valley HS", "100488748", "5313", 1, "00:22:22.314", "00:22:22.314", "finished" ],
-  [ 52, "Noah", "Hillebert", "Mound Westonka", "100419282", "5442", 1, "00:25:36.966", "00:25:36.966", "finished" ],
+  [ 52, "Noah", "Hillebert", "Mound Westonka", "100419282", "5442", 1, "00:25:36.966", "00:25:36.966", "finished" ]
 ]
 
 # 8th Grade Boys D1 Results
@@ -407,7 +407,7 @@ results_8th_grade_boys_d1 = [
   [ 47, "Rock", "Hummel", "Shakopee HS", "100390950", "5557", 1, "00:20:54.056", "00:20:54.056", "finished" ],
   [ 48, "Jacob", "Ward", "Minneapolis Washburn HS", "100393057", "5485", 1, "00:20:54.368", "00:20:54.368", "finished" ],
   [ 49, "Oleg", "Komarenko", "Edina Cycling", "100473819", "5387", 1, "00:21:22.646", "00:21:22.646", "finished" ],
-  [ 50, "Julian", "Swarthout", "Minneapolis Washburn HS", "100479306", "5484", 1, "00:22:21.581", "00:22:21.581", "finished" ],
+  [ 50, "Julian", "Swarthout", "Minneapolis Washburn HS", "100479306", "5484", 1, "00:22:21.581", "00:22:21.581", "finished" ]
 ]
 
 # ===============================================================================
