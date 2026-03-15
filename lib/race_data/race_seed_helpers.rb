@@ -139,7 +139,7 @@ module RaceData
         race: race,
         racer_season: racer_season
       ) do |result|
-        result.place = place
+        result.place = place.is_a?(Integer) ? place : nil
         result.total_time_ms = parse_time_to_ms(total_time)
         result.total_time_raw = total_time
         result.laps_completed = laps

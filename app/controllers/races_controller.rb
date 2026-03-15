@@ -13,7 +13,7 @@ class RacesController < ApplicationController
     all_race_results = @race.race_results
                             .joins(racer_season: :racer)
                             .includes(racer_season: [ racer: :team ], category: [], race_result_laps: [])
-                            .order(:place)
+                            .order(Arel.sql("CASE WHEN place IS NULL THEN 1 ELSE 0 END, place"))
 
     # Filter by category if specified, otherwise show first category with results
     @selected_category = params[:category]
