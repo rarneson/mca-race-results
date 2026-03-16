@@ -9,7 +9,7 @@ A Ruby on Rails application for managing and viewing Minnesota Cycling Associati
 - SQLite3
 - Hotwire (Turbo + Stimulus)
 - TailwindCSS + daisyUI
-- Deployed with Kamal + Docker
+- Deployed with Kamal + Docker on DigitalOcean
 
 ## Setup
 
@@ -57,3 +57,23 @@ rails test
 ```bash
 rubocop
 ```
+
+## Deployment
+
+The app is deployed to a DigitalOcean Droplet using [Kamal](https://kamal-deploy.org/). The Docker image is hosted on Docker Hub.
+
+```bash
+# First-time setup (provisions server, deploys app, sets up SSL)
+kamal setup
+
+# Subsequent deploys
+kamal deploy
+
+# Open a Rails console on the server
+kamal console
+
+# Tail production logs
+kamal logs
+```
+
+Ensure `KAMAL_REGISTRY_PASSWORD` is set in your shell and `config/master.key` exists locally before deploying.
