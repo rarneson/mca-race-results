@@ -23,7 +23,7 @@ class RacersController < ApplicationController
 
     if params[:search].present?
       @search_query = params[:search]
-      search_term = "%#{@search_query}%"
+      search_term = "%#{@search_query.strip}%"
       racers = racers.left_joins(:team).where(
         "racers.first_name LIKE :term OR racers.last_name LIKE :term OR teams.name LIKE :term OR (racers.first_name || ' ' || racers.last_name) LIKE :term",
         term: search_term
