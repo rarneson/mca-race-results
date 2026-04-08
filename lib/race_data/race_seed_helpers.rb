@@ -37,6 +37,20 @@ module RaceData
       end
     end
 
+    CATEGORY_LAPS = {
+      "6th Grade Girls" => 1, "6th Grade Boys D1" => 1, "6th Grade Boys D2" => 1,
+      "7th Grade Girls" => 1, "7th Grade Boys D1" => 1, "7th Grade Boys D2" => 1,
+      "8th Grade Girls" => 1, "8th Grade Boys D1" => 1, "8th Grade Boys D2" => 1,
+      "Freshman Girls" => 2, "Freshman Boys D1" => 2, "Freshman Boys D2" => 2,
+      "JV2 Girls" => 2, "JV2 Boys D1" => 2, "JV2 Boys D2" => 2,
+      "JV3 Girls" => 3, "JV3 Boys" => 3,
+      "Varsity Girls" => 4, "Varsity Boys" => 4
+    }.freeze
+
+    def get_expected_laps(category_name)
+      CATEGORY_LAPS.fetch(category_name, 1)
+    end
+
     # Main import method for a division
     def import_division_results(race, category_name, results_data, expected_laps)
       puts "Creating #{race.name.split(' - ').first} #{category_name} results..."

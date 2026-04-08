@@ -3,11 +3,6 @@ require_relative '../../lib/race_data/race_seed_helpers'
 # Include the shared helpers
 include RaceData::RaceSeedHelpers
 
-def get_expected_laps(category_name)
-  category_data = CATEGORY_DATA.find { |cat| cat[:name] == category_name }
-  category_data ? category_data[:laps] : 1
-end
-
 # ===============================================================================
 # RACE DATA - Race 1 - Schindler's Way Austin MN (DATE)
 # ===============================================================================

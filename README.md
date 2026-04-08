@@ -35,7 +35,7 @@ rails db:seed
 To run a single seed file (useful when adding new races incrementally):
 
 ```bash
-rake db:seed:file[2023_detroit_lakes]
+rake db:seed:file FILE=2023_detroit_lakes
 ```
 
 The filename is passed without the `.rb` extension and corresponds to a file in `db/seeds/`.
@@ -74,6 +74,15 @@ kamal console
 
 # Tail production logs
 kamal logs
+
+# Run migrations on the server
+kamal app exec "bin/rails db:migrate"
+
+# Seed all data on the server
+kamal app exec "bin/rails db:seed"
+
+# Run a single seed file on the server
+kamal app exec "bin/rake db:seed:file FILE=2023_detroit_lakes"
 ```
 
 Ensure `KAMAL_REGISTRY_PASSWORD` is set in your shell and `config/master.key` exists locally before deploying.

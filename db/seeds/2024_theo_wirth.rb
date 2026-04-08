@@ -1097,12 +1097,6 @@ theo_wirth_jv2_boys_d1_results = [
 # IMPORT ALL DIVISIONS
 # ===============================================================================
 
-# Helper method to get expected laps for a category
-def get_expected_laps(category_name)
-  category_data = CATEGORY_DATA.find { |cat| cat[:name] == category_name }
-  category_data ? category_data[:laps] : 1
-end
-
 # Import 6th Grade Girls results
 import_division_results(race, "6th Grade Girls", theo_wirth_6th_grade_girls_results, get_expected_laps("6th Grade Girls"))
 import_division_results(race, "6th Grade Boys D2", theo_wirth_6th_grade_boys_d2_results, get_expected_laps("6th Grade Boys D2"))
