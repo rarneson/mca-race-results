@@ -11,10 +11,10 @@ puts "Creating 2025 State Championships results..."
 
 # Create the race
 race = Race.find_or_create_by!(
-  name: "Race 9 - 2025 State Championships",
+  name: "Race 9 - 2025 State Championship - Mount Kato",
   race_date: Date.parse("October 11, 2025")
 ) do |race|
-  race.location = "Mount Kato"
+  race.location = "Mankato, MN"
   race.year = 2025
 end
 

@@ -126,7 +126,8 @@ CATEGORY_DATA = [
   { name: "JV3 Girls", laps: 3, sort_order: 16 },
   { name: "JV3 Boys", laps: 3, sort_order: 17 },
   { name: "Varsity Girls", laps: 4, sort_order: 18 },
-  { name: "Varsity Boys", laps: 4, sort_order: 19 }
+  { name: "Varsity Boys", laps: 4, sort_order: 19 },
+  { name: "Senior Open Boys", laps: 2, sort_order: 20 }
 ].freeze
 
 puts "Creating categories..."

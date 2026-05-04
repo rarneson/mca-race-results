@@ -44,7 +44,8 @@ module RaceData
       "Freshman Girls" => 2, "Freshman Boys D1" => 2, "Freshman Boys D2" => 2,
       "JV2 Girls" => 2, "JV2 Boys D1" => 2, "JV2 Boys D2" => 2,
       "JV3 Girls" => 3, "JV3 Boys" => 3,
-      "Varsity Girls" => 4, "Varsity Boys" => 4
+      "Varsity Girls" => 4, "Varsity Boys" => 4,
+      "Senior Open Boys" => 2
     }.freeze
 
     def get_expected_laps(category_name)
