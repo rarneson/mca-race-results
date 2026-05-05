@@ -1,73 +1,78 @@
 <% content_for(:title, "MCA Race Results") %>
 
-<div class="container mx-auto px-4 py-6">
-  <!-- Hero Section -->
-  <div class="text-center py-8 md:py-12">
-    <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">MCA Race Results</h1>
-    <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-      The Minnesota Cycling Association's mountain bike race results archive. Look up race results, find racers, and explore teams.
+<div class="max-w-[1100px] mx-auto px-6">
+  <%= render "shared/hud/breadcrumb", trail: [{ label: "home" }] %>
+
+  <%# Hero %>
+  <section class="pt-5 pb-6">
+    <div class="hud-label">▸ MN_CYCLING_ASSOC ::</div>
+    <h1 class="hud-mono text-[36px] font-bold text-hud-accent mt-2.5 mb-1.5 tracking-[0.02em] leading-tight">
+      RACE_RESULTS.<%= @selected_year %>
+    </h1>
+    <p class="text-sm text-hud-ink-dim max-w-[640px] leading-relaxed m-0">
+      Minnesota Cycling Association mountain bike race archive — look up race results, find racers, explore teams.
     </p>
+
+    <%# Racer search %>
+    <%= form_with url: racers_path, method: :get, class: "mt-5 relative max-w-[560px]" do |f| %>
+      <%= f.text_field :search,
+            placeholder: "$ search racers…",
+            autocomplete: "off",
+            class: "hud-input hud-mono w-full px-3.5 py-3 text-sm pr-9" %>
+      <span class="hud-blink absolute right-3.5 top-1/2 -translate-y-1/2 text-hud-accent pointer-events-none">▍</span>
+    <% end %>
+  </section>
+
+  <%# Stat strip %>
+  <div class="hud-panel p-4 grid gap-3 mb-7" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));">
+    <%= render "shared/hud/hero_stat",
+          label: "◷ RACES",
+          value: @season_race_count,
+          sub: "#{@selected_year} season",
+          accent_color: "text-hud-accent" %>
+    <%= render "shared/hud/hero_stat",
+          label: "▣ RACERS",
+          value: number_with_delimiter(@season_racer_count),
+          sub: "active",
+          accent_color: "text-hud-accent" %>
+    <%= render "shared/hud/hero_stat",
+          label: "⌖ TEAMS",
+          value: @season_team_count,
+          sub: "competing",
+          accent_color: "text-hud-accent" %>
   </div>
 
-  <!-- Racer Search -->
-  <div class="max-w-xl mx-auto mb-12 md:mb-16">
-    <div class="flex items-center bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden focus-within:border-emerald-400 focus-within:ring-2 focus-within:ring-emerald-100 transition-all">
-      <svg class="w-5 h-5 text-gray-400 ml-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-      </svg>
-      <%= form_tag racers_path, method: :get, class: "flex-1" do %>
-        <input type="text" name="search" placeholder="Search for a racer..." class="w-full px-4 py-3 text-gray-700 bg-transparent border-none focus:outline-none focus:ring-0" />
+  <%# Season header + year tabs %>
+  <div class="flex justify-between items-end mb-3 flex-wrap gap-3">
+    <h2 class="hud-mono text-lg font-bold m-0 tracking-[0.04em] text-hud-ink">
+      <span class="text-hud-accent">▸</span> <%= @selected_year %> SEASON
+    </h2>
+    <%= render "shared/hud/year_tabs",
+          years: @available_years,
+          selected: @selected_year,
+          path_builder: ->(y) { root_path(year: y) } %>
+  </div>
+
+  <%# Race list %>
+  <% if @season_races.empty? %>
+    <div class="hud-panel p-8 text-center">
+      <p class="hud-mono text-sm text-hud-ink-dim m-0">$ no races recorded for <%= @selected_year %></p>
+    </div>
+  <% else %>
+    <div class="hud-panel overflow-hidden">
+      <% @season_races.each_with_index do |race, i| %>
+        <%= link_to race_path(race),
+              class: "hud-row grid gap-3.5 items-center px-3 py-3 no-underline #{'border-t border-hud-border' if i > 0}",
+              style: "grid-template-columns: 1fr auto;" do %>
+          <div>
+            <div class="font-semibold text-sm text-hud-ink"><%= race.name %></div>
+            <div class="hud-mono text-[11px] text-hud-ink-dim mt-0.5">
+              ◷ <%= race.race_date.strftime("%B %-d, %Y") %><% if race.location.present? %> · ⌖ <%= race.location %><% end %>
+            </div>
+          </div>
+          <span class="hud-mono text-hud-accent text-sm">▸</span>
+        <% end %>
       <% end %>
     </div>
-  </div>
-
-  <!-- Quick Stats -->
-  <div class="grid grid-cols-3 gap-4 max-w-lg mx-auto mb-14 md:mb-20">
-    <div class="text-center">
-      <div class="text-2xl md:text-3xl font-bold text-emerald-600"><%= @total_races %></div>
-      <div class="text-sm text-gray-500">Races</div>
-    </div>
-    <div class="text-center">
-      <div class="text-2xl md:text-3xl font-bold text-emerald-600"><%= @total_racers %></div>
-      <div class="text-sm text-gray-500">Racers</div>
-    </div>
-    <div class="text-center">
-      <div class="text-2xl md:text-3xl font-bold text-emerald-600"><%= @total_teams %></div>
-      <div class="text-sm text-gray-500">Teams</div>
-    </div>
-  </div>
-
-  <!-- Season Cards -->
-  <div class="max-w-4xl mx-auto">
-    <% @seasons.each do |year| %>
-      <div class="mb-10 md:mb-12">
-        <div class="flex items-center gap-3 mb-4">
-          <h3 class="text-xl font-semibold text-gray-800"><%= year %> Season</h3>
-          <span class="text-sm text-gray-500"><%= @races_by_year[year]&.size || 0 %> races</span>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <% (@races_by_year[year] || []).each do |race| %>
-            <%= link_to race_path(race), class: "block bg-white rounded-lg border border-gray-200 p-4 hover:border-emerald-300 hover:shadow-md transition-all group" do %>
-              <h4 class="font-semibold text-gray-900 group-hover:text-emerald-600 mb-2"><%= race.name %></h4>
-              <div class="space-y-1 text-sm text-gray-600">
-                <div class="flex items-center">
-                  <svg class="w-4 h-4 mr-2 shrink-0" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
-                  </svg>
-                  <%= race.race_date.strftime("%B %-d, %Y") %>
-                </div>
-                <div class="flex items-center">
-                  <svg class="w-4 h-4 mr-2 shrink-0" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                  </svg>
-                  <%= race.location %>
-                </div>
-              </div>
-            <% end %>
-          <% end %>
-        </div>
-      </div>
-    <% end %>
-  </div>
+  <% end %>
 </div>

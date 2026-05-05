@@ -1,0 +1,16 @@
+<%
+  # trail: array of { label:, path: nil } hashes — last entry is treated as current segment (dim, no link)
+  trail ||= []
+%>
+<div class="hud-mono text-[11px] text-hud-ink-dim py-2.5">
+  <span class="text-hud-accent">~</span>
+  <% trail.each_with_index do |seg, i| %>
+    <span class="mx-1.5">/</span>
+    <% if seg[:path] && i < trail.length - 1 %>
+      <%= link_to seg[:label], seg[:path], class: "hud-link" %>
+    <% else %>
+      <span class="text-hud-ink"><%= seg[:label] %></span>
+    <% end %>
+  <% end %>
+  <span class="hud-blink ml-1">▍</span>
+</div>
