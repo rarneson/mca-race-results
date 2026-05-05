@@ -51,7 +51,7 @@ results_6th_grade_girls = [
   [ 23, "Charlotte", "Perzynski", "Elk River", "100485234", "7035", 1, "00:26:25.557", "00:26:25.557", nil, nil, nil, "finished", nil, nil ],
   [ 24, "Lily", "Morgan", "Edina Cycling", "100472078", "7033", 1, "00:27:10.785", "00:27:10.785", nil, nil, nil, "finished", nil, nil ],
   [ 25, "Emma", "Daman", "Edina Cycling", "100478630", "7032", 1, "00:28:38.714", "00:28:38.714", nil, nil, nil, "finished", nil, nil ],
-  [ 26, "Isabel", "Calhoun-Lopez", "Minnetonka HS", "100482132", "7044", 1, "00:37:38.622", "00:32:38.622", nil, nil, nil, "finished", "5 Min", "Outside Assistance" ],
+  [ 26, "Isabel", "Calhoun-Lopez", "Minnetonka HS", "100482132", "7044", 1, "00:37:38.622", "00:32:38.622", nil, nil, nil, "finished", "5 Min", "Outside Assistance" ]
 ]
 
 # 6th Grade Boys D2 Results
@@ -80,7 +80,7 @@ results_6th_grade_boys_d2 = [
   [ 22, "Matthew", "Storkamp", "Hastings", "100482885", "7585", 1, "00:25:35.243", "00:25:35.243", nil, nil, nil, "finished", nil, nil ],
   [ 23, "Foster", "Vosooney", "Mahtomedi HS", "100483257", "7607", 1, "00:26:49.093", "00:26:49.093", nil, nil, nil, "finished", nil, nil ],
   [ 24, "Wesley", "Detert", "Cannon Valley", "100487335", "7537", 1, "00:27:30.027", "00:27:30.027", nil, nil, nil, "finished", nil, nil ],
-  [ 25, "Oliver", "Shipman", "Mahtomedi HS", "100461918", "7605", 1, "00:30:54.452", "00:30:54.452", nil, nil, nil, "finished", nil, nil ],
+  [ 25, "Oliver", "Shipman", "Mahtomedi HS", "100461918", "7605", 1, "00:30:54.452", "00:30:54.452", nil, nil, nil, "finished", nil, nil ]
 ]
 
 # 6th Grade Boys D1 Results
@@ -124,7 +124,7 @@ results_6th_grade_boys_d1 = [
   [ 37, "Gael", "Fox", "Edina Cycling", "100471144", "7561", 1, "00:29:05.069", "00:29:05.069", nil, nil, nil, "finished", nil, nil ],
   [ 38, "Mackinley", "Northenscold", "Edina Cycling", "100474040", "7569", 1, "00:29:12.225", "00:29:12.225", nil, nil, nil, "finished", nil, nil ],
   [ 39, "Robert", "Stinchcombe III", "Edina Cycling", "100471075", "7574", 1, "00:29:58.143", "00:29:58.143", nil, nil, nil, "finished", nil, nil ],
-  [ 40, "Bennett", "Havlicek", "Shakopee HS", "100482346", "7666", 0, "", "", nil, nil, nil, "DNF", nil, nil ],
+  [ 40, "Bennett", "Havlicek", "Shakopee HS", "100482346", "7666", 0, "", "", nil, nil, nil, "DNF", nil, nil ]
 ]
 
 # 7th Grade Girls Results
@@ -166,7 +166,7 @@ results_7th_grade_girls = [
   [ 35, "Dae", "Olson", "Edina Cycling", "100462914", "6037", 1, "00:30:34.945", "00:30:34.945", nil, nil, nil, "finished", nil, nil ],
   [ 36, "Scarlet", "Eder", "Mound Westonka", "100469619", "6056", 1, "00:31:10.522", "00:31:10.522", nil, nil, nil, "finished", nil, nil ],
   [ 37, "Reese", "Jeremiason", "Orono HS", "100405929", "6073", 1, "00:34:49.110", "00:34:49.110", nil, nil, nil, "finished", nil, nil ],
-  [ 38, "Meribelle", "Parks", "Austin HS", "100427563", "6006", 1, "00:41:02.880", "00:41:02.880", nil, nil, nil, "finished", nil, nil ],
+  [ 38, "Meribelle", "Parks", "Austin HS", "100427563", "6006", 1, "00:41:02.880", "00:41:02.880", nil, nil, nil, "finished", nil, nil ]
 ]
 
 # 7th Grade Boys D2 Results
@@ -205,7 +205,7 @@ results_7th_grade_boys_d2 = [
   [ 32, "Carson", "Bretz", "Elk River", "100484771", "6583", 1, "00:23:08.990", "00:23:08.990", nil, nil, nil, "finished", nil, nil ],
   [ 33, "Alex", "Aguilera", "Mahtomedi HS", "100483515", "6605", 1, "00:23:13.803", "00:23:13.803", nil, nil, nil, "finished", nil, nil ],
   [ 34, "Noah", "Short", "Hastings", "100466861", "6588", 1, "00:25:19.313", "00:25:19.313", nil, nil, nil, "finished", nil, nil ],
-  [ 35, "Daniel", "Eton", "Rochester", "100468616", "6697", 1, "00:28:21.094", "00:28:21.094", nil, nil, nil, "finished", nil, nil ],
+  [ 35, "Daniel", "Eton", "Rochester", "100468616", "6697", 1, "00:28:21.094", "00:28:21.094", nil, nil, nil, "finished", nil, nil ]
 ]
 
 # 7th Grade Boys D1 Results
@@ -258,7 +258,7 @@ results_7th_grade_boys_d1 = [
   [ 46, "Logan", "Jopp", "Prior Lake HS", "100478971", "6685", 1, "00:26:22.691", "00:26:22.691", nil, nil, nil, "finished", nil, nil ],
   [ 47, "Carson", "Shopbell", "Minnetonka HS", "100417188", "6627", 1, "00:26:29.516", "00:26:29.516", nil, nil, nil, "finished", nil, nil ],
   [ 48, "Evan", "Sachs", "Prior Lake HS", "100421249", "6690", 1, "00:27:26.083", "00:27:26.083", nil, nil, nil, "finished", nil, nil ],
-  [ 49, "David", "Healy", "Minnetonka HS", "100484612", "6618", 1, "00:28:15.750", "00:28:15.750", nil, nil, nil, "finished", nil, nil ],
+  [ 49, "David", "Healy", "Minnetonka HS", "100484612", "6618", 1, "00:28:15.750", "00:28:15.750", nil, nil, nil, "finished", nil, nil ]
 ]
 
 # 8th Grade Girls Results
@@ -291,7 +291,7 @@ results_8th_grade_girls = [
   [ 26, "Annika", "Ostby", "Rochester Century HS", "100410357", "5074", 1, "00:26:46.023", "00:26:46.023", nil, nil, nil, "finished", nil, nil ],
   [ 27, "Addison", "Deutsch", "Shakopee HS", "100427539", "5078", 1, "00:31:15.628", "00:31:15.628", nil, nil, nil, "finished", nil, nil ],
   [ 28, "Marianna", "Milne", "Wayzata Mountain Bike", "100481869", "5092", 1, "00:32:17.517", "00:32:17.517", nil, nil, nil, "finished", nil, nil ],
-  [ 29, "Sylvia", "Klein", "Shakopee HS", "100391219", "5079", 1, "00:38:44.968", "00:38:44.968", nil, nil, nil, "finished", nil, nil ],
+  [ 29, "Sylvia", "Klein", "Shakopee HS", "100391219", "5079", 1, "00:38:44.968", "00:38:44.968", nil, nil, nil, "finished", nil, nil ]
 ]
 
 # 8th Grade Boys D2 Results
@@ -345,7 +345,7 @@ results_8th_grade_boys_d2 = [
   [ 47, "Finley", "Froemming", "Rochester Century HS", "100408537", "5526", 1, "00:25:07.100", "00:25:07.100", nil, nil, nil, "finished", nil, nil ],
   [ 48, "Noah", "Hillebert", "Mound Westonka", "100419282", "5442", 1, "00:25:12.555", "00:25:12.555", nil, nil, nil, "finished", nil, nil ],
   [ 49, "Graham", "Nelson", "Orono HS", "100483924", "5501", 1, "00:25:19.643", "00:25:19.643", nil, nil, nil, "finished", nil, nil ],
-  [ 50, "Jeffrey", "Spaulding", "Rochester Mayo", "100472335", "5534", 1, "00:25:58.529", "00:25:58.529", nil, nil, nil, "finished", nil, nil ],
+  [ 50, "Jeffrey", "Spaulding", "Rochester Mayo", "100472335", "5534", 1, "00:25:58.529", "00:25:58.529", nil, nil, nil, "finished", nil, nil ]
 ]
 
 # 8th Grade Boys D1 Results
@@ -422,7 +422,7 @@ results_8th_grade_boys_d1 = [
   [ 70, "Oleg", "Komarenko", "Edina Cycling", "100473819", "5387", 1, "00:24:35.602", "00:24:35.602", nil, nil, nil, "finished", nil, nil ],
   [ 71, "Frank", "Snider", "Minnetonka HS", "100413369", "5438", 1, "00:24:39.572", "00:24:39.572", nil, nil, nil, "finished", nil, nil ],
   [ 72, "Ike", "Davidson", "Minnetonka HS", "100390101", "5425", 1, "00:24:40.026", "00:24:40.026", nil, nil, nil, "finished", nil, nil ],
-  [ 73, "Erik", "Fog", "Stillwater Mountain Bike", "100416611", "5595", 1, "00:24:44.816", "00:24:44.816", nil, nil, nil, "finished", nil, nil ],
+  [ 73, "Erik", "Fog", "Stillwater Mountain Bike", "100416611", "5595", 1, "00:24:44.816", "00:24:44.816", nil, nil, nil, "finished", nil, nil ]
 ]
 
 # Freshman Boys D2 Results
@@ -502,7 +502,7 @@ results_freshman_boys_d2 = [
   [ 73, "Jude", "Boden", "St Croix", "100389702", "4713", 2, "01:01:38.971", "00:19:22.477", "00:32:16.494", nil, nil, "finished", "10 Min", "Bike Swap" ],
   [ 74, "Alex", "Baraibar", "Park HS", "100467319", "4624", 0, "", "", "", nil, nil, "DNF", nil, nil ],
   [ 75, "Carson", "Abel", "Rochester", "100467726", "4656", 0, "", "", "", nil, nil, "DNF", nil, nil ],
-  [ 76, "Ryan", "Lynch", "BBBikers", "100429019", "4431", 0, "", "", "", nil, nil, "DNF", nil, nil ],
+  [ 76, "Ryan", "Lynch", "BBBikers", "100429019", "4431", 0, "", "", "", nil, nil, "DNF", nil, nil ]
 ]
 
 # Freshman Boys D1 Results
@@ -585,7 +585,7 @@ results_freshman_boys_d1 = [
   [ 76, "Jackson", "White", "Prior Lake HS", "100475578", "4645", 2, "00:46:58.902", "00:21:46.375", "00:25:12.527", nil, nil, "finished", nil, nil ],
   [ 77, "William", "Boyd", "Stillwater Mountain Bike", "100415791", "4744", 0, "", "", "", nil, nil, "DNF", nil, nil ],
   [ 78, "Nolan", "Mcguire", "Shakopee HS", "100427503", "4699", 0, "", "", "", nil, nil, "DNF", nil, nil ],
-  [ 79, "Jack", "Smithberg", "Stillwater Mountain Bike", "100426037", "4761", 0, "", "", "", nil, nil, "DNF", nil, nil ],
+  [ 79, "Jack", "Smithberg", "Stillwater Mountain Bike", "100426037", "4761", 0, "", "", "", nil, nil, "DNF", nil, nil ]
 ]
 
 # Freshman Girls Results
@@ -624,7 +624,7 @@ results_freshman_girls = [
   [ 32, "Addison", "Riendeau", "Hudson HS", "100459913", "4035", 2, "00:53:14.174", "00:26:19.149", "00:26:55.025", nil, nil, "finished", nil, nil ],
   [ 33, "Audrey", "Geht", "Minnetonka HS", "100472313", "4041", 2, "00:59:35.268", "00:28:32.616", "00:31:02.652", nil, nil, "finished", nil, nil ],
   [ 34, "Sarah", "Biros", "Mounds View HS", "100405745", "4045", 2, "00:59:38.559", "00:28:21.333", "00:31:17.226", nil, nil, "finished", nil, nil ],
-  [ 35, "Dylan", "Schmidt", "Hudson HS", "100392505", "4036", 2, "01:05:07.479", "00:33:13.336", "00:31:54.143", nil, nil, "finished", nil, nil ],
+  [ 35, "Dylan", "Schmidt", "Hudson HS", "100392505", "4036", 2, "01:05:07.479", "00:33:13.336", "00:31:54.143", nil, nil, "finished", nil, nil ]
 ]
 
 # JV2 Girls Results
@@ -667,7 +667,7 @@ results_jv2_girls = [
   [ 36, "Greta", "Sundberg", "Hudson HS", "100392789", "2041", 2, "00:53:14.120", "00:26:18.841", "00:26:55.279", nil, nil, "finished", nil, nil ],
   [ 37, "Kaci", "Wallin", "Austin HS", "100487202", "2009", 2, "00:53:28.430", "00:24:32.503", "00:28:55.927", nil, nil, "finished", nil, nil ],
   [ 38, "Michaela", "Hemphill", "Rochester Mayo", "100390809", "2079", 2, "00:53:34.354", "00:24:39.676", "00:28:54.678", nil, nil, "finished", nil, nil ],
-  [ 39, "Nora", "Leger", "Winona", "100391416", "2116", 2, "00:54:50.802", "00:25:50.122", "00:29:00.680", nil, nil, "finished", nil, nil ],
+  [ 39, "Nora", "Leger", "Winona", "100391416", "2116", 2, "00:54:50.802", "00:25:50.122", "00:29:00.680", nil, nil, "finished", nil, nil ]
 ]
 
 # JV3 Boys Results
@@ -786,7 +786,7 @@ results_jv3_boys = [
   [ 112, "Charlie", "Boese", "North Dakota", "100389707", "840", 3, "01:08:39.343", "00:20:59.117", "00:23:53.413", "00:23:46.813", nil, "finished", nil, nil ],
   [ 113, "Brody", "Parmer", "North Dakota", "100392073", "842", 3, "01:09:35.344", "00:16:31.937", "00:17:46.395", "00:35:17.012", nil, "finished", nil, nil ],
   [ 114, "Charlie", "Cutts", "Shakopee HS", "100390064", "887", 0, "", "", "", "", nil, "DNF", nil, nil ],
-  [ 115, "Jack", "Liiste", "Totino Grace-Irondale", "100391465", "954", 0, "", "", "", "", nil, "DNF", nil, nil ],
+  [ 115, "Jack", "Liiste", "Totino Grace-Irondale", "100391465", "954", 0, "", "", "", "", nil, "DNF", nil, nil ]
 ]
 
 # Varsity Boys Results
@@ -835,7 +835,7 @@ results_varsity_boys = [
   [ 42, "Colten", "Lajoie", "Duluth", "100429512", "222", 4, "01:14:11.524", "00:16:53.647", "00:18:59.808", "00:18:56.672", "00:19:21.397", "finished", nil, nil ],
   [ 43, "Teague", "Jackson", "BBBikers", "100390991", "207", 0, "", "", "", "", nil, "DNF", nil, nil ],
   [ 44, "Corban", "Carlson", "Mounds View HS", "100409178", "282", 0, "", "", "", "", nil, "DNF", nil, nil ],
-  [ 45, "Jack", "Schweigert", "Park HS", "100392559", "254", 0, "", "", "", "", nil, "DNF", nil, nil ],
+  [ 45, "Jack", "Schweigert", "Park HS", "100392559", "254", 0, "", "", "", "", nil, "DNF", nil, nil ]
 ]
 
 # JV3 Girls Results
@@ -866,7 +866,7 @@ results_jv3_girls = [
   [ 24, "Addison", "Aleman", "Minnetonka HS", "100417235", "416", 3, "01:09:17.285", "00:21:37.566", "00:23:48.607", "00:23:51.112", nil, "finished", nil, nil ],
   [ 25, "Jenna", "Pettes", "Prior Lake HS", "100392168", "430", 3, "01:10:09.570", "00:22:01.455", "00:23:58.858", "00:24:09.257", nil, "finished", nil, nil ],
   [ 26, "Lila", "Golomb", "Wayzata Mountain Bike", "100390568", "439", 3, "01:20:48.956", "00:17:30.637", "00:32:54.808", "00:20:23.511", nil, "finished", "10 Min", "Bike Swap" ],
-  [ 27, "Molly", "Goheen", "Stillwater Mountain Bike", "100390563", "436", 0, "", "", "", "", nil, "DNF", nil, nil ],
+  [ 27, "Molly", "Goheen", "Stillwater Mountain Bike", "100390563", "436", 0, "", "", "", "", nil, "DNF", nil, nil ]
 ]
 
 # Varsity Girls Results
@@ -885,7 +885,7 @@ results_varsity_girls = [
   [ 12, "Eleanora", "Williams", "Rochester Mayo", "100393155", "20", 4, "01:17:22.238", "00:18:40.676", "00:19:36.205", "00:20:12.684", "00:18:52.673", "finished", nil, nil ],
   [ 13, "Jadah", "Kelly", "North Dakota", "100391156", "19", 4, "01:22:46.941", "00:20:06.727", "00:21:25.001", "00:21:31.874", "00:19:43.339", "finished", nil, nil ],
   [ 14, "Leah", "Coleman", "Duluth East HS", "100389992", "8", 4, "01:23:50.760", "00:20:01.071", "00:20:53.243", "00:21:53.302", "00:21:03.144", "finished", nil, nil ],
-  [ 15, "Michon", "Harju", "Duluth East HS", "100390718", "26", 4, "01:24:47.964", "00:20:05.311", "00:21:16.238", "00:21:41.733", "00:21:44.682", "finished", nil, nil ],
+  [ 15, "Michon", "Harju", "Duluth East HS", "100390718", "26", 4, "01:24:47.964", "00:20:05.311", "00:21:16.238", "00:21:41.733", "00:21:44.682", "finished", nil, nil ]
 ]
 
 # JV2 Boys D2 Results
@@ -970,7 +970,7 @@ results_jv2_boys_d2 = [
   [ 78, "Weston", "Vogelsang", "Chisago Lakes", "100393001", "2402", 0, "", "", "", nil, nil, "DNF", nil, nil ],
   [ 79, "Chris", "Schefelbein", "Totino Grace-Irondale", "100471323", "2824", 0, "", "", "", nil, nil, "DNF", nil, nil ],
   [ 80, "Ari", "Greenberg", "North Dakota", "100390603", "2637", 0, "", "", "", nil, nil, "DNF", nil, nil ],
-  [ 81, "Philip", "Hodapp", "Bemidji", "100486254", "2333", 0, "", "", "", nil, nil, "DNF", nil, nil ],
+  [ 81, "Philip", "Hodapp", "Bemidji", "100486254", "2333", 0, "", "", "", nil, nil, "DNF", nil, nil ]
 ]
 
 # JV2 Boys D1 Results
@@ -1069,7 +1069,7 @@ results_jv2_boys_d1 = [
   [ 92, "Bear", "Ingebretson", "Hopkins HS", "100390975", "2486", 0, "", "", "", nil, nil, "DNF", nil, nil ],
   [ 93, "Lachlan", "Johnsen", "Edina Cycling", "100391035", "2450", 0, "", "", "", nil, nil, "DNF", nil, nil ],
   [ 94, "Benjamin", "Stonehouse", "Stillwater Mountain Bike", "100392752", "2811", 0, "", "", "", nil, nil, "DNF", nil, nil ],
-  [ 95, "Dominick", "Tamburo", "Stillwater Mountain Bike", "100417495", "2812", 0, "", "", "", nil, nil, "DNF", nil, nil ],
+  [ 95, "Dominick", "Tamburo", "Stillwater Mountain Bike", "100417495", "2812", 0, "", "", "", nil, nil, "DNF", nil, nil ]
 ]
 
 # ===============================================================================
