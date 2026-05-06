@@ -1,40 +1,44 @@
-<% content_for(:title, "Races - MTB Race Center") %>
+<% content_for :title, "Races" %>
 
-<div class="container mx-auto px-4 py-6">
-  <%= render "shared/page_header", title: "Race Results", subtitle: "Browse all race results by season" %>
+<div class="max-w-[1100px] mx-auto px-6">
+  <%= render "shared/hud/breadcrumb", trail: [{ label: "races" }] %>
 
-  <!-- Main Content -->
+  <%# Hero %>
+  <section class="pt-5 pb-6">
+    <div class="hud-label">RACES ::</div>
+    <h1 class="hud-mono text-[36px] font-bold text-hud-accent mt-2.5 mb-1.5 tracking-[0.02em] leading-tight">
+      ALL_RACES
+    </h1>
+    <p class="text-sm text-hud-ink-dim max-w-[640px] leading-relaxed m-0">
+      Every MCA mountain bike race in the archive. Browse by season to see results.
+    </p>
+  </section>
+
+  <%# Year sections %>
   <% @races_by_year.keys.sort.reverse.each do |year| %>
-    <div class="mb-6 md:mb-12">
-      <h2 class="text-2xl font-semibold text-gray-900 mb-6"><%= year %> Season</h2>
-      
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <% @races_by_year[year].each do |race| %>
-          <%= link_to race_path(race), class: "block bg-white rounded-lg border border-gray-200 p-4 md:p-5 hover:border-emerald-300 hover:shadow-md transition-all group" do %>
-            <h3 class="text-lg font-semibold text-gray-900 group-hover:text-emerald-600 mb-3"><%= race.name %></h3>
-            <div class="space-y-2 text-sm text-gray-600">
-              <div class="flex items-center">
-                <svg class="w-4 h-4 mr-2 shrink-0" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
-                </svg>
-                <%= race.race_date.strftime("%B %-d, %Y") %>
-              </div>
-              <div class="flex items-center">
-                <svg class="w-4 h-4 mr-2 shrink-0" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                </svg>
-                <%= race.location %>
+    <section class="mb-7">
+      <div class="flex justify-between items-end mb-3 flex-wrap gap-3">
+        <h2 class="hud-mono text-lg font-bold m-0 tracking-[0.04em] text-hud-ink">
+<%= year %> SEASON
+        </h2>
+        <span class="hud-microlabel"><%= pluralize(@races_by_year[year].size, "race") %></span>
+      </div>
+
+      <div class="hud-panel overflow-hidden">
+        <% @races_by_year[year].each_with_index do |race, i| %>
+          <%= link_to race_path(race),
+                class: "hud-row grid gap-3.5 items-center px-3 py-3 no-underline #{'border-t border-hud-border' if i > 0}",
+                style: "grid-template-columns: 1fr auto;" do %>
+            <div>
+              <div class="font-semibold text-sm text-hud-ink"><%= race.name %></div>
+              <div class="hud-mono text-[11px] text-hud-ink-dim mt-0.5">
+                ◷ <%= race.race_date.strftime("%B %-d, %Y") %><% if race.location.present? %> · ⌖ <%= race.location %><% end %>
               </div>
             </div>
-            <div class="mt-4 flex items-center text-sm font-medium text-emerald-600 group-hover:text-emerald-700">
-              View Results
-              <svg class="ml-1 w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
-              </svg>
-            </div>
+            <span class="hud-mono text-hud-accent text-sm">▸</span>
           <% end %>
         <% end %>
       </div>
-    </div>
+    </section>
   <% end %>
 </div>

@@ -1,6 +1,7 @@
 class TeamsController < ApplicationController
   include TeamsHelper
   include BackNavigable
+  layout "hud"
   before_action :set_team, only: %i[ show ]
 
   # GET /teams or /teams.json

@@ -8,22 +8,22 @@ class RacesTest < ApplicationSystemTestCase
   test "visiting the races index page" do
     visit races_url
 
-    assert_selector "h1", text: "Race Results"
-    assert_selector "h3", text: @race.name
+    assert_selector "h1", text: "ALL_RACES"
+    assert_text @race.name
   end
 
   test "visiting the race results page" do
     visit race_url(@race)
 
-    assert_selector "h1", text: "Race Results"
-    assert_selector "h2", text: @race.name
+    assert_selector "h1", text: @race.name.upcase
     assert_text @race.location
   end
 
   test "displays category filter" do
     visit race_url(@race)
 
-    assert_text "Filter by Category"
+    assert_text "CATEGORY"
+    assert_selector "select"
   end
 
   test "displays race results table" do
@@ -32,15 +32,15 @@ class RacesTest < ApplicationSystemTestCase
     assert_selector "thead"
     assert_selector "tbody"
     assert_selector "th", text: /pos/i
-    assert_selector "th", text: /name/i
-    assert_selector "td", text: "Alex Rodriguez"
+    assert_selector "th", text: /racer/i
+    assert_text "Alex Rodriguez"
   end
 
   test "shows navigation tabs" do
     visit race_url(@race)
 
-    assert_text "Results"
-    assert_text "Lap Analysis"
+    assert_text "RESULTS"
+    assert_text "LAP_ANALYSIS"
   end
 
   test "can navigate from index to race show" do
@@ -49,6 +49,6 @@ class RacesTest < ApplicationSystemTestCase
     click_link @race.name
 
     assert_current_path race_path(@race)
-    assert_selector "h2", text: @race.name
+    assert_selector "h1", text: @race.name.upcase
   end
 end

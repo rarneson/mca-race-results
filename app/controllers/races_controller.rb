@@ -1,7 +1,11 @@
 class RacesController < ApplicationController
   include BackNavigable
+  layout "hud"
+
+  TOP_FINISHERS_FOR_LAP_CHART = 5
+
   def index
-    races = Race.all.order(name: :asc)
+    races = Race.all.order(race_date: :asc)
     @races_by_year = races.group_by { |race| race.race_date.year }
   end
 
@@ -39,11 +43,11 @@ class RacesController < ApplicationController
       end
     end
 
-    @overall_winner = all_race_results.first
-    @fastest_lap = find_fastest_lap(all_race_results)
-    @average_time = calculate_average_time(all_race_results)
-    @participants_count = all_race_results.count
-    @finished_count = all_race_results.finished.count
+    @overall_winner = @race_results.first
+    @fastest_lap = find_fastest_lap(@race_results)
+    @average_time = calculate_average_time(@race_results)
+    @participants_count = @race_results.count
+    @finished_count = @race_results.finished.count
     @dnf_dns_count = @participants_count - @finished_count
 
     @category_stats = calculate_category_stats(all_race_results)
@@ -74,11 +78,10 @@ class RacesController < ApplicationController
   end
 
   def calculate_average_time(race_results)
-    finished_results = race_results.finished
-    return 0 if finished_results.empty?
+    times = race_results.select { |r| r.finished? && r.total_time_ms }.map(&:total_time_ms)
+    return 0 if times.empty?
 
-    total_time = finished_results.sum(:total_time_ms)
-    total_time / finished_results.count
+    times.sum / times.size
   end
 
   def calculate_category_stats(race_results)

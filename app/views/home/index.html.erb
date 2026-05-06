@@ -5,7 +5,7 @@
 
   <%# Hero %>
   <section class="pt-5 pb-6">
-    <div class="hud-label">▸ MN_CYCLING_ASSOC ::</div>
+    <div class="hud-label">MN_CYCLING_ASSOC ::</div>
     <h1 class="hud-mono text-[36px] font-bold text-hud-accent mt-2.5 mb-1.5 tracking-[0.02em] leading-tight">
       RACE_RESULTS.<%= @selected_year %>
     </h1>
@@ -45,7 +45,7 @@
   <%# Season header + year tabs %>
   <div class="flex justify-between items-end mb-3 flex-wrap gap-3">
     <h2 class="hud-mono text-lg font-bold m-0 tracking-[0.04em] text-hud-ink">
-      <span class="text-hud-accent">▸</span> <%= @selected_year %> SEASON
+<%= @selected_year %> SEASON
     </h2>
     <%= render "shared/hud/year_tabs",
           years: @available_years,

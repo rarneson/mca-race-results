@@ -1,1 +1,12 @@
-<%= pluralize(total_teams, 'team') %> with <%= pluralize(total_racers, 'racer') %> competing in <%= selected_year %>
+<div class="hud-panel p-4 grid gap-3" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));">
+  <%= render "shared/hud/hero_stat",
+        label: "⌖ TEAMS",
+        value: total_teams,
+        sub: "#{selected_year} season",
+        accent_color: "text-hud-accent" %>
+  <%= render "shared/hud/hero_stat",
+        label: "▣ RACERS",
+        value: number_with_delimiter(total_racers),
+        sub: "competing",
+        accent_color: "text-hud-accent" %>
+</div>

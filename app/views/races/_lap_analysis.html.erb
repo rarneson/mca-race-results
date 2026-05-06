@@ -1,0 +1,109 @@
+<%
+  top_finishers = race_results.select(&:finished?).first(5)
+  all_lap_times = top_finishers.flat_map { |r| r.race_result_laps.map(&:lap_time_ms) }.compact
+%>
+
+<% if top_finishers.empty? || all_lap_times.empty? || max_laps < 1 %>
+  <div class="hud-panel p-12 text-center">
+    <p class="hud-mono text-sm text-hud-ink-dim m-0">$ no lap data available</p>
+  </div>
+<% else %>
+  <%
+    margin = [(all_lap_times.max - all_lap_times.min) * 0.1, 2000].max
+    min_time = all_lap_times.min - margin
+    max_time = all_lap_times.max + margin
+    range_ms = (max_time - min_time).to_f
+    range_ms = 1.0 if range_ms.zero?
+
+    width   = 800
+    height  = 280
+    pad_l   = 64
+    pad_r   = 24
+    pad_t   = 18
+    pad_b   = 36
+    inner_w = width - pad_l - pad_r
+    inner_h = height - pad_t - pad_b
+    x_step  = max_laps > 1 ? inner_w.to_f / (max_laps - 1) : 0
+
+    palette = %w[
+      var(--color-hud-accent)
+      var(--color-hud-amber)
+      var(--color-hud-cyan)
+      var(--color-hud-violet)
+      var(--color-hud-red)
+    ]
+  %>
+  <div class="hud-panel p-4">
+    <div class="flex justify-between items-center mb-3 flex-wrap gap-2">
+      <div class="hud-label">TOP_<%= top_finishers.size %> LAP_TIMES</div>
+      <div class="hud-microlabel"><%= max_laps %> laps · <%= @selected_category %></div>
+    </div>
+
+    <div class="overflow-x-auto">
+      <svg viewBox="0 0 <%= width %> <%= height %>" class="w-full block" style="min-width: 480px;">
+        <%# Horizontal grid lines %>
+        <% 4.times do |i| %>
+          <% y = pad_t + (inner_h.to_f / 3) * i %>
+          <line x1="<%= pad_l %>" x2="<%= width - pad_r %>" y1="<%= y.round(1) %>" y2="<%= y.round(1) %>"
+                stroke="var(--color-hud-border)" stroke-width="1" />
+        <% end %>
+
+        <%# X-axis (lap labels) %>
+        <% (1..max_laps).each do |lap_num| %>
+          <% x = pad_l + x_step * (lap_num - 1) %>
+          <text x="<%= x.round(1) %>" y="<%= height - 12 %>"
+                fill="var(--color-hud-ink-dim)" font-size="11"
+                text-anchor="middle" font-family="JetBrains Mono">L<%= lap_num %></text>
+        <% end %>
+
+        <%# Y-axis (time labels) %>
+        <% [max_time, (max_time + min_time) / 2.0, min_time].each_with_index do |t, i| %>
+          <% y = pad_t + (inner_h.to_f / 2) * i + 4 %>
+          <text x="<%= pad_l - 10 %>" y="<%= y.round(1) %>"
+                fill="var(--color-hud-ink-dim)" font-size="10"
+                text-anchor="end" font-family="JetBrains Mono"><%= time_from_ms(t.round) %></text>
+        <% end %>
+
+        <%# Data lines %>
+        <% top_finishers.each_with_index do |result, ri| %>
+          <%
+            color = palette[ri]
+            racer_name = result.racer_season.racer.name
+            laps  = result.race_result_laps.sort_by(&:lap_number)
+            points = laps.filter_map do |lap|
+              next nil if lap.lap_time_ms.nil?
+              x = pad_l + x_step * (lap.lap_number - 1)
+              y = pad_t + inner_h - ((lap.lap_time_ms - min_time).to_f / range_ms) * inner_h
+              [x, y, lap.lap_number, lap.lap_time_ms]
+            end
+          %>
+          <% next if points.empty? %>
+          <% path_d = points.each_with_index.map { |p, idx| "#{idx.zero? ? 'M' : 'L'}#{p[0].round(1)} #{p[1].round(1)}" }.join(' ') %>
+          <g>
+            <%# Wide invisible hit area for easier hovering %>
+            <path d="<%= path_d %>" fill="none" stroke="transparent" stroke-width="14" pointer-events="stroke">
+              <title>P<%= result.place %> · <%= racer_name %></title>
+            </path>
+            <path d="<%= path_d %>" fill="none" stroke="<%= color %>" stroke-width="2" pointer-events="none" />
+            <% points.each do |x, y, lap_num, lap_ms| %>
+              <circle cx="<%= x.round(1) %>" cy="<%= y.round(1) %>" r="6" fill="transparent">
+                <title>P<%= result.place %> · <%= racer_name %> — L<%= lap_num %> <%= time_from_ms(lap_ms) %></title>
+              </circle>
+              <circle cx="<%= x.round(1) %>" cy="<%= y.round(1) %>" r="3" fill="<%= color %>" pointer-events="none" />
+            <% end %>
+          </g>
+        <% end %>
+      </svg>
+    </div>
+
+    <%# Legend %>
+    <div class="flex flex-wrap gap-x-4 gap-y-2 mt-4 pt-3 border-t border-hud-border">
+      <% top_finishers.each_with_index do |result, i| %>
+        <div class="hud-mono text-[11px] flex items-center gap-1.5" style="color: <%= palette[i] %>;">
+          <span class="inline-block w-3 h-0.5" style="background: <%= palette[i] %>;"></span>
+          P<%= result.place %> · <%= result.racer_season.racer.name %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
