@@ -1,5 +1,7 @@
-<% if selected_year == "All" %>
-  <%= number_with_delimiter(count) %> <%= 'racer'.pluralize(count) %> total
-<% else %>
-  <%= number_with_delimiter(count) %> <%= 'racer'.pluralize(count) %> competing in <%= selected_year %>
-<% end %>
+<div class="hud-panel p-4 grid gap-3" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));">
+  <%= render "shared/hud/hero_stat",
+        label: "▣ RACERS",
+        value: number_with_delimiter(count),
+        sub: selected_year == "All" ? "all-time" : "#{selected_year} season",
+        accent_color: "text-hud-accent" %>
+</div>

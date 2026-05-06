@@ -1,0 +1,13 @@
+<%
+  # years: array of year integers (most recent first)
+  # selected: currently selected year
+  # path_builder: lambda that takes a year and returns a URL string
+%>
+<div class="flex gap-1.5 flex-wrap" role="tablist" aria-label="Season">
+  <% years.each do |year| %>
+    <%= link_to year.to_s, path_builder.call(year),
+          role: "tab",
+          "aria-selected": (year == selected).to_s,
+          class: "hud-tab #{'active' if year == selected}" %>
+  <% end %>
+</div>

@@ -33,6 +33,38 @@ module ApplicationHelper
     html.html_safe
   end
 
+  def pagy_hud_nav(pagy)
+    html = +'<div class="flex gap-1.5 flex-wrap">'
+
+    if pagy.prev
+      html << link_to("‹ PREV", pagy_url_for(pagy, pagy.prev), class: "hud-tab")
+    else
+      html << '<span class="hud-tab opacity-40">‹ PREV</span>'
+    end
+
+    pagy.series.each do |item|
+      case item
+      when Integer
+        if item == pagy.page
+          html << %(<span class="hud-tab active">#{item}</span>)
+        else
+          html << link_to(item, pagy_url_for(pagy, item), class: "hud-tab")
+        end
+      when "gap"
+        html << '<span class="hud-tab opacity-40">…</span>'
+      end
+    end
+
+    if pagy.next
+      html << link_to("NEXT ›", pagy_url_for(pagy, pagy.next), class: "hud-tab")
+    else
+      html << '<span class="hud-tab opacity-40">NEXT ›</span>'
+    end
+
+    html << "</div>"
+    html.html_safe
+  end
+
   def time_from_ms(milliseconds)
     return "00:00.0" if milliseconds.nil? || milliseconds == 0
 

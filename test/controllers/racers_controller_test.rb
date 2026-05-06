@@ -45,7 +45,8 @@ class RacersControllerTest < ActionDispatch::IntegrationTest
 
     get racer_url(teamless_racer)
     assert_response :success
-    assert_select "p.text-gray-600", text: "No Team"
+    assert_select "h1", text: /SOLO RIDER/
+    assert_select "a[href^='/teams/']", false, "Expected no team link for a teamless racer"
   end
 
   test "get_current_category returns most recent assignment" do

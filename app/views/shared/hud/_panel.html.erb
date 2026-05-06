@@ -1,0 +1,8 @@
+<%
+  # Reusable bordered surface. Pass content via block; optional `padding` and extra `class:`.
+  padding ||= "p-4"
+  extra_class = local_assigns[:class] || ""
+%>
+<div class="hud-panel <%= padding %> <%= extra_class %>">
+  <%= yield %>
+</div>

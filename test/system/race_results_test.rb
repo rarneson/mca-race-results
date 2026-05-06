@@ -7,7 +7,7 @@ class RaceResultsTest < ApplicationSystemTestCase
 
   test "visiting race results through race page" do
     visit race_url(@race)
-    assert_selector "h3", text: "Race Results"
+    assert_selector "h1", text: @race.name.upcase
     assert_selector "table"
   end
 end

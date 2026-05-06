@@ -12,40 +12,41 @@ class RacesControllerTest < ActionDispatch::IntegrationTest
   test "should get index" do
     get races_url
     assert_response :success
-    assert_select "h1", "Race Results"
-    assert_select "h3", @race.name
+    assert_select "h1", "ALL_RACES"
+    assert_select "div", text: @race.name
   end
 
   test "should show race" do
     get race_url(@race)
     assert_response :success
-    assert_select "h2", @race.name
-    assert_select "td", text: /#{@racer.first_name}/
+    assert_select "h1", @race.name.upcase
+    assert_select "a", text: /#{@racer.first_name}/
   end
 
   test "should display category filter" do
     get race_url(@race)
     assert_response :success
 
-    assert_select "span.text-sm.font-medium.text-gray-700", "Filter by Category"
+    assert_select "div.hud-label", text: /CATEGORY/
+    assert_select "select"
   end
 
-  test "should display category results" do
+  test "should display standings panel" do
     get race_url(@race)
     assert_response :success
 
-    assert_select "h3", "Race Results"
+    assert_select "div.hud-label", text: /STANDINGS/
   end
 
-  test "should display race results table" do
+  test "should display race results table with HUD column headers" do
     get race_url(@race)
     assert_response :success
 
     assert_select "table"
-    assert_select "th", "Pos"
-    assert_select "th", "Name"
-    assert_select "th", "Total"
-    assert_select "th", "Gap"
+    assert_select "th", text: /POS/
+    assert_select "th", text: /RACER/
+    assert_select "th", text: /TIME/
+    assert_select "th", text: /GAP/
   end
 
   test "should handle race with no results" do

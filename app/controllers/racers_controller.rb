@@ -1,5 +1,6 @@
 class RacersController < ApplicationController
   include BackNavigable
+  layout "hud"
   before_action :set_racer, only: %i[ show edit update destroy ]
 
   # GET /racers or /racers.json
@@ -49,7 +50,7 @@ class RacersController < ApplicationController
           turbo_stream.update(
             "racers_table",
             partial: "racers/racers_table",
-            locals: { racers: @racers, pagy: @pagy }
+            locals: { racers: @racers, pagy: @pagy, search_query: @search_query, selected_year: @selected_year }
           ),
           turbo_stream.update(
             "racers_count",

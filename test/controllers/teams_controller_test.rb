@@ -14,15 +14,15 @@ class TeamsControllerTest < ActionDispatch::IntegrationTest
     get teams_url
     assert_response :success
 
-    assert_select "h1", "Teams"
+    assert_select "h1", /\AALL_TEAMS\./
   end
 
   test "should list teams with race results on index" do
     get teams_url, params: { year: 2024 }
     assert_response :success
 
-    assert_select "a", "Mountain Velocity"
-    assert_select "a", "Trail Blazers"
+    assert_select "a", text: /Mountain Velocity/
+    assert_select "a", text: /Trail Blazers/
   end
 
   test "should default to most recent year with data" do
@@ -37,7 +37,7 @@ class TeamsControllerTest < ActionDispatch::IntegrationTest
     get teams_url, params: { search: "Mountain" }
     assert_response :success
 
-    assert_select "h1", "Teams"
+    assert_select "h1", /\AALL_TEAMS\./
   end
 
   test "should get index when no teams exist" do
@@ -45,7 +45,7 @@ class TeamsControllerTest < ActionDispatch::IntegrationTest
     get teams_url
     assert_response :success
 
-    assert_select "h3", "No teams found"
+    assert_select "p", /no teams recorded/
   end
 
   test "should show team" do

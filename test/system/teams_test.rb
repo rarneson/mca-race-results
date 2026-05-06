@@ -7,11 +7,11 @@ class TeamsTest < ApplicationSystemTestCase
 
   test "visiting the index" do
     visit teams_url
-    assert_selector "h1", text: "Teams"
+    assert_selector "h1", text: "ALL_TEAMS"
   end
 
   test "should show team" do
     visit team_url(@team)
-    assert_text @team.name
+    assert_text @team.name.upcase
   end
 end
