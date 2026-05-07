@@ -28,10 +28,8 @@
     <p class="hud-mono text-sm text-hud-ink-dim m-0">
       <% if defined?(search_query) && search_query.present? %>
         $ no racers match "<%= search_query %>"
-      <% elsif defined?(selected_year) && selected_year != "All" %>
+      <% elsif defined?(selected_year) %>
         $ no racers competed in <%= selected_year %>
-      <% else %>
-        $ no racers recorded
       <% end %>
     </p>
   </div>

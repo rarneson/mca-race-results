@@ -5,22 +5,18 @@ class RacersController < ApplicationController
 
   # GET /racers or /racers.json
   def index
-    # Get selected year or default to "All"
-    @selected_year = params[:year].present? && params[:year] != "" ? params[:year] : "All"
-
     # Get available years for the dropdown
     @available_years = Race.available_years
 
-    # Start with base racers query
-    if @selected_year == "All"
-      # Show all racers regardless of year
-      racers = Racer.all.order(:last_name, :first_name)
+    # Get selected year or default to most recent year with data
+    @selected_year = if params[:year].present? && params[:year] != ""
+      params[:year]
     else
-      # Filter racers who competed in the selected year
-      year_int = @selected_year.to_i
-      racers = Racer.active_in_year(year_int)
-                    .order(:last_name, :first_name)
+      (@available_years.first || Date.current.year).to_s
     end
+
+    year_int = @selected_year.to_i
+    racers = Racer.active_in_year(year_int).order(:last_name, :first_name)
 
     if params[:search].present?
       @search_query = params[:search]
@@ -145,31 +141,17 @@ class RacersController < ApplicationController
             .first&.race_results&.first&.category
     end
 
-    def calculate_team_counts(year = "All")
+    def calculate_team_counts(year)
+      year_int = year.to_i
       counts = {}
 
-      if year == "All"
-        # Count all racers for each team
-        Team.all.each do |team|
-          racer_count = team.racers.count
-          counts[team.name] = racer_count if racer_count > 0
-        end
-
-        # Count all orphaned racers
-        orphaned_count = Racer.orphaned.count
-        counts["No Team"] = orphaned_count if orphaned_count > 0
-      else
-        # Count racers who competed in the selected year
-        year_int = year.to_i
-        Team.all.each do |team|
-          racer_count = team.racers.active_in_year(year_int).count
-          counts[team.name] = racer_count if racer_count > 0
-        end
-
-        # Count orphaned racers who competed in the selected year
-        orphaned_count = Racer.orphaned.active_in_year(year_int).count
-        counts["No Team"] = orphaned_count if orphaned_count > 0
+      Team.all.each do |team|
+        racer_count = team.racers.active_in_year(year_int).count
+        counts[team.name] = racer_count if racer_count > 0
       end
+
+      orphaned_count = Racer.orphaned.active_in_year(year_int).count
+      counts["No Team"] = orphaned_count if orphaned_count > 0
 
       counts.sort_by { |name, _| name }.to_h
     end
