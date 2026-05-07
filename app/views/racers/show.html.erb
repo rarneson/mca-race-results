@@ -8,11 +8,8 @@
 
   <%# Header %>
   <section class="pt-2 pb-5">
-    <div class="hud-label">
-RACER<% if @racer.number.present? %> #<%= @racer.number %><% end %>
-    </div>
     <h1 class="hud-mono text-[30px] font-bold text-hud-accent mt-2 mb-1.5 tracking-[0.02em] leading-tight m-0">
-      <%= @racer.name.upcase %>
+      <%= @racer.name.upcase %><% if @racer.number.present? %><span class="text-hud-ink-dim font-normal text-sm ml-4 align-middle">#<%= @racer.number %></span><% end %>
     </h1>
     <% if @current_category || @racer.team_name.present? %>
       <div class="hud-mono text-[12px] text-hud-ink-dim">
@@ -32,55 +29,12 @@ RACER<% if @racer.number.present? %> #<%= @racer.number %><% end %>
   <%
     all_results = @racer.race_results
     total_count = all_results.count
-    finished_results = all_results.where(status: "finished")
     placed = all_results.where.not(place: nil)
-    wins = all_results.where(place: 1).count
-    podiums = all_results.where("place <= 3").count
     top5 = all_results.where("place <= 5").count
     dnfs = all_results.where(status: "DNF").count
     best_position = placed.minimum(:place)
     avg_position = placed.any? ? placed.average(:place).to_f.round(1) : nil
-    win_rate = total_count > 0 ? (wins.to_f / total_count * 100) : 0
-    podium_rate = total_count > 0 ? (podiums.to_f / total_count * 100) : 0
-    finish_rate = total_count > 0 ? (finished_results.count.to_f / total_count * 100) : 0
-
-    rate_color = ->(pct) {
-      if pct >= 50 then "text-hud-accent"
-      elsif pct >= 25 then "text-hud-amber"
-      else "text-hud-red"
-      end
-    }
-    rate_bar = ->(pct) {
-      if pct >= 50 then "bg-hud-accent"
-      elsif pct >= 25 then "bg-hud-amber"
-      else "bg-hud-red"
-      end
-    }
   %>
-
-  <%# Performance overview %>
-  <div class="mb-3">
-    <h2 class="hud-mono text-sm font-bold tracking-[0.04em] text-hud-ink m-0">
-PERFORMANCE_OVERVIEW
-    </h2>
-  </div>
-  <div class="hud-panel p-4 grid gap-3 mb-7" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));">
-    <%= render "shared/hud/hero_stat",
-          label: "▣ RACES",
-          value: total_count,
-          sub: "total starts",
-          accent_color: "text-hud-accent" %>
-    <%= render "shared/hud/hero_stat",
-          label: "◉ PODIUMS",
-          value: podiums,
-          sub: "top-3 finishes",
-          accent_color: "text-hud-amber" %>
-    <%= render "shared/hud/hero_stat",
-          label: "⌖ AVG_POS",
-          value: avg_position || "—",
-          sub: "average finish",
-          accent_color: "text-hud-accent" %>
-  </div>
 
   <%# Career statistics %>
   <div class="mb-3">
@@ -88,44 +42,19 @@ PERFORMANCE_OVERVIEW
 CAREER_STATISTICS
     </h2>
   </div>
-  <div class="grid gap-4 mb-7" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
-    <%# Success rates %>
-    <div class="hud-panel p-4">
-      <div class="hud-microlabel mb-3.5">★ SUCCESS_RATES</div>
-      <% [
-        ["WIN_RATE", win_rate],
-        ["PODIUM_RATE", podium_rate],
-        ["FINISH_RATE", finish_rate]
-      ].each_with_index do |(label, pct), idx| %>
-        <div class="<%= 'mt-3 pt-3 border-t border-hud-border' if idx > 0 %>">
-          <div class="flex justify-between items-center mb-1.5">
-            <span class="hud-microlabel"><%= label %></span>
-            <span class="hud-mono text-sm font-semibold <%= rate_color.call(pct) %>">
-              <%= number_with_precision(pct, precision: 1) %>%
-            </span>
-          </div>
-          <div class="h-1.5 w-full bg-hud-row rounded-sm overflow-hidden">
-            <div class="h-full <%= rate_bar.call(pct) %>" style="width: <%= [pct, 100].min %>%"></div>
-          </div>
-        </div>
-      <% end %>
-    </div>
-
-    <%# Position stats %>
-    <div class="hud-panel p-4">
-      <div class="hud-microlabel mb-3.5">◎ POSITION_STATS</div>
-      <% [
-        ["BEST_POSITION", best_position ? "P#{best_position}" : "—", "text-hud-amber"],
-        ["AVG_POSITION", avg_position || "—", "text-hud-accent"],
-        ["TOP_5_FINISHES", top5, "text-hud-accent"],
-        ["DNFS", dnfs, dnfs == 0 ? "text-hud-accent" : "text-hud-red"]
-      ].each_with_index do |(label, value, color), idx| %>
-        <div class="<%= 'mt-2.5 pt-2.5 border-t border-hud-border' if idx > 0 %> flex justify-between items-center">
-          <span class="hud-microlabel"><%= label %></span>
-          <span class="hud-mono text-sm font-semibold <%= color %>"><%= value %></span>
-        </div>
-      <% end %>
-    </div>
+  <div class="grid gap-3 mb-7" style="grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));">
+    <% [
+      ["TOTAL_STARTS", total_count, "text-hud-accent"],
+      ["BEST_POSITION", best_position ? "P#{best_position}" : "—", "text-hud-amber"],
+      ["AVG_POSITION", avg_position || "—", "text-hud-accent"],
+      ["TOP_5_FINISHES", top5, "text-hud-accent"],
+      ["DNFS", dnfs, dnfs == 0 ? "text-hud-accent" : "text-hud-red"]
+    ].each do |label, value, color| %>
+      <div class="hud-panel p-4 aspect-square flex flex-col justify-center items-center text-center">
+        <div class="hud-microlabel mb-2"><%= label %></div>
+        <div class="hud-mono text-[28px] font-bold <%= color %>"><%= value %></div>
+      </div>
+    <% end %>
   </div>
 
   <%# Race history %>

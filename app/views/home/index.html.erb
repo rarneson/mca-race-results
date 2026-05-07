@@ -5,16 +5,15 @@
 
   <%# Hero %>
   <section class="pt-5 pb-6">
-    <div class="hud-label">MN_CYCLING_ASSOC ::</div>
     <h1 class="hud-mono text-[36px] font-bold text-hud-accent mt-2.5 mb-1.5 tracking-[0.02em] leading-tight">
       RACE_RESULTS.<%= @selected_year %>
     </h1>
-    <p class="text-sm text-hud-ink-dim max-w-[640px] leading-relaxed m-0">
-      Minnesota Cycling Association mountain bike race archive — look up race results, find racers, explore teams.
+    <p class="text-sm text-hud-ink-dim leading-relaxed m-0">
+      Mountain bike race archive — look up race results, find racers, explore teams.
     </p>
 
     <%# Racer search %>
-    <%= form_with url: racers_path, method: :get, class: "mt-5 relative max-w-[560px]" do |f| %>
+    <%= form_with url: racers_path, method: :get, class: "mt-5 relative" do |f| %>
       <%= f.text_field :search,
             placeholder: "$ search racers…",
             autocomplete: "off",
