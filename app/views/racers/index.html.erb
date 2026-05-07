@@ -7,7 +7,7 @@
   <section class="pt-5 pb-6">
     <div class="hud-label">RACERS ::</div>
     <h1 class="hud-mono text-[36px] font-bold text-hud-accent mt-2.5 mb-1.5 tracking-[0.02em] leading-tight">
-      ALL_RACERS.<%= @selected_year == "All" ? "ALL" : @selected_year %>
+      ALL_RACERS.<%= @selected_year %>
     </h1>
     <p class="text-sm text-hud-ink-dim max-w-[640px] leading-relaxed m-0">
       Riders competing in the MCA mountain bike series. Filter by season or team, or search by name.
@@ -37,13 +37,9 @@
   <%# Filters: year tabs + team filter %>
   <div class="flex justify-between items-end mb-3 flex-wrap gap-3">
     <h2 class="hud-mono text-lg font-bold m-0 tracking-[0.04em] text-hud-ink">
-<%= @selected_year == "All" ? "ALL SEASONS" : "#{@selected_year} SEASON" %>
+      <%= @selected_year %> SEASON
     </h2>
     <div class="flex gap-1.5 flex-wrap" role="tablist" aria-label="Season">
-      <%= link_to "ALL", racers_path(search: @search_query.presence, team: @selected_team.presence),
-            role: "tab",
-            "aria-selected": (@selected_year == "All").to_s,
-            class: "hud-tab #{'active' if @selected_year == 'All'}" %>
       <% @available_years.each do |year| %>
         <%= link_to year.to_s, racers_path(year: year, search: @search_query.presence, team: @selected_team.presence),
               role: "tab",
@@ -66,7 +62,7 @@
                 onchange: "this.form.submit();"
               } %>
         <%= form.hidden_field :search, value: @search_query if @search_query.present? %>
-        <%= form.hidden_field :year, value: @selected_year if @selected_year.present? && @selected_year != "All" %>
+        <%= form.hidden_field :year, value: @selected_year if @selected_year.present? %>
       <% end %>
     </div>
   <% end %>
