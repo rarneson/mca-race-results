@@ -131,6 +131,60 @@ class RacesControllerTest < ActionDispatch::IntegrationTest
     assert_select "div", text: /GAP THROUGH L02/
   end
 
+  test "compare back link preserves category from referer" do
+    alex = race_results(:alex_first_place)
+    sarah = race_results(:sarah_second_place)
+
+    get compare_race_url(@race, racer_season_ids: [ alex.racer_season_id, sarah.racer_season_id ]),
+        headers: { "HTTP_REFERER" => race_url(@race, category: "Varsity") }
+    assert_response :success
+
+    expected_href = race_path(@race, category: "Varsity")
+    assert_select "a.hud-link[href=?]", expected_href, text: /Back to Race/
+  end
+
+  test "compare back link falls back to shared racer category when referer lacks one" do
+    alex = race_results(:alex_first_place)
+    sarah = race_results(:sarah_second_place)
+
+    get compare_race_url(@race, racer_season_ids: [ alex.racer_season_id, sarah.racer_season_id ])
+    assert_response :success
+
+    expected_href = race_path(@race, category: alex.category.name)
+    assert_select "a.hud-link[href=?]", expected_href, text: /Back to Race/
+  end
+
+  test "compare back link omits category when racers differ and no referer" do
+    jv3 = categories(:jv3)
+    mike = Racer.create!(first_name: "Mike", last_name: "Jones", team: teams(:mountain_velocity))
+    mike_season = RacerSeason.create!(racer: mike, year: 2024, plate_number: "55")
+    RaceResult.create!(
+      race: @race,
+      racer_season: mike_season,
+      place: 1,
+      total_time_ms: 4_000_000,
+      laps_completed: 2,
+      laps_expected: 2,
+      status: "finished",
+      category: jv3,
+      plate_number_snapshot: "55"
+    )
+
+    alex = race_results(:alex_first_place)
+    get compare_race_url(@race, racer_season_ids: [ alex.racer_season_id, mike_season.id ])
+    assert_response :success
+
+    assert_select "a.hud-link[href=?]", race_path(@race), text: /Back to Race/
+  end
+
+  test "compare empty state back button preserves category from referer" do
+    get compare_race_url(@race, racer_season_ids: [ race_results(:alex_first_place).racer_season_id ]),
+        headers: { "HTTP_REFERER" => race_url(@race, category: "Varsity") }
+    assert_response :success
+
+    assert_select "a.hud-button[href=?]", race_path(@race, category: "Varsity"), text: /BACK TO RACE/
+  end
+
   test "compare handles a DNF racer" do
     dnf_racer = Racer.create!(first_name: "Dani", last_name: "DNF", team: teams(:mountain_velocity))
     dnf_season = RacerSeason.create!(racer: dnf_racer, year: 2024, plate_number: "99")
