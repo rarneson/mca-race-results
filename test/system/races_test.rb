@@ -51,4 +51,23 @@ class RacesTest < ApplicationSystemTestCase
     assert_current_path race_path(@race)
     assert_selector "h1", text: @race.name.upcase
   end
+
+  test "compares two racers head-to-head" do
+    alex = race_results(:alex_first_place)
+    sarah = race_results(:sarah_second_place)
+
+    visit compare_race_url(@race, racer_season_ids: [ alex.racer_season_id, sarah.racer_season_id ])
+
+    assert_selector "h1", text: @race.name.upcase
+    assert_text "LAP-BY-LAP"
+    assert_text alex.racer_season.racer.name
+    assert_text sarah.racer_season.racer.name
+    assert_text "OVERALL GAP"
+  end
+
+  test "compare empty state when no racers selected" do
+    visit compare_race_url(@race)
+
+    assert_text "select two racers"
+  end
 end

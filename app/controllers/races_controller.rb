@@ -59,6 +59,37 @@ class RacesController < ApplicationController
                              .maximum("race_result_laps.lap_number") || 0
   end
 
+  def compare
+    @race = Race.find_by!(slug: params[:id])
+
+    requested_ids = Array(params[:racer_season_ids]).map(&:to_i).reject(&:zero?).uniq.first(2)
+
+    @results = if requested_ids.size == 2
+      @race.race_results
+           .where(racer_season_id: requested_ids)
+           .includes(racer_season: { racer: :team }, category: [], race_result_laps: [])
+           .to_a
+           .sort_by { |r| requested_ids.index(r.racer_season_id) || 99 }
+    else
+      []
+    end
+
+    @back_path, @back_text = determine_back_path(default_path: race_path(@race), default_text: "Back to Race")
+
+    if @results.size < 2
+      @comparison_ready = false
+      return
+    end
+
+    @comparison_ready = true
+    @racer_a, @racer_b = @results
+    @laps_a = @racer_a.race_result_laps.sort_by(&:lap_number)
+    @laps_b = @racer_b.race_result_laps.sort_by(&:lap_number)
+    @max_compare_laps = [ @laps_a.size, @laps_b.size ].max
+    @min_compare_laps = [ @laps_a.size, @laps_b.size ].min
+    @cross_category = @racer_a.category_id.present? && @racer_b.category_id.present? && @racer_a.category_id != @racer_b.category_id
+  end
+
   private
 
   def find_fastest_lap(race_results)

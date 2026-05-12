@@ -53,6 +53,11 @@
   }
   .hud-row:hover { background: color-mix(in oklch, var(--color-hud-accent) 8%, transparent); }
   .hud-row.expanded { background: color-mix(in oklch, var(--color-hud-accent) 10%, transparent); }
+  .hud-row.compare-selected {
+    background: color-mix(in oklch, var(--color-hud-cyan) 14%, transparent);
+    box-shadow: inset 3px 0 0 var(--color-hud-cyan);
+  }
+  .hud-row.compare-mode { cursor: crosshair; }
 
   .hud-tab {
     background: transparent;

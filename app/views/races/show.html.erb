@@ -1,7 +1,9 @@
 <% content_for :title, "#{@race.name} - Race Results" %>
 
 <div class="max-w-[1100px] mx-auto px-6"
-     data-controller="race-show">
+     data-controller="race-show compare-select"
+     data-compare-select-race-slug-value="<%= @race.slug %>"
+     data-compare-select-compare-url-value="<%= compare_race_path(@race) %>">
   <%= render "shared/hud/breadcrumb", trail: [
         { label: "races", path: races_path },
         { label: @race.slug }
@@ -98,6 +100,30 @@
           <div class="hud-label">
             STANDINGS<span data-race-show-target="filteredFlag" class="hidden"> [<span data-race-show-target="visibleCount"></span> matching]</span>
           </div>
+          <button type="button"
+                  data-compare-select-target="toggle"
+                  data-action="click->compare-select#toggle"
+                  class="hud-tab ml-auto">
+            ⇄ COMPARE
+          </button>
+        </div>
+
+        <div data-compare-select-target="bar"
+             class="hidden items-center gap-3 px-3.5 py-2 border-b border-hud-border bg-hud-row flex-wrap">
+          <span class="hud-microlabel">SELECT 2 ACROSS CATEGORIES</span>
+          <span class="hud-mono text-[11px] text-hud-ink-dim" data-compare-select-target="count">0/2</span>
+          <span class="hud-mono text-[12px] text-hud-accent" data-compare-select-target="names">select 2 racers</span>
+          <div class="ml-auto flex gap-2">
+            <button type="button"
+                    data-action="click->compare-select#clear"
+                    class="hud-button text-[11px]">clear</button>
+            <a href="#"
+               data-compare-select-target="submit"
+               data-action="click->compare-select#submit"
+               class="hud-button text-[11px] opacity-40 pointer-events-none">
+              COMPARE ▸
+            </a>
+          </div>
         </div>
 
         <div class="overflow-x-auto" data-race-show-target="tableWrap">
@@ -136,7 +162,9 @@
                 <% search_blob = [result.racer_season.racer.name, result.racer_season.team&.name, result.plate_number_snapshot].compact.join(" ").downcase %>
                 <tr class="hud-row group border-t border-hud-border <%= 'opacity-70' if is_dnf %>"
                     data-race-show-target="row"
-                    data-action="click->race-show#toggleExpand"
+                    data-compare-select-target="row"
+                    data-action="click->compare-select#tryToggle:capture click->race-show#toggleExpand"
+                    data-racer-season-id="<%= result.racer_season_id %>"
                     data-pos="<%= result.place || 9999 %>"
                     data-plate="<%= result.plate_number_snapshot.to_i %>"
                     data-name="<%= result.racer_season.racer.name.downcase %>"
@@ -146,11 +174,15 @@
                     data-search="<%= search_blob %>">
                   <td class="hud-mono pl-5 pr-0 py-2.5 w-[24px] text-hud-ink-dim">
                     <% unless is_dnf %>
-                      <span class="group-hover:text-hud-accent" aria-hidden="true">
+                      <span class="group-hover:text-hud-accent group-[.compare-mode]:hidden" aria-hidden="true">
                         <span class="group-[.expanded]:hidden">+</span>
                         <span class="hidden group-[.expanded]:inline">−</span>
                       </span>
                     <% end %>
+                    <span class="hidden group-[.compare-mode]:inline group-hover:text-hud-cyan group-[.compare-selected]:text-hud-cyan" aria-hidden="true">
+                      <span class="group-[.compare-selected]:hidden">◇</span>
+                      <span class="hidden group-[.compare-selected]:inline">◆</span>
+                    </span>
                   </td>
                   <td class="hud-mono px-3 py-2.5 text-right w-[60px] <%= result.place == 1 ? 'text-hud-amber font-bold' : (result.place && result.place <= 3 ? 'text-hud-amber' : 'text-hud-ink-dim') %>">
                     <%= is_dnf ? '—' : (result.place ? sprintf('%02d', result.place) : '—') %>
