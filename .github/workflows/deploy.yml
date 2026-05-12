@@ -24,7 +24,18 @@ jobs:
           ssh-private-key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
 
       - name: Add server to known hosts
-        run: ssh-keyscan -H 137.184.37.34 >> ~/.ssh/known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          ssh-keyscan -t rsa,ecdsa,ed25519 137.184.37.34 >> ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Debug host keys
+        run: |
+          echo "--- scanned fingerprints ---"
+          ssh-keyscan -t rsa,ecdsa,ed25519 137.184.37.34 2>/dev/null | ssh-keygen -lf -
+          echo "--- known_hosts contents ---"
+          cat ~/.ssh/known_hosts
 
       - name: Write master key
         run: echo "${{ secrets.RAILS_MASTER_KEY }}" > config/master.key
