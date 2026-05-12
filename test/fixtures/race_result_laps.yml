@@ -23,3 +23,15 @@ sarah_lap_1:
   lap_number: 1
   lap_time_ms: 2040000 # 34:00
   cumulative_time_ms: 2040000
+
+sarah_lap_2:
+  race_result: sarah_second_place
+  lap_number: 2
+  lap_time_ms: 2040000 # 34:00
+  cumulative_time_ms: 4080000
+
+sarah_lap_3:
+  race_result: sarah_second_place
+  lap_number: 3
+  lap_time_ms: 2040000 # 34:00
+  cumulative_time_ms: 6120000
