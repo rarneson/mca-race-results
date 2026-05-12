@@ -74,7 +74,11 @@ class RacesController < ApplicationController
       []
     end
 
+    @back_category = compare_referer_category || compare_shared_category(@results)
     @back_path, @back_text = determine_back_path(default_path: race_path(@race), default_text: "Back to Race")
+    if @back_text == "Back to Race" && @back_category.present?
+      @back_path = race_path(@race, category: @back_category)
+    end
 
     if @results.size < 2
       @comparison_ready = false
@@ -91,6 +95,25 @@ class RacesController < ApplicationController
   end
 
   private
+
+  def compare_referer_category
+    referer = request.referer
+    return nil if referer.blank?
+    uri = begin
+      URI.parse(referer)
+    rescue URI::InvalidURIError
+      return nil
+    end
+    return nil unless uri.path == race_path(@race)
+    Rack::Utils.parse_nested_query(uri.query.to_s)["category"].presence
+  end
+
+  def compare_shared_category(results)
+    return nil if results.size != 2
+    cat_a = results[0].category&.name
+    cat_b = results[1].category&.name
+    cat_a if cat_a.present? && cat_a == cat_b
+  end
 
   def find_fastest_lap(race_results)
     fastest_lap_result = nil

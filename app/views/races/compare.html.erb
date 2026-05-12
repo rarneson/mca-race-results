@@ -23,7 +23,7 @@
       <div class="hud-mono text-[13px] text-hud-ink-dim mb-3">
         $ select two racers from the standings to compare
       </div>
-      <%= link_to "‹ BACK TO RACE", race_path(@race), class: "hud-button" %>
+      <%= link_to "‹ BACK TO RACE", race_path(@race, category: @back_category), class: "hud-button" %>
     </div>
   <% else %>
     <%
