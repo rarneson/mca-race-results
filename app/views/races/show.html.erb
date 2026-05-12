@@ -284,7 +284,12 @@
 
     <%# LAP_ANALYSIS tab %>
     <div data-tabs-target="content">
-      <%= render "races/lap_analysis", race_results: @race_results, max_laps: @max_laps %>
+      <% top_finishers = @race_results.select(&:finished?).first(RacesController::TOP_FINISHERS_FOR_LAP_CHART) %>
+      <%= render "races/lap_analysis",
+            racers: top_finishers,
+            max_laps: @max_laps,
+            title: "TOP_#{top_finishers.size} LAP_TIMES",
+            subtitle: "#{@max_laps} laps · #{@selected_category}" %>
     </div>
   </div>
 </div>

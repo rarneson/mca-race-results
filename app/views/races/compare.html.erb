@@ -210,6 +210,17 @@
       </div>
     <% end %>
 
+    <%# Lap analysis chart %>
+    <% if @max_compare_laps > 0 %>
+      <div class="mb-3">
+        <%= render "races/lap_analysis",
+              racers: [ @racer_a, @racer_b ],
+              max_laps: @max_compare_laps,
+              title: "LAP_ANALYSIS",
+              subtitle: "#{@max_compare_laps} lap#{'s' if @max_compare_laps != 1}" %>
+      </div>
+    <% end %>
+
     <%# Lap-by-lap table %>
     <div class="hud-panel overflow-hidden mb-4">
       <div class="flex items-center px-3.5 py-2.5 border-b border-hud-border">

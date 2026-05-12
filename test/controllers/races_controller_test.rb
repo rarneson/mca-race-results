@@ -185,6 +185,18 @@ class RacesControllerTest < ActionDispatch::IntegrationTest
     assert_select "a.hud-button[href=?]", race_path(@race, category: "Varsity"), text: /BACK TO RACE/
   end
 
+  test "compare renders lap analysis chart when both racers have lap data" do
+    alex = race_results(:alex_first_place)
+    sarah = race_results(:sarah_second_place)
+
+    get compare_race_url(@race, racer_season_ids: [ alex.racer_season_id, sarah.racer_season_id ])
+    assert_response :success
+
+    assert_select "div.hud-label", text: /LAP_ANALYSIS/
+    assert_select "svg"
+  end
+
+
   test "compare handles a DNF racer" do
     dnf_racer = Racer.create!(first_name: "Dani", last_name: "DNF", team: teams(:mountain_velocity))
     dnf_season = RacerSeason.create!(racer: dnf_racer, year: 2024, plate_number: "99")
