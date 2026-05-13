@@ -210,9 +210,9 @@
       </div>
     <% end %>
 
-    <%# Lap analysis chart %>
+    <%# Lap analysis chart (hidden on mobile) %>
     <% if @max_compare_laps > 0 %>
-      <div class="mb-3">
+      <div class="mb-3 hidden md:block">
         <%= render "races/lap_analysis",
               racers: [ @racer_a, @racer_b ],
               max_laps: @max_compare_laps,
