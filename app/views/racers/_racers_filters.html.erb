@@ -1,0 +1,27 @@
+<div class="flex justify-between items-end mb-3 flex-wrap gap-3">
+  <h2 class="hud-mono text-lg font-bold m-0 tracking-[0.04em] text-hud-ink">
+    <%= selected_year %> SEASON
+  </h2>
+  <%= render "shared/hud/year_tabs",
+        years: available_years,
+        selected: selected_year.to_i,
+        path_builder: ->(y) { racers_path(year: y, search: search_query.presence, team: selected_team.presence) },
+        search_linked: true %>
+</div>
+
+<% if team_counts.any? %>
+  <div class="mb-4">
+    <%= form_with url: racers_path, method: :get, local: true, class: "flex items-center gap-2" do |form| %>
+      <%= form.label :team, "TEAM:", class: "hud-microlabel" %>
+      <%= form.select :team,
+            options_for_select([ [ "all teams", "" ] ] + team_counts.map { |team, count| [ "#{team} (#{count})", team ] }, selected_team),
+            {},
+            {
+              class: "hud-select hud-mono",
+              onchange: "this.form.submit();"
+            } %>
+      <%= form.hidden_field :search, value: search_query, data: { search_field: "" } %>
+      <%= form.hidden_field :year, value: selected_year if selected_year.present? %>
+    <% end %>
+  </div>
+<% end %>

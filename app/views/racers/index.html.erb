@@ -13,15 +13,18 @@
     </p>
 
     <%# Search %>
-    <div class="mt-5 relative max-w-[560px]" data-controller="racer-search" data-racer-search-url-value="<%= racers_path %>">
+    <div class="mt-5 relative max-w-[560px]"
+         data-controller="search"
+         data-search-url-value="<%= racers_path %>"
+         data-search-params-value="<%= { year: @selected_year, team: @selected_team }.compact.to_json %>">
       <input
         id="racer_search"
         type="text"
         placeholder="$ search racers…"
         autocomplete="off"
         class="hud-input hud-mono w-full px-3.5 py-3 text-sm pr-9"
-        data-racer-search-target="input"
-        data-action="input->racer-search#search keydown->racer-search#handleKeydown"
+        data-search-target="input"
+        data-action="input->search#search keydown->search#handleKeydown"
         value="<%= @search_query %>"
       />
       <span class="hud-blink absolute right-3.5 top-1/2 -translate-y-1/2 text-hud-accent pointer-events-none">▍</span>
@@ -33,38 +36,10 @@
     <%= render partial: "racers/racers_count", locals: { count: @pagy.count, selected_year: @selected_year } %>
   </div>
 
-  <%# Filters: year tabs + team filter %>
-  <div class="flex justify-between items-end mb-3 flex-wrap gap-3">
-    <h2 class="hud-mono text-lg font-bold m-0 tracking-[0.04em] text-hud-ink">
-      <%= @selected_year %> SEASON
-    </h2>
-    <div class="flex gap-1.5 flex-wrap" role="tablist" aria-label="Season">
-      <% @available_years.each do |year| %>
-        <%= link_to year.to_s, racers_path(year: year, search: @search_query.presence, team: @selected_team.presence),
-              role: "tab",
-              "aria-selected": (@selected_year.to_s == year.to_s).to_s,
-              class: "hud-tab #{'active' if @selected_year.to_s == year.to_s}" %>
-      <% end %>
-    </div>
+  <%# Filters: year tabs + team filter (re-renders on search via turbo-stream) %>
+  <div id="racers_filters">
+    <%= render partial: "racers/racers_filters", locals: { available_years: @available_years, selected_year: @selected_year, search_query: @search_query, selected_team: @selected_team, team_counts: @team_counts } %>
   </div>
-
-  <%# Team filter %>
-  <% if @team_counts.any? %>
-    <div class="mb-4">
-      <%= form_with url: racers_path, method: :get, local: true, class: "flex items-center gap-2" do |form| %>
-        <%= form.label :team, "TEAM:", class: "hud-microlabel" %>
-        <%= form.select :team,
-              options_for_select([["all teams", ""]] + @team_counts.map { |team, count| [ "#{team} (#{count})", team ] }, @selected_team),
-              {},
-              {
-                class: "hud-select hud-mono",
-                onchange: "this.form.submit();"
-              } %>
-        <%= form.hidden_field :search, value: @search_query if @search_query.present? %>
-        <%= form.hidden_field :year, value: @selected_year if @selected_year.present? %>
-      <% end %>
-    </div>
-  <% end %>
 
   <%# Racers list %>
   <div id="racers_table">
