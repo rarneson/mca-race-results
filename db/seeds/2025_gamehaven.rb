@@ -15,7 +15,7 @@ race = Race.find_or_create_by!(
   race_date: Date.parse("September 20, 2025")
 ) do |race|
   race.location = "Gamehaven Rochester"
-  race.year = 2024
+  race.year = 2025
 end
 
 puts "✓ Race: #{race.name} (#{race.race_date})"
