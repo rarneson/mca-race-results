@@ -184,7 +184,7 @@
                       <span class="hidden group-[.compare-selected]:inline">◆</span>
                     </span>
                   </td>
-                  <td class="hud-mono px-3 py-2.5 text-right w-[60px] <%= result.place == 1 ? 'text-hud-amber font-bold' : (result.place && result.place <= 3 ? 'text-hud-amber' : 'text-hud-ink-dim') %>">
+                  <td class="hud-mono px-3 py-2.5 text-right w-[60px] <%= result.place == 1 ? 'text-hud-amber font-bold' : (result.place && result.place <= 5 ? 'text-hud-amber' : 'text-hud-ink-dim') %>">
                     <%= is_dnf ? '—' : (result.place ? sprintf('%02d', result.place) : '—') %>
                   </td>
                   <td class="hud-mono px-3 py-2.5 text-hud-ink-dim w-[60px]">

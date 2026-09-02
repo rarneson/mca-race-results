@@ -102,7 +102,7 @@ class TeamsController < ApplicationController
     stats = {
       total_racers: racers_in_year.count,
       total_wins: all_race_results.count { |result| result.place == 1 },
-      total_podiums: all_race_results.count { |result| result.place && result.place <= 3 },
+      total_podiums: all_race_results.count { |result| result.place && result.place <= 5 },
       best_finish: all_race_results.map(&:place).compact.min || nil
     }
 
