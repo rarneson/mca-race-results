@@ -104,7 +104,7 @@ module ApplicationHelper
 
     if place == 1
       "text-amber-600 font-bold"
-    elsif place <= 3
+    elsif place <= 5
       "text-orange-600 font-bold"
     else
       ""

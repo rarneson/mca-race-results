@@ -42,7 +42,7 @@
     <%= render "shared/hud/hero_stat",
           label: "◉ PODIUMS",
           value: @team_stats[:total_podiums],
-          sub: "top-3 finishes",
+          sub: "top-5 finishes",
           accent_color: "text-hud-amber" %>
     <%= render "shared/hud/hero_stat",
           label: "⌖ BEST",
@@ -154,7 +154,7 @@
                 <% category_results.sort_by { |r| r.place || 999 }.each_with_index do |result, idx| %>
                   <div class="grid gap-3.5 items-center px-3 py-2.5 <%= 'border-t border-hud-border' if idx > 0 %>"
                        style="grid-template-columns: 60px 1fr auto;">
-                    <span class="hud-mono text-sm <%= result.place == 1 ? 'text-hud-amber font-bold' : (result.place && result.place <= 3 ? 'text-hud-amber' : 'text-hud-ink-dim') %>">
+                    <span class="hud-mono text-sm <%= result.place == 1 ? 'text-hud-amber font-bold' : (result.place && result.place <= 5 ? 'text-hud-amber' : 'text-hud-ink-dim') %>">
                       <% if result.place %>P<%= result.place %><% else %>—<% end %>
                     </span>
                     <span class="text-sm text-hud-ink"><%= result.racer_season.racer.name %></span>
