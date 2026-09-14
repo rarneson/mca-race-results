@@ -42,7 +42,7 @@
     <%= render "shared/hud/hero_stat",
           label: "◉ PODIUMS",
           value: @team_stats[:total_podiums],
-          sub: "top-3 finishes",
+          sub: "top-5 finishes",
           accent_color: "text-hud-amber" %>
     <%= render "shared/hud/hero_stat",
           label: "⌖ BEST",
@@ -52,7 +52,7 @@
   </div>
 
   <%# Tabs %>
-  <div data-controller="tabs">
+  <div data-controller="tabs" data-tabs-key-value="team-show">
     <nav class="flex gap-1.5 mb-4 flex-wrap" role="tablist">
       <button type="button" data-tabs-target="tab" data-action="click->tabs#switch" class="hud-tab">
         TEAM_ROSTER
@@ -130,22 +130,25 @@
 
       <% if all_results.any? %>
         <% results_by_race = all_results.group_by(&:race) %>
-        <% results_by_race.sort_by { |race, _| race.race_date }.each do |race, race_results| %>
-          <div class="mb-6">
-            <div class="flex items-center justify-between mb-2.5 flex-wrap gap-2">
+        <% results_by_race.sort_by { |race, _| race.race_date }.reverse.each do |race, race_results| %>
+          <details class="group mb-6">
+            <summary class="flex items-center justify-between mb-2.5 flex-wrap gap-2 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
               <div>
                 <h3 class="hud-mono text-sm font-bold tracking-[0.04em] text-hud-ink m-0">
-<%= race.name.upcase %>
+                  <span class="inline-block mr-1.5 w-3 text-hud-ink-dim group-hover:text-hud-accent" aria-hidden="true">
+                    <span class="group-open:hidden">+</span>
+                    <span class="hidden group-open:inline">−</span>
+                  </span><%= race.name.upcase %>
                 </h3>
-                <div class="hud-mono text-[11px] text-hud-ink-dim mt-0.5">
+                <div class="hud-mono text-[11px] text-hud-ink-dim mt-0.5 ml-[18px]">
                   ◷ <%= race.race_date.strftime("%B %-d, %Y") %><% if race.location.present? %> · ⌖ <%= race.location %><% end %>
                 </div>
               </div>
               <span class="hud-microlabel"><%= pluralize(race_results.count, "result") %></span>
-            </div>
+            </summary>
 
             <% results_by_category = race_results.group_by { |r| r.category&.name || "No Category" } %>
-            <% results_by_category.sort_by { |category_name, _| category_name }.each do |category_name, category_results| %>
+            <% sort_category_pairs(results_by_category).each do |category_name, category_results| %>
               <div class="hud-panel overflow-hidden mb-2.5">
                 <div class="flex items-center justify-between px-3 py-2 border-b border-hud-border">
                   <span class="hud-microlabel"><%= category_name.upcase %></span>
@@ -154,7 +157,7 @@
                 <% category_results.sort_by { |r| r.place || 999 }.each_with_index do |result, idx| %>
                   <div class="grid gap-3.5 items-center px-3 py-2.5 <%= 'border-t border-hud-border' if idx > 0 %>"
                        style="grid-template-columns: 60px 1fr auto;">
-                    <span class="hud-mono text-sm <%= result.place == 1 ? 'text-hud-amber font-bold' : (result.place && result.place <= 3 ? 'text-hud-amber' : 'text-hud-ink-dim') %>">
+                    <span class="hud-mono text-sm <%= result.place == 1 ? 'text-hud-amber font-bold' : (result.place && result.place <= 5 ? 'text-hud-amber' : 'text-hud-ink-dim') %>">
                       <% if result.place %>P<%= result.place %><% else %>—<% end %>
                     </span>
                     <span class="text-sm text-hud-ink"><%= result.racer_season.racer.name %></span>
@@ -171,7 +174,7 @@
                 <% end %>
               </div>
             <% end %>
-          </div>
+          </details>
         <% end %>
       <% else %>
         <div class="hud-panel p-8 text-center">

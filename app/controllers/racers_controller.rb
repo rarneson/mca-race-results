@@ -52,6 +52,11 @@ class RacersController < ApplicationController
             "racers_count",
             partial: "racers/racers_count",
             locals: { count: @pagy.count, selected_year: @selected_year }
+          ),
+          turbo_stream.update(
+            "racers_filters",
+            partial: "racers/racers_filters",
+            locals: { available_years: @available_years, selected_year: @selected_year, search_query: @search_query, selected_team: @selected_team, team_counts: @team_counts }
           )
         ], content_type: "text/vnd.turbo-stream.html"
       end

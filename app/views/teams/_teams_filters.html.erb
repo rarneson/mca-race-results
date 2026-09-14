@@ -1,0 +1,10 @@
+<div class="flex justify-between items-end mb-3 flex-wrap gap-3">
+  <h2 class="hud-mono text-lg font-bold m-0 tracking-[0.04em] text-hud-ink">
+    <%= selected_year %> SEASON
+  </h2>
+  <%= render "shared/hud/year_tabs",
+        years: available_years,
+        selected: selected_year,
+        path_builder: ->(y) { teams_path(year: y, search: search_query.presence) },
+        search_linked: true %>
+</div>
