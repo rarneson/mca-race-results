@@ -52,7 +52,7 @@
   </div>
 
   <%# Tabs %>
-  <div data-controller="tabs">
+  <div data-controller="tabs" data-tabs-key-value="team-show">
     <nav class="flex gap-1.5 mb-4 flex-wrap" role="tablist">
       <button type="button" data-tabs-target="tab" data-action="click->tabs#switch" class="hud-tab">
         TEAM_ROSTER
@@ -130,13 +130,15 @@
 
       <% if all_results.any? %>
         <% results_by_race = all_results.group_by(&:race) %>
-        <% most_recent_race = results_by_race.keys.max_by(&:race_date) %>
         <% results_by_race.sort_by { |race, _| race.race_date }.reverse.each do |race, race_results| %>
-          <details class="group mb-6" <%= "open" if race == most_recent_race %>>
+          <details class="group mb-6">
             <summary class="flex items-center justify-between mb-2.5 flex-wrap gap-2 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
               <div>
                 <h3 class="hud-mono text-sm font-bold tracking-[0.04em] text-hud-ink m-0">
-                  <span class="inline-block mr-1 text-hud-ink-dim transition-transform group-open:rotate-90">▸</span><%= race.name.upcase %>
+                  <span class="inline-block mr-1.5 w-3 text-hud-ink-dim group-hover:text-hud-accent" aria-hidden="true">
+                    <span class="group-open:hidden">+</span>
+                    <span class="hidden group-open:inline">−</span>
+                  </span><%= race.name.upcase %>
                 </h3>
                 <div class="hud-mono text-[11px] text-hud-ink-dim mt-0.5 ml-[18px]">
                   ◷ <%= race.race_date.strftime("%B %-d, %Y") %><% if race.location.present? %> · ⌖ <%= race.location %><% end %>
