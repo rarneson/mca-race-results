@@ -1,30 +1,26 @@
 module ApplicationHelper
-  include Pagy::Frontend
-
   def pagy_daisyui_nav(pagy)
     html = +'<div class="join">'
 
-    if pagy.prev
-      html << link_to("«", pagy_url_for(pagy, pagy.prev), class: "join-item btn btn-sm")
+    if pagy.previous
+      html << link_to("«", pagy.page_url(:previous), class: "join-item btn btn-sm")
     else
       html << '<button class="join-item btn btn-sm btn-disabled">«</button>'
     end
 
-    pagy.series.each do |item|
+    pagy.data_hash(data_keys: [ :series ])[:series].each do |item|
       case item
       when Integer
-        if item == pagy.page
-          html << %(<button class="join-item btn btn-sm btn-active">#{item}</button>)
-        else
-          html << link_to(item, pagy_url_for(pagy, item), class: "join-item btn btn-sm")
-        end
-      when "gap"
+        html << link_to(item, pagy.page_url(item), class: "join-item btn btn-sm")
+      when String
+        html << %(<button class="join-item btn btn-sm btn-active">#{item}</button>)
+      when :gap
         html << '<button class="join-item btn btn-sm btn-disabled">...</button>'
       end
     end
 
     if pagy.next
-      html << link_to("»", pagy_url_for(pagy, pagy.next), class: "join-item btn btn-sm")
+      html << link_to("»", pagy.page_url(:next), class: "join-item btn btn-sm")
     else
       html << '<button class="join-item btn btn-sm btn-disabled">»</button>'
     end
@@ -36,27 +32,25 @@ module ApplicationHelper
   def pagy_hud_nav(pagy)
     html = +'<div class="flex gap-1.5 flex-wrap">'
 
-    if pagy.prev
-      html << link_to("‹ PREV", pagy_url_for(pagy, pagy.prev), class: "hud-tab")
+    if pagy.previous
+      html << link_to("‹ PREV", pagy.page_url(:previous), class: "hud-tab")
     else
       html << '<span class="hud-tab opacity-40">‹ PREV</span>'
     end
 
-    pagy.series.each do |item|
+    pagy.data_hash(data_keys: [ :series ])[:series].each do |item|
       case item
       when Integer
-        if item == pagy.page
-          html << %(<span class="hud-tab active">#{item}</span>)
-        else
-          html << link_to(item, pagy_url_for(pagy, item), class: "hud-tab")
-        end
-      when "gap"
+        html << link_to(item, pagy.page_url(item), class: "hud-tab")
+      when String
+        html << %(<span class="hud-tab active">#{item}</span>)
+      when :gap
         html << '<span class="hud-tab opacity-40">…</span>'
       end
     end
 
     if pagy.next
-      html << link_to("NEXT ›", pagy_url_for(pagy, pagy.next), class: "hud-tab")
+      html << link_to("NEXT ›", pagy.page_url(:next), class: "hud-tab")
     else
       html << '<span class="hud-tab opacity-40">NEXT ›</span>'
     end
