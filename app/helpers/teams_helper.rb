@@ -36,10 +36,19 @@ module TeamsHelper
       end
     end
 
-    # Sort categories and racers, ensuring no duplicates
-    sorted_categories = racers_with_categories.sort_by { |category_name, _| category_name }
-    sorted_categories.to_h do |category_name, category_racers|
+    sort_category_pairs(racers_with_categories).to_h do |category_name, category_racers|
       [ category_name, category_racers.uniq(&:id).sort_by { |r| r.last_name || "" } ]
+    end
+  end
+
+  # Sorts [category_name, value] pairs descending by Category#sort_order (Varsity
+  # first, then JV3, JV2, Freshman, 8th, 7th, 6th grade), with unknown/uncategorized
+  # names last
+  def sort_category_pairs(pairs)
+    category_sort_orders = Category.pluck(:name, :sort_order).to_h
+    pairs.sort_by do |category_name, _|
+      sort_order = category_sort_orders[category_name]
+      sort_order ? -sort_order : Float::INFINITY
     end
   end
 end
