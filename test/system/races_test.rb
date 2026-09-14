@@ -8,70 +8,66 @@ class RacesTest < ApplicationSystemTestCase
   test "visiting the races index page" do
     visit races_url
 
-    assert_selector "h1", text: "MTB Race Center"
-    assert_selector "h2", text: "All Races"
-    assert_selector "h3", text: @race.name
+    assert_selector "h1", text: "ALL_RACES"
+    assert_text @race.name
   end
 
   test "visiting the race results page" do
     visit race_url(@race)
 
-    assert_selector "h1", text: "MTB Race Center"
-    assert_selector "h2", text: @race.name
+    assert_selector "h1", text: @race.name.upcase
     assert_text @race.location
   end
 
-  test "displays race statistics correctly" do
+  test "displays category filter" do
     visit race_url(@race)
 
-    # Check overall winner card
-    assert_selector ".text-amber-600", text: /Alex Rodriguez/
-    
-    # Check participants count
-    assert_selector ".text-gray-900", text: /2/
-    
-    # Check results table exists
-    assert_selector "table"
-    assert_selector "th", text: /Pos/i
-    assert_selector "th", text: /Name/i
-    assert_selector "th", text: /Time/i
+    assert_text "CATEGORY"
+    assert_selector "select"
   end
 
-  test "displays category filter buttons" do
+  test "displays race results table" do
     visit race_url(@race)
-    
-    # Check for category filter section
-    assert_selector ".text-gray-700", text: "Filter by Category"
-    assert_selector ".bg-emerald-100", text: "All Categories"
-  end
 
-  test "displays race results in table format" do
-    visit race_url(@race)
-    
-    # Check table structure
     assert_selector "thead"
     assert_selector "tbody"
-    assert_selector "tr"
-    
-    # Check for specific racer data
-    assert_selector "td", text: "Alex Rodriguez"
-    assert_selector ".bg-green-100", text: "FINISHED"
+    assert_selector "th", text: /pos/i
+    assert_selector "th", text: /racer/i
+    assert_text "Alex Rodriguez"
   end
 
   test "shows navigation tabs" do
     visit race_url(@race)
-    
-    assert_selector ".border-emerald-500", text: "Results"
-    assert_selector ".text-gray-500", text: "Lap Analysis"
-    assert_selector ".text-gray-500", text: "Statistics"
+
+    assert_text "RESULTS"
+    assert_text "LAP_ANALYSIS"
   end
 
   test "can navigate from index to race show" do
     visit races_url
-    
+
     click_link @race.name
-    
+
     assert_current_path race_path(@race)
-    assert_selector "h2", text: @race.name
+    assert_selector "h1", text: @race.name.upcase
+  end
+
+  test "compares two racers head-to-head" do
+    alex = race_results(:alex_first_place)
+    sarah = race_results(:sarah_second_place)
+
+    visit compare_race_url(@race, racer_season_ids: [ alex.racer_season_id, sarah.racer_season_id ])
+
+    assert_selector "h1", text: @race.name.upcase
+    assert_text "LAP-BY-LAP"
+    assert_text alex.racer_season.racer.name
+    assert_text sarah.racer_season.racer.name
+    assert_text "OVERALL GAP"
+  end
+
+  test "compare empty state when no racers selected" do
+    visit compare_race_url(@race)
+
+    assert_text "select two racers"
   end
 end

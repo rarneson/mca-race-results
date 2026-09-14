@@ -3,6 +3,7 @@ require "test_helper"
 class RacerSeasonsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @racer_season = racer_seasons(:one)
+    @racer = racers(:alex_rodriguez)
   end
 
   test "should get index" do
@@ -17,7 +18,7 @@ class RacerSeasonsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create racer_season" do
     assert_difference("RacerSeason.count") do
-      post racer_seasons_url, params: { racer_season: {} }
+      post racer_seasons_url, params: { racer_season: { racer_id: @racer.id, year: 2025 } }
     end
 
     assert_redirected_to racer_season_url(RacerSeason.last)

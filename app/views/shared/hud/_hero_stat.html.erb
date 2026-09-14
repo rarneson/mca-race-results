@@ -1,0 +1,15 @@
+<%
+  # label: short caps label (e.g. "◷ RACES")
+  # value: the big mono number/text
+  # sub: optional sub-label
+  # accent_color: tailwind text color class for the value (default text-hud-ink)
+  sub ||= nil
+  accent_color ||= "text-hud-ink"
+%>
+<div>
+  <div class="hud-label"><%= label %></div>
+  <div class="hud-mono text-[22px] mt-2 <%= accent_color %>"><%= value %></div>
+  <% if sub %>
+    <div class="text-[11px] text-hud-ink-dim mt-0.5"><%= sub %></div>
+  <% end %>
+</div>

@@ -1,0 +1,77 @@
+<% content_for(:title, "MCA Race Results") %>
+
+<div class="max-w-[1100px] mx-auto px-6">
+  <%= render "shared/hud/breadcrumb", trail: [{ label: "home" }] %>
+
+  <%# Hero %>
+  <section class="pt-5 pb-6">
+    <h1 class="hud-mono text-[36px] font-bold text-hud-accent mt-2.5 mb-1.5 tracking-[0.02em] leading-tight">
+      RACE_RESULTS.<%= @selected_year %>
+    </h1>
+    <p class="text-sm text-hud-ink-dim leading-relaxed m-0">
+      Mountain bike race archive — look up race results, find racers, explore teams.
+    </p>
+
+    <%# Racer search %>
+    <%= form_with url: racers_path, method: :get, class: "mt-5 relative" do |f| %>
+      <%= f.text_field :search,
+            placeholder: "$ search racers…",
+            autocomplete: "off",
+            class: "hud-input hud-mono w-full px-3.5 py-3 text-sm pr-9" %>
+      <span class="hud-blink absolute right-3.5 top-1/2 -translate-y-1/2 text-hud-accent pointer-events-none">▍</span>
+    <% end %>
+  </section>
+
+  <%# Stat strip %>
+  <div class="hud-panel p-4 grid gap-3 mb-7" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));">
+    <%= render "shared/hud/hero_stat",
+          label: "◷ RACES",
+          value: @season_race_count,
+          sub: "#{@selected_year} season",
+          accent_color: "text-hud-accent" %>
+    <%= render "shared/hud/hero_stat",
+          label: "▣ RACERS",
+          value: number_with_delimiter(@season_racer_count),
+          sub: "active",
+          accent_color: "text-hud-accent" %>
+    <%= render "shared/hud/hero_stat",
+          label: "⌖ TEAMS",
+          value: @season_team_count,
+          sub: "competing",
+          accent_color: "text-hud-accent" %>
+  </div>
+
+  <%# Season header + year tabs %>
+  <div class="flex justify-between items-end mb-3 flex-wrap gap-3">
+    <h2 class="hud-mono text-lg font-bold m-0 tracking-[0.04em] text-hud-ink">
+<%= @selected_year %> SEASON
+    </h2>
+    <%= render "shared/hud/year_tabs",
+          years: @available_years,
+          selected: @selected_year,
+          path_builder: ->(y) { root_path(year: y) } %>
+  </div>
+
+  <%# Race list %>
+  <% if @season_races.empty? %>
+    <div class="hud-panel p-8 text-center">
+      <p class="hud-mono text-sm text-hud-ink-dim m-0">$ no races recorded for <%= @selected_year %></p>
+    </div>
+  <% else %>
+    <div class="hud-panel overflow-hidden">
+      <% @season_races.each_with_index do |race, i| %>
+        <%= link_to race_path(race),
+              class: "hud-row grid gap-3.5 items-center px-3 py-3 no-underline #{'border-t border-hud-border' if i > 0}",
+              style: "grid-template-columns: 1fr auto;" do %>
+          <div>
+            <div class="font-semibold text-sm text-hud-ink"><%= race.name %></div>
+            <div class="hud-mono text-[11px] text-hud-ink-dim mt-0.5">
+              ◷ <%= race.race_date.strftime("%B %-d, %Y") %><% if race.location.present? %> · ⌖ <%= race.location %><% end %>
+            </div>
+          </div>
+          <span class="hud-mono text-hud-accent text-sm">▸</span>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

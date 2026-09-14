@@ -1,49 +1,25 @@
 <% if teams.any? %>
-  <div class="bg-white rounded-lg border border-gray-200 overflow-hidden overflow-x-auto">
-    <table class="min-w-full divide-y divide-gray-200">
-      <thead class="bg-gray-50">
-        <tr>
-          <th scope="col" class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-            Team Name
-          </th>
-          <th scope="col" class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-            Racers
-          </th>
-        </tr>
-      </thead>
-      <tbody class="bg-white divide-y divide-gray-200">
-        <% teams.each do |team| %>
-          <tr class="hover:bg-gray-50">
-            <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap">
-              <div class="flex items-center">
-                <div>
-                  <div class="text-sm font-medium text-gray-900">
-                    <%= link_to team.name, team_path(team, year: selected_year), class: "text-green-600 hover:text-green-900" %>
-                  </div>
-                </div>
-              </div>
-            </td>
-            <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-sm text-gray-900">
-              <%= team.racers_count %>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
+  <div class="hud-panel overflow-hidden">
+    <% teams.each_with_index do |team, i| %>
+      <%= link_to team_path(team, year: selected_year),
+            class: "hud-row grid gap-3.5 items-center px-3 py-3 no-underline #{'border-t border-hud-border' if i > 0}",
+            style: "grid-template-columns: 1fr auto auto;" do %>
+        <div class="font-semibold text-sm text-hud-ink"><%= team.name %></div>
+        <div class="hud-mono text-[11px] text-hud-ink-dim">
+          <%= pluralize(team.racers_count, "racer") %>
+        </div>
+        <span class="hud-mono text-hud-accent text-sm">▸</span>
+      <% end %>
+    <% end %>
   </div>
 <% else %>
-  <div class="hero min-h-[400px]">
-    <div class="hero-content text-center">
-      <div class="max-w-md">
-        <h3 class="text-2xl font-bold mb-4">No teams found</h3>
-        <p class="mb-6">
-          <% if defined?(search_query) && search_query.present? %>
-            No teams match your search for "<%= search_query %>".
-          <% else %>
-            Get started by creating your first team.
-          <% end %>
-        </p>
-      </div>
-    </div>
+  <div class="hud-panel p-8 text-center">
+    <p class="hud-mono text-sm text-hud-ink-dim m-0">
+      <% if defined?(search_query) && search_query.present? %>
+        $ no teams match "<%= search_query %>"
+      <% else %>
+        $ no teams recorded for <%= selected_year %>
+      <% end %>
+    </p>
   </div>
 <% end %>

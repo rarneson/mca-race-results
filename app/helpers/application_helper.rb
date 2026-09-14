@@ -29,7 +29,39 @@ module ApplicationHelper
       html << '<button class="join-item btn btn-sm btn-disabled">»</button>'
     end
 
-    html << '</div>'
+    html << "</div>"
+    html.html_safe
+  end
+
+  def pagy_hud_nav(pagy)
+    html = +'<div class="flex gap-1.5 flex-wrap">'
+
+    if pagy.prev
+      html << link_to("‹ PREV", pagy_url_for(pagy, pagy.prev), class: "hud-tab")
+    else
+      html << '<span class="hud-tab opacity-40">‹ PREV</span>'
+    end
+
+    pagy.series.each do |item|
+      case item
+      when Integer
+        if item == pagy.page
+          html << %(<span class="hud-tab active">#{item}</span>)
+        else
+          html << link_to(item, pagy_url_for(pagy, item), class: "hud-tab")
+        end
+      when "gap"
+        html << '<span class="hud-tab opacity-40">…</span>'
+      end
+    end
+
+    if pagy.next
+      html << link_to("NEXT ›", pagy_url_for(pagy, pagy.next), class: "hud-tab")
+    else
+      html << '<span class="hud-tab opacity-40">NEXT ›</span>'
+    end
+
+    html << "</div>"
     html.html_safe
   end
 
@@ -72,7 +104,7 @@ module ApplicationHelper
 
     if place == 1
       "text-amber-600 font-bold"
-    elsif place <= 3
+    elsif place <= 5
       "text-orange-600 font-bold"
     else
       ""
@@ -93,5 +125,4 @@ module ApplicationHelper
       "bg-gray-100 text-gray-800"
     end
   end
-
 end

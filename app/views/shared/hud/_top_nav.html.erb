@@ -1,0 +1,22 @@
+<%
+  nav_items = [
+    { id: :home,   label: "HOME",   path: root_path,    active: current_page?(root_path) },
+    { id: :races,  label: "RACES",  path: races_path,   active: controller_name == "races" },
+    { id: :teams,  label: "TEAMS",  path: teams_path,   active: controller_name == "teams" },
+    { id: :racers, label: "RACERS", path: racers_path,  active: controller_name == "racers" || controller_name == "racer_seasons" },
+  ]
+%>
+<header class="border-b border-hud-border bg-hud-panel">
+  <div class="max-w-[1100px] mx-auto px-6 py-3 flex items-center justify-between gap-4 flex-wrap">
+    <%= link_to root_path, class: "flex items-center gap-2.5 no-underline" do %>
+      <span class="hud-dot"></span>
+      <span class="hud-mono font-bold text-hud-accent tracking-[0.06em] text-sm">MCA::RESULTS</span>
+    <% end %>
+
+    <nav class="flex gap-1 flex-wrap">
+      <% nav_items.each do |item| %>
+        <%= link_to item[:label], item[:path], class: "hud-tab #{'active' if item[:active]}" %>
+      <% end %>
+    </nav>
+  </div>
+</header>

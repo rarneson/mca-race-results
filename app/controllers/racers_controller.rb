@@ -1,32 +1,29 @@
 class RacersController < ApplicationController
   include BackNavigable
+  layout "hud"
   before_action :set_racer, only: %i[ show edit update destroy ]
 
   # GET /racers or /racers.json
   def index
-    # Get selected year or default to "All"
-    @selected_year = params[:year].present? && params[:year] != "" ? params[:year] : "All"
-
     # Get available years for the dropdown
     @available_years = Race.available_years
 
-    # Start with base racers query
-    if @selected_year == "All"
-      # Show all racers regardless of year
-      racers = Racer.all.order(:last_name, :first_name)
+    # Get selected year or default to most recent year with data
+    @selected_year = if params[:year].present? && params[:year] != ""
+      params[:year]
     else
-      # Filter racers who competed in the selected year
-      year_int = @selected_year.to_i
-      racers = Racer.active_in_year(year_int)
-                    .order(:last_name, :first_name)
+      (@available_years.first || Date.current.year).to_s
     end
+
+    year_int = @selected_year.to_i
+    racers = Racer.active_in_year(year_int).order(:last_name, :first_name)
 
     if params[:search].present?
       @search_query = params[:search]
-      search_term = "%#{@search_query}%"
+      search_term = "%#{@search_query.strip}%"
       racers = racers.left_joins(:team).where(
-        "racers.first_name LIKE ? OR racers.last_name LIKE ? OR teams.name LIKE ?",
-        search_term, search_term, search_term
+        "racers.first_name LIKE :term OR racers.last_name LIKE :term OR teams.name LIKE :term OR (racers.first_name || ' ' || racers.last_name) LIKE :term",
+        term: search_term
       ).distinct
     end
 
@@ -49,12 +46,17 @@ class RacersController < ApplicationController
           turbo_stream.update(
             "racers_table",
             partial: "racers/racers_table",
-            locals: { racers: @racers, pagy: @pagy }
+            locals: { racers: @racers, pagy: @pagy, search_query: @search_query, selected_year: @selected_year }
           ),
           turbo_stream.update(
             "racers_count",
             partial: "racers/racers_count",
             locals: { count: @pagy.count, selected_year: @selected_year }
+          ),
+          turbo_stream.update(
+            "racers_filters",
+            partial: "racers/racers_filters",
+            locals: { available_years: @available_years, selected_year: @selected_year, search_query: @search_query, selected_team: @selected_team, team_counts: @team_counts }
           )
         ], content_type: "text/vnd.turbo-stream.html"
       end
@@ -64,17 +66,17 @@ class RacersController < ApplicationController
   # GET /racers/1 or /racers/1.json
   def show
     @selected_race = params[:race_id] ? @racer.race_results.find(params[:race_id]) : @racer.race_results.first
-    
+
     # Get current category from the most recent race result or current season
     @current_category = get_current_category
-    
+
     # Group race results by year for organized display
     @race_results_by_year = @racer.race_results
                                   .includes(:race, :race_result_laps, :category)
                                   .joins(:race)
-                                  .order('races.race_date DESC')
+                                  .order("races.race_date DESC")
                                   .group_by { |result| result.race.race_date.year }
-    
+
     @back_path, @back_text = determine_back_path(default_path: racers_path, default_text: "Back to Racers")
   end
 
@@ -139,38 +141,23 @@ class RacersController < ApplicationController
     def get_current_category
       # Get most recent category from race results
       @racer.racer_seasons
-            .joins(race_results: [:race, :category])
-            .order('races.race_date DESC')
+            .joins(race_results: [ :race, :category ])
+            .order("races.race_date DESC")
             .first&.race_results&.first&.category
     end
 
-    def calculate_team_counts(year = "All")
+    def calculate_team_counts(year)
+      year_int = year.to_i
       counts = {}
 
-      if year == "All"
-        # Count all racers for each team
-        Team.all.each do |team|
-          racer_count = team.racers.count
-          counts[team.name] = racer_count if racer_count > 0
-        end
-
-        # Count all orphaned racers
-        orphaned_count = Racer.orphaned.count
-        counts["No Team"] = orphaned_count if orphaned_count > 0
-      else
-        # Count racers who competed in the selected year
-        year_int = year.to_i
-        Team.all.each do |team|
-          racer_count = team.racers.active_in_year(year_int).count
-          counts[team.name] = racer_count if racer_count > 0
-        end
-
-        # Count orphaned racers who competed in the selected year
-        orphaned_count = Racer.orphaned.active_in_year(year_int).count
-        counts["No Team"] = orphaned_count if orphaned_count > 0
+      Team.all.each do |team|
+        racer_count = team.racers.active_in_year(year_int).count
+        counts[team.name] = racer_count if racer_count > 0
       end
+
+      orphaned_count = Racer.orphaned.active_in_year(year_int).count
+      counts["No Team"] = orphaned_count if orphaned_count > 0
 
       counts.sort_by { |name, _| name }.to_h
     end
-
 end

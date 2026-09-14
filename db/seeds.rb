@@ -126,7 +126,8 @@ CATEGORY_DATA = [
   { name: "JV3 Girls", laps: 3, sort_order: 16 },
   { name: "JV3 Boys", laps: 3, sort_order: 17 },
   { name: "Varsity Girls", laps: 4, sort_order: 18 },
-  { name: "Varsity Boys", laps: 4, sort_order: 19 }
+  { name: "Varsity Boys", laps: 4, sort_order: 19 },
+  { name: "Senior Open Boys", laps: 2, sort_order: 20 }
 ].freeze
 
 puts "Creating categories..."
@@ -159,7 +160,7 @@ puts "\nLoading race data from seed files..."
 Dir[Rails.root.join('db', 'seeds', '*.rb')].sort.each do |file|
   filename = File.basename(file)
   next if filename == '_template.rb'
-  
+
   puts "Loading #{filename}..."
   require file
 end
@@ -168,6 +169,6 @@ puts "\n" + "="*60
 puts "FINAL DATABASE SUMMARY"
 puts "="*60
 puts "#{Race.count} races in database"
-puts "#{RaceResult.count} race results in database" 
+puts "#{RaceResult.count} race results in database"
 puts "#{RaceResultLap.count} lap times in database"
 puts "="*60

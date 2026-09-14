@@ -14,7 +14,7 @@ class RaceTest < ActiveSupport::TestCase
       location: "Test Location",
       year: 2024
     )
-    
+
     assert race.valid?
   end
 
@@ -22,7 +22,7 @@ class RaceTest < ActiveSupport::TestCase
     race = races(:cascade_mountain_challenge)
     result_count = race.race_results.count
     assert result_count > 0
-    
+
     race.destroy
     assert_equal 0, RaceResult.where(race_id: race.id).count
   end
