@@ -131,8 +131,8 @@
       <% if all_results.any? %>
         <% results_by_race = all_results.group_by(&:race) %>
         <% results_by_race.sort_by { |race, _| race.race_date }.reverse.each do |race, race_results| %>
-          <details class="hud-panel group mb-6 p-4">
-            <summary class="flex items-center justify-between flex-wrap gap-2 cursor-pointer list-none [&::-webkit-details-marker]:hidden group-open:mb-4">
+          <details class="group mb-6">
+            <summary class="flex items-center justify-between mb-2.5 flex-wrap gap-2 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
               <div>
                 <h3 class="hud-mono text-sm font-bold tracking-[0.04em] text-hud-ink m-0">
                   <span class="inline-block mr-1.5 w-3 text-hud-ink-dim group-hover:text-hud-accent" aria-hidden="true">
@@ -149,7 +149,7 @@
 
             <% results_by_category = race_results.group_by { |r| r.category&.name || "No Category" } %>
             <% sort_category_pairs(results_by_category).each do |category_name, category_results| %>
-              <div class="hud-panel overflow-hidden mb-2.5 last:mb-0">
+              <div class="hud-panel overflow-hidden mb-2.5">
                 <div class="flex items-center justify-between px-3 py-2 border-b border-hud-border">
                   <span class="hud-microlabel"><%= category_name.upcase %></span>
                   <%= link_to "VIEW_RACE ▸", race_path(race, category: category_name), class: "hud-mono text-[10px] text-hud-accent no-underline hover:underline tracking-[0.06em]" %>
