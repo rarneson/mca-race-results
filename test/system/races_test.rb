@@ -12,22 +12,49 @@ class RacesTest < ApplicationSystemTestCase
     assert_text @race.name
   end
 
-  test "visiting the race results page" do
+  test "visiting the race overview page" do
     visit race_url(@race)
 
     assert_selector "h1", text: @race.name.upcase
     assert_text @race.location
+    assert_text "4 racers"
+    assert_text "Alex Rodriguez"
+  end
+
+  test "overview field chips filter the category podiums" do
+    visit race_url(@race)
+    assert_text "Alex Rodriguez"
+
+    click_button "GIRLS"
+
+    assert_no_text "Alex Rodriguez"
+    assert_text "no category matches"
+
+    click_button "clear filters"
+
+    assert_text "Alex Rodriguez"
+  end
+
+  test "overview search filters the category podiums" do
+    visit race_url(@race)
+
+    fill_in "name, team, or plate #", with: "sarah"
+    assert_text "Sarah Chen"
+
+    fill_in "name, team, or plate #", with: "nobody"
+    assert_no_text "Sarah Chen"
+    assert_text "no category matches"
   end
 
   test "displays category filter" do
-    visit race_url(@race)
+    visit results_race_url(@race)
 
     assert_text "CATEGORY"
     assert_selector "select"
   end
 
   test "displays race results table" do
-    visit race_url(@race)
+    visit results_race_url(@race)
 
     assert_selector "thead"
     assert_selector "tbody"
@@ -37,7 +64,7 @@ class RacesTest < ApplicationSystemTestCase
   end
 
   test "shows navigation tabs" do
-    visit race_url(@race)
+    visit results_race_url(@race)
 
     assert_text "RESULTS"
     assert_text "LAP_ANALYSIS"

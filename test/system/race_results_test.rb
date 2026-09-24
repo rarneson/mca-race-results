@@ -5,9 +5,13 @@ class RaceResultsTest < ApplicationSystemTestCase
     @race = races(:cascade_mountain_challenge)
   end
 
-  test "visiting race results through race page" do
+  test "visiting race results through the race overview" do
     visit race_url(@race)
     assert_selector "h1", text: @race.name.upcase
+
+    find("a[href='#{results_race_path(@race, category: categories(:varsity).name)}']").click
+
+    assert_current_path results_race_path(@race, category: categories(:varsity).name)
     assert_selector "table"
   end
 end

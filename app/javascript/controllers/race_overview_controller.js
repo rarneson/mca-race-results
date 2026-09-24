@@ -47,6 +47,6 @@ export default class extends Controller {
 
     this.listTarget.classList.toggle("hidden", visible === 0)
     this.emptyStateTarget.classList.toggle("hidden", visible !== 0)
-    this.emptyQueryTarget.textContent = this.query
+    this.emptyQueryTarget.textContent = this.query === "" ? "that filter" : `"${this.query}"`
   }
 }
