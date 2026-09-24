@@ -3,6 +3,15 @@ class RacesController < ApplicationController
   layout "hud"
 
   TOP_FINISHERS_FOR_LAP_CHART = 5
+  # How many finishers each category band lists on the overview.
+  PODIUM_PLACES = 5
+  FIELD_FILTERS = {
+    "all" => "ALL",
+    "girls" => "GIRLS",
+    "boys" => "BOYS",
+    "middle_school" => "MIDDLE SCHOOL",
+    "high_school" => "HIGH SCHOOL"
+  }.freeze
 
   def index
     races = Race.all.order(race_date: :asc)
@@ -10,6 +19,17 @@ class RacesController < ApplicationController
   end
 
   def show
+    @race = Race.find_by!(slug: params[:id])
+
+    results = @race.race_results
+                   .includes(racer_season: [ racer: :team ], category: [])
+                   .to_a
+
+    @category_podiums = build_category_podiums(results)
+    @totals = build_totals(results)
+  end
+
+  def results
     @race = Race.includes(race_results: [ racer_season: [ racer: :team ], category: [], race_result_laps: [] ])
                 .find_by!(slug: params[:id])
 
@@ -25,10 +45,10 @@ class RacesController < ApplicationController
       @race_results = all_race_results.joins(:category)
                                       .where(categories: { name: @selected_category })
     else
-      # Default to first category with results
+      # Default to the first category the overview lists (oldest field first)
       first_category = all_race_results.joins(:category)
                                       .group("categories.name")
-                                      .order("categories.name")
+                                      .order("categories.sort_order DESC")
                                       .limit(1)
                                       .pluck("categories.name")
                                       .first
@@ -52,7 +72,7 @@ class RacesController < ApplicationController
 
     @category_stats = calculate_category_stats(all_race_results)
 
-    @back_path, @back_text = determine_back_path(default_path: races_path, default_text: "Back to Races")
+    @back_path, @back_text = determine_back_path(default_path: race_path(@race), default_text: "Back to Race")
 
     # Calculate maximum number of laps for dynamic lap columns based on filtered results
     @max_laps = @race_results.joins(:race_result_laps)
@@ -75,9 +95,9 @@ class RacesController < ApplicationController
     end
 
     @back_category = compare_referer_category || compare_shared_category(@results)
-    @back_path, @back_text = determine_back_path(default_path: race_path(@race), default_text: "Back to Race")
+    @back_path, @back_text = determine_back_path(default_path: results_race_path(@race), default_text: "Back to Race")
     if @back_text == "Back to Race" && @back_category.present?
-      @back_path = race_path(@race, category: @back_category)
+      @back_path = results_race_path(@race, category: @back_category)
     end
 
     if @results.size < 2
@@ -96,6 +116,36 @@ class RacesController < ApplicationController
 
   private
 
+  # One entry per category with results, ordered oldest field first (varsity at the
+  # top), each carrying its leading finishers and the size of its field.
+  def build_category_podiums(results)
+    by_category_id = results.group_by(&:category_id)
+
+    Category.order(sort_order: :desc).filter_map do |category|
+      entries = by_category_id[category.id]
+      next if entries.blank?
+
+      {
+        category: category,
+        count: entries.size,
+        podium: entries.select { |r| r.finished? && r.place }
+                       .sort_by(&:place)
+                       .first(PODIUM_PLACES)
+      }
+    end
+  end
+
+  def build_totals(results)
+    finished = results.count(&:finished?)
+
+    {
+      racers: results.size,
+      finishers: finished,
+      teams: results.filter_map { |r| r.racer_season.team&.id }.uniq.size,
+      categories: results.filter_map(&:category_id).uniq.size
+    }
+  end
+
   def compare_referer_category
     referer = request.referer
     return nil if referer.blank?
@@ -104,7 +154,7 @@ class RacesController < ApplicationController
     rescue URI::InvalidURIError
       return nil
     end
-    return nil unless uri.path == race_path(@race)
+    return nil unless uri.path == results_race_path(@race)
     Rack::Utils.parse_nested_query(uri.query.to_s)["category"].presence
   end
 

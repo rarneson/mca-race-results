@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   resources :races, only: [ :index, :show ] do
     member do
       get :compare
+      get :results
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
