@@ -61,6 +61,7 @@ OptionParser.new do |o|
   o.on("--date DATE")     { |v| options[:date] = v }
   o.on("--location LOC")  { |v| options[:location] = v }
   o.on("--year YEAR")     { |v| options[:year] = v.to_i }
+  o.on("--merge")         { options[:merge] = true }
 end.parse!
 
 %i[raw out name date location year].each do |k|
@@ -291,6 +292,33 @@ divisions.each do |div, rows|
   end
 end
 
+# ---------------------------------------------------------------- merge guard
+#
+# A race is often delivered a few divisions at a time. Writing this file must
+# never drop divisions that an earlier drop already populated.
+
+existing = {}
+if File.exist?(options[:out])
+  prev = File.read(options[:out])
+  prev_name = prev[/name: "([^"]+)"/, 1]
+  if prev_name && prev_name != options[:name]
+    fatal << "#{options[:out]} already holds #{prev_name.inspect} but --name is #{options[:name].inspect}"
+  end
+  prev.scan(/^# ([^\n]+?) Results\nresults_\w+ = \[\n(.*?)\n?^\]$/m).each do |div, body|
+    rows = body.to_s.lines.map { |l| l.strip.sub(/,\z/, "") }.reject(&:empty?).map { |l| "  #{l}" }
+    existing[div] = rows unless rows.empty?
+  end
+end
+
+carried  = existing.keys - divisions.keys
+replaced = existing.keys & divisions.keys
+
+if carried.any? && !options[:merge]
+  fatal << "#{options[:out]} already has data for #{carried.size} division(s) absent from this " \
+           "paste (#{carried.join(', ')}).\n      Re-run with --merge to keep them, or delete the " \
+           "file first to start the race over."
+end
+
 unless fatal.empty?
   warn "\nABORTED - #{fatal.size} problem(s); nothing written:\n"
   fatal.first(40).each { |f| warn "  - #{f}" }
@@ -330,9 +358,13 @@ out = +<<~RUBY
 RUBY
 
 DIVISIONS.each do |div, var, _|
-  rows = divisions[div] || []
+  rows = if divisions.key?(div)
+           divisions[div].map { |r| r[:ruby] }
+  else
+           existing[div] || []
+  end
   out << "# #{div} Results\n#{var} = [\n"
-  out << rows.map { |r| r[:ruby] }.join(",\n") << "\n" unless rows.empty?
+  out << rows.join(",\n") << "\n" unless rows.empty?
   out << "]\n\n"
 end
 
@@ -359,13 +391,23 @@ File.write(options[:out], out)
 
 total = divisions.values.sum(&:size)
 puts "Wrote #{options[:out]}"
-puts "Round-trip: all #{total} rows reproduce their source line exactly.\n\n"
+puts "Round-trip: all #{total} rows in this paste reproduce their source line exactly.\n\n"
 
+grand = 0
 DIVISIONS.each do |div, _, _|
-  rows = divisions[div]
-  puts format("  %-20s %s", div, rows.nil? ? "(not in paste - empty array)" : "#{rows.size} rows")
+  if divisions.key?(div)
+    n = divisions[div].size
+    grand += n
+    note = replaced.include?(div) ? " (replaced #{existing[div].size} existing)" : ""
+    puts format("  %-20s %d rows%s", div, n, note)
+  elsif existing[div]
+    grand += existing[div].size
+    puts format("  %-20s %d rows (kept from earlier drop)", div, existing[div].size)
+  else
+    puts format("  %-20s %s", div, "(not in paste - empty array)")
+  end
 end
-puts "  #{'TOTAL'.ljust(20)} #{total} rows"
+puts "  #{'TOTAL'.ljust(20)} #{grand} rows in file"
 
 sections = [
   [ :team_alias,  "Team-name aliases applied (source spelling -> TEAM_NAMES)" ],

@@ -9,11 +9,20 @@ description: Instructions and exact format requirements for importing race resul
 
 **All race result data must be provided by the user.** Never generate, guess, or fabricate race results. If the user hasn't provided data for a category, leave the array empty — do not fill it with placeholder or example data.
 
-The user will normally paste **the entire race at once** — every division, all ~900 rows. That is the expected and preferred workflow. Do not ask them to split it up.
+Results arrive two ways. **Both use the same scripts, format and rules** — the
+only difference is one flag.
+
+| How it arrives | What to run |
+| --- | --- |
+| **Whole race at once** (every division, ~900 rows) — the normal case | Steps 1–3 below |
+| **A few divisions at a time**, across separate messages for the same race | Same steps, plus `--merge` from the second drop on |
+
+Do not ask the user to split a full paste up, and do not ask them to wait until
+they have everything. Either is fine.
 
 ---
 
-# Bulk Import (preferred)
+# Import Workflow
 
 **Never hand-transcribe ~900 rows into Ruby arrays.** It is slow and it silently
 introduces typos. Convert mechanically, then verify. The whole run is three
@@ -230,11 +239,42 @@ it must be preserved.
    sequence check catches most of these; reconstruct a clean list rather than
    importing the repeats.
 
-# Partial and corrective imports
+# A few divisions at a time
 
-- **Some divisions only**: paste just those blocks. Missing divisions become
-  empty arrays and import as zero racers without erroring.
+Same three steps. The only difference is that from the **second** drop onward
+you must pass `--merge`, so divisions captured earlier are carried forward:
+
+```bash
+ruby .claude/skills/import-race-data/scripts/convert_results.rb \
+  --raw tmp/race5_drop2.txt \
+  --out db/seeds/2026_brophy_park.rb \
+  --name "Race 5 - Brophy Park" \
+  --date "September 19, 2026" \
+  --location "Brophy Park" \
+  --year 2026 \
+  --merge
+```
+
+Keep `--out` and the race metadata identical across drops — the same file
+accumulates. Two guards protect this:
+
+- Without `--merge`, writing a file that already holds divisions **absent from
+  the current paste** aborts rather than silently dropping them.
+- If `--out` already holds a **different race name**, it aborts — you are
+  pointing at the wrong file.
+
+The report distinguishes `25 rows`, `13 rows (kept from earlier drop)` and
+`(not in paste - empty array)`, so you can confirm at a glance what the file now
+holds. Re-pasting a division that is already populated **replaces** it, and the
+report says `(replaced N existing)`.
+
+Run Step 3 after every drop — a partially filled file is valid, imports cleanly,
+and missing divisions import as zero racers.
+
+# Corrective imports
+
 - **Re-running an import**: `Race.find_or_create_by!` plus the unique constraint
   on race results makes the seed idempotent; re-running will not duplicate.
 - **A single fix after the fact**: hand-edit the row in `db/seeds/<file>.rb` and
-  re-run Step 3. Do not re-run the converter unless the raw paste changed.
+  re-run Step 3. Do not re-run the converter unless the raw paste changed — and
+  if you do, pass `--merge` so the rest of the race survives.
