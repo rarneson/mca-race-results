@@ -9,47 +9,272 @@ description: Instructions and exact format requirements for importing race resul
 
 **All race result data must be provided by the user.** Never generate, guess, or fabricate race results. If the user hasn't provided data for a category, leave the array empty — do not fill it with placeholder or example data.
 
-## Creating a New Race Seed File
+Results arrive two ways. **Both use the same scripts, format and rules** — the
+only difference is one flag.
 
-When importing a new race, create a new seed file in `db/seeds/` by copying the template:
+| How it arrives | What to run |
+| --- | --- |
+| **Whole race at once** (every division, ~900 rows) — the normal case | Steps 1–3 below |
+| **A few divisions at a time**, across separate messages for the same race | Same steps, plus `--merge` from the second drop on |
 
-1. Copy `db/seeds/_template.rb` to a new file named after the race (e.g., `db/seeds/race_7_elm_creek.rb`)
-2. Replace all placeholder values (RACE NUMBER, RACE NAME, DATE) with actual race data
-3. Fill in the results arrays with the race data provided by the user
-4. Keep the exact same file structure, helper method names, variable names, and division order as the template — only the race name and results data should differ
+Do not ask the user to split a full paste up, and do not ask them to wait until
+they have everything. Either is fine.
 
-## Data Format - EXACT FORMAT REQUIRED
+---
 
-**CRITICAL: Follow these exact formats or data will be imported incorrectly**
+# Import Workflow
 
-### For 1 lap races:
-- **Finished racers**: `[place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, nil, nil, nil, "finished", penalty, comments]`
-- **DNF racers**: `[place, first_name, last_name, team_name, rider_number, plate, 0, "", "", nil, nil, nil, "DNF", penalty, comments]`
+**Never hand-transcribe ~900 rows into Ruby arrays.** It is slow and it silently
+introduces typos. Convert mechanically, then verify. The whole run is three
+commands.
 
-### For 2 lap races:
-- **Finished racers**: `[place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, lap2_time, nil, nil, "finished", penalty, comments]`
-- **DNF racers**: `[place, first_name, last_name, team_name, rider_number, plate, 0, "", "", "", nil, nil, "DNF", penalty, comments]`
+## Step 1 — Save the paste verbatim
 
-### For 3 lap races:
-- **Finished racers**: `[place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, lap2_time, lap3_time, nil, "finished", penalty, comments]`
-- **DNF racers**: `[place, first_name, last_name, team_name, rider_number, plate, 0, "", "", "", "", nil, "DNF", penalty, comments]`
+Write the user's paste to `tmp/<race>_raw.txt` **exactly as given**: no
+reformatting, no reordering, no fixing of names or times. The converter needs
+the original bytes in order to prove it parsed them correctly.
 
-### For 4 lap races:
-- **Finished racers**: `[place, first_name, last_name, team_name, rider_number, plate, laps, total_time, lap1_time, lap2_time, lap3_time, lap4_time, "finished", penalty, comments]`
-- **DNF racers**: `[place, first_name, last_name, team_name, rider_number, plate, 0, "", "", "", "", nil, "DNF", penalty, comments]`
+The expected shape, repeated per division:
 
-## Key Rules
+```
+Division: 6th Grade Girls
+Place Plate Name Team Name IYRaceID Laps Penalty UserField2 Total Lap 1
+1 6529 Delaney Wilcox Maple Grove HS 100603365 1 00:12:10.9 00:12:10.9
+2 6560 Marikka Wheeler St Paul Central 100566702 1 00:12:55.4 00:12:55.4
+```
 
-1. **Status field**: Always "finished" for completed races, "DNF" for did not finish
-2. **Empty fields**: Use `""` for missing times, `nil` for unused lap positions
-3. **DNF format**: laps = 0, total_time = "", lap times = ""
-4. **Field order matters**: place, names, team, numbers, laps, then times/status
-5. **Penalty/Comment handling**: **CRITICAL - NEVER MISS THIS DATA**
-   - **ALWAYS scan user-provided race data for ANY additional text, comments, penalties, or notes**
-   - Add penalty as field after laps: `[..., laps, "penalty_amount", nil, total_time, ...]`
-   - Add comments as field after penalty: `[..., laps, nil, "comment_text", total_time, ...]`
-   - Add both if needed: `[..., laps, "penalty_amount", "comment_text", total_time, ...]`
-   - **Examples of comments to capture**: "Deviation - relegate 3 spaces", "DNF - mechanical", "Time penalty", etc.
-   - **If unsure whether something is penalty or comment, put it in comments field**
-   - **NEVER exclude any additional data from the source** - all text must be preserved
-6. **Always check existing seed files** in `db/seeds/` for working examples before creating new data
+Divisions may appear in any order and may be missing; missing ones become empty
+arrays. Both `Division:` header lines and the `Place Plate Name ...` column
+header are required for each block.
+
+## Step 2 — Convert
+
+```bash
+ruby .claude/skills/import-race-data/scripts/convert_results.rb \
+  --raw tmp/race5_raw.txt \
+  --out db/seeds/2026_brophy_park.rb \
+  --name "Race 5 - Brophy Park" \
+  --date "September 19, 2026" \
+  --location "Brophy Park" \
+  --year 2026
+```
+
+Seed files are named `<year>_<venue_snake_case>.rb`. `db/seeds.rb` loads
+everything in `db/seeds/` automatically — there is no list to register in.
+
+The converter **round-trips every row back to its source line before writing
+anything**, and aborts without writing if a single row fails to reproduce. It
+also aborts on an unknown team, an unknown division, a missing rider id, a
+place sequence with a gap, or a lap-time count that disagrees with the lap
+column.
+
+It then prints a review report. **Read it and relay the judgement calls to the
+user** — these are never applied silently:
+
+| Section | Meaning |
+| --- | --- |
+| Team-name aliases applied | Source spelling differed from `TEAM_NAMES` |
+| Source casing repaired | `GILBERT NELSON` → `Gilbert Nelson`, from prior races |
+| First/last split inherited | `Jerid Jr Adickes` → `"Jerid Jr"` / `"Adickes"` |
+| Penalties / Comments recorded | Every non-empty penalty column value |
+| REVIEW — name differs | Same rider id, different name than last race |
+| REVIEW — kept source casing | Source casing kept over a differing prior spelling |
+| REVIEW — team differs | Rider changed teams since last race |
+| Riders new to the dataset | First appearance of this rider id |
+
+## Step 3 — Verify
+
+```bash
+RAILS_ENV=test bin/rails runner \
+  .claude/skills/import-race-data/scripts/verify_seed.rb db/seeds/2026_brophy_park.rb
+```
+
+Structural checks, then a real import into the test database inside a
+transaction that is **always rolled back**, so nothing is left behind. It
+confirms the row count, the lap-record count, and that no racer was orphaned by
+a failed team lookup. Exits non-zero on any problem.
+
+Finish with `bundle exec rubocop db/seeds/<file>.rb` and `bin/rails test`.
+
+## Why both a round-trip and a live import
+
+They catch different things, and neither alone is sufficient.
+
+The round-trip cannot see a misplaced name/team boundary. `Maeve Young St Louis
+Park HS` split as name `Maeve Young St Louis` + team `Park HS` rejoins to
+exactly the same source line — it round-trips perfectly while being wrong. That
+class of error is caught only by the converter's team matcher (longest matching
+suffix wins, so `St Louis Park HS` beats `Park HS`) and by the report flagging
+an unexpected team change for a known rider id. **If the report shows a burst of
+team changes that all share a suffix, suspect the boundary, not the roster.**
+
+---
+
+# Seed File Format
+
+Generated by the converter, but you must be able to read and hand-patch it.
+
+Division order and variable names must match `db/seeds/_template.rb` exactly.
+Only the race name, date, location, year and the results data differ between
+files.
+
+Every row has **15 fields**, with four lap slots regardless of division:
+
+```
+[place, first, last, team, rider_number, plate, laps, total, lap1, lap2, lap3, lap4, status, penalty, comments]
+```
+
+### Finished racers
+
+| Laps | Row |
+| --- | --- |
+| 1 | `[1, "First", "Last", "Team", "100603365", "6529", 1, total, lap1, nil, nil, nil, "finished", penalty, comments]` |
+| 2 | `[..., 2, total, lap1, lap2, nil, nil, "finished", penalty, comments]` |
+| 3 | `[..., 3, total, lap1, lap2, lap3, nil, "finished", penalty, comments]` |
+| 4 | `[..., 4, total, lap1, lap2, lap3, lap4, "finished", penalty, comments]` |
+
+### DNF racers
+
+A DNF that completed **zero** laps uses `0`, `""` for the total, and `""` in
+each lap slot the division uses:
+
+| Division laps | Row |
+| --- | --- |
+| 1 | `[..., 0, "", "", nil, nil, nil, "DNF", penalty, comments]` |
+| 2 | `[..., 0, "", "", "", nil, nil, "DNF", penalty, comments]` |
+| 3 and 4 | `[..., 0, "", "", "", "", nil, "DNF", penalty, comments]` |
+
+A DNF that completed **some** laps keeps its real laps and times and only
+changes the status — this is common in JV3/Varsity:
+
+```ruby
+[ 102, "Calm", "Enz", "Northwest", "100390296", "1109", 1, "15:33.2", "15:33.2", nil, nil, nil, "DNF", nil, nil ]
+```
+
+### Expected laps per division
+
+From `CATEGORY_LAPS` in `lib/race_data/race_seed_helpers.rb`:
+
+| Divisions | Laps |
+| --- | --- |
+| 6th / 7th / 8th Grade (all) | 1 |
+| Freshman (all), JV2 (all) | 2 |
+| JV3 Boys, JV3 Girls | 3 |
+| Varsity Boys, Varsity Girls | 4 |
+
+---
+
+# Normalisation Rules
+
+These are the conventions the existing corpus already follows. The converter
+applies them; apply them by hand too if you are patching a file.
+
+### Time format — strip leading zeros
+
+The source exports `HH:MM:SS.s`. Seed files drop an empty hour component and
+strip leading zeros from the leading component.
+
+| Source | Seed file |
+| --- | --- |
+| `00:12:10.9` | `"12:10.9"` |
+| `00:09:36.7` | `"9:36.7"` |
+| `00:00:00.4` | `"0:00.4"` |
+| `01:03:16.5` | `"1:03:16.5"` |
+
+### Team names
+
+Teams **must** match `TEAM_NAMES` in `db/seeds.rb` exactly, or the racer is
+orphaned at import. Known timing-export spellings live in `TEAM_ALIASES` at the
+top of `convert_results.rb`:
+
+- `Lakes Area Composite` → `Lake Area Composite`
+
+Add new aliases there as they appear, and **tell the user** — a recurring alias
+usually means the upstream export changed and `TEAM_NAMES` may need updating
+rather than aliasing forever.
+
+### Names
+
+Racers are matched by rider id (`IYRaceID`), so casing differences do not create
+duplicate racers. What matters is the **split point** between first and last
+name. Default is first token / everything else, which correctly handles
+`Van De Ven`, `MacGregor Farris`, `Lowenthal Walsh`, `Cedarleaf Dahl`.
+
+- If the rider id appeared before with the same name (case-insensitively), the
+  established split point is inherited — this is what fixes `Jerid Jr Adickes`
+  and `Thomas 'Tommy' Hagen`.
+- If the source is **shouting** (a name token entirely upper- or lower-case,
+  e.g. `GILBERT NELSON`, `Morgan shield`, `rylan O'HEARN`), the prior spelling
+  is taken wholesale — that is an export artifact, not a preference.
+- Otherwise **source casing wins**, so a genuine correction (`Degier` →
+  `DeGier`) still lands. These are reported for review rather than applied
+  silently.
+- Preserve accents exactly (`Sebastián Fischer`).
+
+### Penalties and comments — never drop this data
+
+**Scan every row for extra text between the laps column and the times.** All of
+it must be preserved.
+
+- Text starting with `Warning` → **comments** field (no time or place adjustment)
+- Everything else → **penalty** field (`5 Min Bike Swap`, `Relegate 1`,
+  `6 Min Outside Assist`)
+- If genuinely unsure, put it in **comments**
+- **Transcribe the wording verbatim.** The export sometimes emits `3 in Outside
+  Assist` where it means `3 Min`. Keep the source wording and flag it to the
+  user rather than silently correcting it.
+
+---
+
+# Things to flag to the user, never fix silently
+
+1. **Team names not in `TEAM_NAMES`** — say which rows and what you mapped them to.
+2. **A rider whose name or team changed** since the last race.
+3. **Implausible timing data** — e.g. a `0:00.4` lap. Transcribe it as the
+   official results show and point it out; it is the timing operator's call,
+   not yours.
+4. **Penalty wording that looks like an OCR artifact** (`in` for `Min`).
+5. **Duplicate rows at PDF page breaks** — if the paste came from a PDF,
+   repeated rows at page boundaries are an artifact. The converter's place
+   sequence check catches most of these; reconstruct a clean list rather than
+   importing the repeats.
+
+# A few divisions at a time
+
+Same three steps. The only difference is that from the **second** drop onward
+you must pass `--merge`, so divisions captured earlier are carried forward:
+
+```bash
+ruby .claude/skills/import-race-data/scripts/convert_results.rb \
+  --raw tmp/race5_drop2.txt \
+  --out db/seeds/2026_brophy_park.rb \
+  --name "Race 5 - Brophy Park" \
+  --date "September 19, 2026" \
+  --location "Brophy Park" \
+  --year 2026 \
+  --merge
+```
+
+Keep `--out` and the race metadata identical across drops — the same file
+accumulates. Two guards protect this:
+
+- Without `--merge`, writing a file that already holds divisions **absent from
+  the current paste** aborts rather than silently dropping them.
+- If `--out` already holds a **different race name**, it aborts — you are
+  pointing at the wrong file.
+
+The report distinguishes `25 rows`, `13 rows (kept from earlier drop)` and
+`(not in paste - empty array)`, so you can confirm at a glance what the file now
+holds. Re-pasting a division that is already populated **replaces** it, and the
+report says `(replaced N existing)`.
+
+Run Step 3 after every drop — a partially filled file is valid, imports cleanly,
+and missing divisions import as zero racers.
+
+# Corrective imports
+
+- **Re-running an import**: `Race.find_or_create_by!` plus the unique constraint
+  on race results makes the seed idempotent; re-running will not duplicate.
+- **A single fix after the fact**: hand-edit the row in `db/seeds/<file>.rb` and
+  re-run Step 3. Do not re-run the converter unless the raw paste changed — and
+  if you do, pass `--merge` so the rest of the race survives.
