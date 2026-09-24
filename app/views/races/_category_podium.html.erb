@@ -1,0 +1,51 @@
+<%
+  # entry: { category:, count:, podium: [RaceResult, ...] }
+  category = entry[:category]
+  podium = entry[:podium]
+  winner = podium.first
+  search_blob = ([ category.name ] + podium.flat_map do |result|
+    [ result.racer_season.racer.name, result.racer_season.team&.name, result.plate_number_snapshot ]
+  end).compact.join(" ").downcase
+%>
+<%= link_to results_race_path(@race, category: category.name),
+      class: "hud-podium-band group grid gap-5 py-[18px] pb-5 border-t border-hud-border no-underline text-hud-ink md:grid-cols-[196px_minmax(0,1fr)]",
+      data: {
+        race_overview_target: "band",
+        field: category_field_tags(category.name).join(" "),
+        search: search_blob
+      } do %>
+  <div class="flex flex-wrap md:flex-col items-baseline md:items-start gap-x-3 gap-y-[7px] pl-1">
+    <span class="hud-mono text-[13px] font-bold tracking-[0.06em] uppercase text-hud-accent leading-snug">
+      <%= category.name %>
+      <span class="font-normal text-hud-ink-dim group-hover:text-hud-accent">▸</span>
+    </span>
+    <span class="hud-microlabel"><%= pluralize(entry[:count], "racer") %></span>
+  </div>
+
+  <div class="flex flex-col">
+    <% podium.each do |result| %>
+      <% is_winner = result.place == 1 %>
+      <% gap_ms = (winner&.total_time_ms && result.total_time_ms) ? result.total_time_ms - winner.total_time_ms : nil %>
+      <div data-place="<%= result.place %>"
+           class="grid grid-cols-[18px_minmax(0,1fr)_80px] md:grid-cols-[18px_minmax(0,1.15fr)_minmax(0,1fr)_84px_76px] gap-x-2.5 md:gap-x-3 gap-y-0.5 items-center border-l-[3px] pl-2.5 pr-1
+                  <%= podium_stripe_class(result.place) %>
+                  <%= is_winner ? 'hud-podium-win py-2.5' : 'py-[7px]' %>">
+        <div class="hud-mono text-[12px] row-span-2 self-start md:row-span-1 md:self-center <%= is_winner ? 'text-hud-amber font-bold' : 'text-hud-ink-dim' %>">
+          <%= result.place %>
+        </div>
+        <div class="col-start-2 row-start-1 md:col-auto md:row-auto min-w-0 truncate <%= is_winner ? 'text-[21px] font-bold text-hud-ink tracking-[-0.01em]' : 'text-[13px] font-medium text-hud-ink-dim' %>">
+          <%= result.racer_season.racer.name %>
+        </div>
+        <div class="hud-mono text-[11px] col-start-2 row-start-2 md:col-auto md:row-auto min-w-0 truncate <%= is_winner ? 'text-hud-ink-dim' : 'text-hud-ink-dim' %>">
+          <%= result.plate_number_snapshot.present? ? "##{result.plate_number_snapshot} · " : "" %><%= result.racer_season.team&.name || "orphaned" %>
+        </div>
+        <div class="hud-mono col-start-3 row-start-1 md:col-auto md:row-auto text-right <%= is_winner ? 'text-[16px] font-medium text-hud-amber' : 'text-[12.5px] text-hud-ink-dim' %>">
+          <%= time_from_ms(result.total_time_ms) %>
+        </div>
+        <div class="hud-mono text-[11px] col-start-3 row-start-2 md:col-auto md:row-auto text-right whitespace-nowrap <%= is_winner ? 'text-hud-amber/60' : 'text-hud-ink-dim' %>">
+          <%= gap_from_leader(gap_ms) %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% end %>

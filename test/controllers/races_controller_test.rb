@@ -9,6 +9,31 @@ class RacesControllerTest < ActionDispatch::IntegrationTest
     @race_result = race_results(:alex_first_place)
   end
 
+  def empty_race
+    @empty_race ||= Race.create!(
+      name: "Empty Race",
+      race_date: Date.current,
+      location: "Test Location",
+      year: 2024
+    )
+  end
+
+  def create_jv3_result(place: 1, plate: "55", last_name: "Jones")
+    racer = Racer.create!(first_name: "Mike", last_name: last_name, team: teams(:mountain_velocity))
+    season = RacerSeason.create!(racer: racer, year: 2024, plate_number: plate)
+    RaceResult.create!(
+      race: @race,
+      racer_season: season,
+      place: place,
+      total_time_ms: 4_000_000,
+      laps_completed: 2,
+      laps_expected: 2,
+      status: "finished",
+      category: categories(:jv3),
+      plate_number_snapshot: plate
+    )
+  end
+
   test "should get index" do
     get races_url
     assert_response :success
@@ -16,15 +41,75 @@ class RacesControllerTest < ActionDispatch::IntegrationTest
     assert_select "div", text: @race.name
   end
 
-  test "should show race" do
+  test "overview shows the race header and field totals" do
     get race_url(@race)
     assert_response :success
+
     assert_select "h1", @race.name.upcase
-    assert_select "a", text: /#{@racer.first_name}/
+    assert_select "div", text: /4 racers/
+    assert_select "div", text: /1 categories/
+  end
+
+  test "overview shows a podium per category linking to that category's results" do
+    get race_url(@race)
+    assert_response :success
+
+    assert_select "a[href=?]", results_race_path(@race, category: categories(:varsity).name) do
+      assert_select "div", text: @racer.name
+    end
+  end
+
+  test "overview lists five finishers per category" do
+    (1..6).each { |place| create_jv3_result(place: place, plate: "10#{place}", last_name: "Rider#{place}") }
+
+    get race_url(@race)
+    assert_response :success
+
+    assert_select "a[href=?]", results_race_path(@race, category: categories(:jv3).name) do
+      assert_select "div[data-place]", count: RacesController::PODIUM_PLACES
+    end
+    assert_match "Rider5", response.body
+    assert_no_match(/Rider6/, response.body)
+  end
+
+  test "overview orders categories by sort order descending" do
+    jv3_result = create_jv3_result
+
+    get race_url(@race)
+    assert_response :success
+
+    varsity_link = results_race_path(@race, category: categories(:varsity).name)
+    jv3_link = results_race_path(@race, category: categories(:jv3).name)
+
+    assert_operator response.body.index(jv3_link), :<, response.body.index(varsity_link),
+                    "expected JV3 (sort_order 2) to render before Varsity (sort_order 1)"
+    assert_match jv3_result.racer_season.racer.name, response.body
+  end
+
+  test "overview tags each category for the field filters" do
+    get race_url(@race)
+    assert_response :success
+
+    assert_select "a[data-field=?]", "boys high_school"
+  end
+
+  test "overview handles a race with no results" do
+    get race_url(empty_race)
+    assert_response :success
+    assert_select "div", text: /0 racers/
+  end
+
+  test "results defaults to the category the overview lists first" do
+    create_jv3_result
+
+    get results_race_url(@race)
+    assert_response :success
+
+    assert_select "div.hud-mono", text: categories(:jv3).name
   end
 
   test "should display category filter" do
-    get race_url(@race)
+    get results_race_url(@race)
     assert_response :success
 
     assert_select "div.hud-label", text: /CATEGORY/
@@ -32,14 +117,14 @@ class RacesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should display standings panel" do
-    get race_url(@race)
+    get results_race_url(@race)
     assert_response :success
 
     assert_select "div.hud-label", text: /STANDINGS/
   end
 
   test "should display race results table with HUD column headers" do
-    get race_url(@race)
+    get results_race_url(@race)
     assert_response :success
 
     assert_select "table"
@@ -50,14 +135,7 @@ class RacesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should handle race with no results" do
-    empty_race = Race.create!(
-      name: "Empty Race",
-      race_date: Date.current,
-      location: "Test Location",
-      year: 2024
-    )
-
-    get race_url(empty_race)
+    get results_race_url(empty_race)
     assert_response :success
   end
 
@@ -136,10 +214,10 @@ class RacesControllerTest < ActionDispatch::IntegrationTest
     sarah = race_results(:sarah_second_place)
 
     get compare_race_url(@race, racer_season_ids: [ alex.racer_season_id, sarah.racer_season_id ]),
-        headers: { "HTTP_REFERER" => race_url(@race, category: "Varsity") }
+        headers: { "HTTP_REFERER" => results_race_url(@race, category: "Varsity") }
     assert_response :success
 
-    expected_href = race_path(@race, category: "Varsity")
+    expected_href = results_race_path(@race, category: "Varsity")
     assert_select "a.hud-link[href=?]", expected_href, text: /Back to Race/
   end
 
@@ -150,7 +228,7 @@ class RacesControllerTest < ActionDispatch::IntegrationTest
     get compare_race_url(@race, racer_season_ids: [ alex.racer_season_id, sarah.racer_season_id ])
     assert_response :success
 
-    expected_href = race_path(@race, category: alex.category.name)
+    expected_href = results_race_path(@race, category: alex.category.name)
     assert_select "a.hud-link[href=?]", expected_href, text: /Back to Race/
   end
 
@@ -174,15 +252,15 @@ class RacesControllerTest < ActionDispatch::IntegrationTest
     get compare_race_url(@race, racer_season_ids: [ alex.racer_season_id, mike_season.id ])
     assert_response :success
 
-    assert_select "a.hud-link[href=?]", race_path(@race), text: /Back to Race/
+    assert_select "a.hud-link[href=?]", results_race_path(@race), text: /Back to Race/
   end
 
   test "compare empty state back button preserves category from referer" do
     get compare_race_url(@race, racer_season_ids: [ race_results(:alex_first_place).racer_season_id ]),
-        headers: { "HTTP_REFERER" => race_url(@race, category: "Varsity") }
+        headers: { "HTTP_REFERER" => results_race_url(@race, category: "Varsity") }
     assert_response :success
 
-    assert_select "a.hud-button[href=?]", race_path(@race, category: "Varsity"), text: /BACK TO RACE/
+    assert_select "a.hud-button[href=?]", results_race_path(@race, category: "Varsity"), text: /BACK TO RACE/
   end
 
   test "compare renders lap analysis chart when both racers have lap data" do

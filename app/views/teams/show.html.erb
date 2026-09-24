@@ -152,7 +152,7 @@
               <div class="hud-panel overflow-hidden mb-2.5">
                 <div class="flex items-center justify-between px-3 py-2 border-b border-hud-border">
                   <span class="hud-microlabel"><%= category_name.upcase %></span>
-                  <%= link_to "VIEW_RACE ▸", race_path(race, category: category_name), class: "hud-mono text-[10px] text-hud-accent no-underline hover:underline tracking-[0.06em]" %>
+                  <%= link_to "VIEW_RACE ▸", results_race_path(race, category: category_name), class: "hud-mono text-[10px] text-hud-accent no-underline hover:underline tracking-[0.06em]" %>
                 </div>
                 <% category_results.sort_by { |r| r.place || 999 }.each_with_index do |result, idx| %>
                   <div class="grid gap-3.5 items-center px-3 py-2.5 <%= 'border-t border-hud-border' if idx > 0 %>"

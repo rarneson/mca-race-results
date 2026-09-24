@@ -87,7 +87,7 @@ RACE_HISTORY
                 <div class="min-w-0">
                   <div class="flex items-center gap-2 flex-wrap">
                     <% if result.race %>
-                      <%= link_to result.race.name.upcase, race_path(result.race, category: result.category&.name),
+                      <%= link_to result.race.name.upcase, results_race_path(result.race, category: result.category&.name),
                             class: "hud-mono text-sm font-bold text-hud-accent no-underline hover:underline tracking-[0.02em]" %>
                     <% else %>
                       <span class="hud-mono text-sm font-bold text-hud-ink-dim">UNKNOWN_RACE</span>
@@ -170,7 +170,7 @@ RACE_HISTORY
               <%# Footer link %>
               <% if result.race %>
                 <div class="mt-5 pt-4 border-t border-hud-border">
-                  <%= link_to "VIEW_FULL_RESULTS ▸", race_path(result.race, category: result.category&.name),
+                  <%= link_to "VIEW_FULL_RESULTS ▸", results_race_path(result.race, category: result.category&.name),
                         class: "hud-mono text-[10px] text-hud-accent no-underline hover:underline tracking-[0.06em]" %>
                 </div>
               <% end %>
