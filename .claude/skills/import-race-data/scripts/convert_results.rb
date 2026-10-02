@@ -47,7 +47,8 @@ DIVISIONS = [
 # in db/seeds.rb. Add new entries here as they show up, and mention them to the
 # user -- a recurring alias usually means the upstream export changed.
 TEAM_ALIASES = {
-  "Lakes Area Composite" => "Lake Area Composite"
+  "Lakes Area Composite" => "Lake Area Composite",
+  "Lakeville South" => "Lakeville South HS"
 }.freeze
 
 TIME_RE = /\A\d{1,2}:\d{2}:\d{2}\.\d\z/
