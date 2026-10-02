@@ -363,9 +363,12 @@ DIVISIONS.each do |div, var, _|
   else
            existing[div] || []
   end
-  out << "# #{div} Results\n#{var} = [\n"
-  out << rows.join(",\n") << "\n" unless rows.empty?
-  out << "]\n\n"
+  out << "# #{div} Results\n"
+  if rows.empty?
+    out << "#{var} = []\n\n"
+  else
+    out << "#{var} = [\n" << rows.join(",\n") << "\n]\n\n"
+  end
 end
 
 out << <<~RUBY

@@ -21,7 +21,7 @@ src = File.read(path)
 
 # ---------------------------------------------------------------- static checks
 
-divisions = src.scan(/^# ([^\n]+?) Results\nresults_(\w+) = \[\n(.*?)\n?^\]$/m)
+divisions = src.scan(/^# ([^\n]+?) Results\nresults_(\w+) = (?:\[\]|\[\n(.*?)\n?^\]$)/m)
 problems << "expected 19 division arrays, found #{divisions.size}" unless divisions.size == 19
 
 rows_by_division = {}
