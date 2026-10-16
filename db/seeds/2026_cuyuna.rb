@@ -18,7 +18,7 @@ race = Race.find_or_create_by!(
   race.year = 2026
 end
 
-race.update!(description: "Lap times were not recorded for this race. The chip reader sat off the regular lap course, so Freshman, JV2, JV3 and Varsity results show only each rider's total time. Middle school races are one lap, so their lap time is the total. One Freshman Boys D2 result (Owen Hershberger, 5 Min Bike Swap) was listed with 0 laps in the timing export despite a finish time of 59:19.0; he is recorded here as a 2-lap finisher.")
+race.update!(description: "Lap times were not recorded for this race. The chip reader sat off the regular lap course, so Freshman, JV2, JV3 and Varsity results show only each rider's total time. Middle school races are one lap, so their lap time is the total.")
 
 puts "✓ Race: #{race.name} (#{race.race_date})"
 
