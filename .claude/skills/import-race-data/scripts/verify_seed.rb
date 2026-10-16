@@ -6,9 +6,14 @@
 #   RAILS_ENV=test bin/rails runner \
 #     .claude/skills/import-race-data/scripts/verify_seed.rb db/seeds/2026_brophy_park.rb
 #
+# Pass --totals-only for a race whose timing export has no per-lap times:
+# multi-lap rows are then expected to carry no lap times and import no
+# RaceResultLap rows.
+#
 # Exits non-zero if anything is wrong. Leaves no data behind.
 
-path = ARGV[0] or abort "usage: rails runner verify_seed.rb db/seeds/<file>.rb"
+totals_only = ARGV.delete("--totals-only")
+path = ARGV[0] or abort "usage: rails runner verify_seed.rb db/seeds/<file>.rb [--totals-only]"
 abort "not found: #{path}" unless File.exist?(path)
 
 seeds_rb = File.read(Rails.root.join("db/seeds.rb"))
@@ -41,7 +46,8 @@ divisions.each do |name, _var, body|
     problems << "#{tag}: status #{r[12].inspect}" unless %w[finished DNF DNS DSQ DQ].include?(r[12])
     laps = r[6]
     times = r[8..11].compact.reject(&:empty?)
-    problems << "#{tag}: #{laps} laps but #{times.size} lap times" if laps.positive? && times.size != laps
+    expected_times = totals_only && (laps > 1 || r[12] == "DNF") ? 0 : laps
+    problems << "#{tag}: #{laps} laps but #{times.size} lap times" if laps.positive? && times.size != expected_times
     problems << "#{tag}: laps=0 but has a total time" if laps.zero? && !r[7].to_s.empty?
   end
 end
@@ -103,7 +109,7 @@ ActiveRecord::Base.transaction do
 end
 
 # Every lap the file claims should have become a RaceResultLap row.
-expected_laps = all.sum { |r| r[7].to_i }
+expected_laps = all.sum { |r| r[9..12].compact.reject(&:empty?).size }
 
 puts "Imported into test DB (rolled back): #{imported} results, #{lap_count} lap records."
 puts "Statuses: #{statuses.inspect}"

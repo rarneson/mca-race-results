@@ -18,6 +18,9 @@ race = Race.find_or_create_by!(
   race.year = 2024
 end
 
+# Optional: call out oddities (rained-out divisions, no lap times, etc.).
+# race.update!(description: "...")
+
 puts "✓ Race: #{race.name} (#{race.race_date})"
 
 # ===============================================================================
