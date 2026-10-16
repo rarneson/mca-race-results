@@ -18,6 +18,8 @@ race = Race.find_or_create_by!(
   race.year = 2026
 end
 
+race.update!(description: "Rain wiped out the high school races (Freshman, JV2, JV3 and Varsity), so only the 6th-8th grade divisions have results.")
+
 puts "✓ Race: #{race.name} (#{race.race_date})"
 
 # ===============================================================================

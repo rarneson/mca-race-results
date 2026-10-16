@@ -1,0 +1,8 @@
+<% if race.description.present? %>
+  <aside class="hud-panel p-4 mb-5" data-race-description>
+    <div class="hud-label mb-1.5">◈ RACE_NOTE</div>
+    <div class="hud-mono text-[13px] text-hud-ink leading-relaxed">
+      <%= simple_format(race.description, {}, wrapper_tag: "p") %>
+    </div>
+  </aside>
+<% end %>

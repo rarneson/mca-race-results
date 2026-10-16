@@ -93,6 +93,34 @@ class RacesControllerTest < ActionDispatch::IntegrationTest
     assert_select "a[data-field=?]", "boys high_school"
   end
 
+  test "overview and results show the race description when present" do
+    @race.update!(description: "Lap times were not recorded.\n\nSecond paragraph.")
+
+    [ race_url(@race), results_race_url(@race) ].each do |url|
+      get url
+      assert_response :success
+      assert_select "[data-race-description]", text: /RACE_NOTE/
+      assert_select "[data-race-description] p", count: 2
+      assert_select "[data-race-description]", text: /Lap times were not recorded/
+    end
+  end
+
+  test "description is escaped" do
+    @race.update!(description: "<script>alert(1)</script>Rained out")
+
+    get race_url(@race)
+    assert_select "[data-race-description] script", count: 0
+    assert_select "[data-race-description]", text: /Rained out/
+  end
+
+  test "no description panel when the race has no description" do
+    get race_url(@race)
+    assert_select "[data-race-description]", count: 0
+
+    get results_race_url(@race)
+    assert_select "[data-race-description]", count: 0
+  end
+
   test "overview handles a race with no results" do
     get race_url(empty_race)
     assert_response :success

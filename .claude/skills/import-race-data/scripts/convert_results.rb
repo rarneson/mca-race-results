@@ -11,6 +11,13 @@
 #     --location "Brophy Park" \
 #     --year 2026
 #
+# Optional:
+#   --merge            keep divisions from an earlier drop of the same race
+#   --totals-only      the timing export has no per-lap times (multi-lap rows
+#                      carry only a total); lap slots are written as nil
+#   --description TEXT note shown at the top of the race page (omit to keep the
+#                      description already in --out)
+#
 # Every row is round-tripped back to its source line before anything is
 # written; a single mismatch aborts the run. Judgement calls (team aliases,
 # name casing, penalty vs comment, roster changes) are printed as a review
@@ -63,6 +70,8 @@ OptionParser.new do |o|
   o.on("--location LOC")  { |v| options[:location] = v }
   o.on("--year YEAR")     { |v| options[:year] = v.to_i }
   o.on("--merge")         { options[:merge] = true }
+  o.on("--totals-only")   { options[:totals_only] = true }
+  o.on("--description TEXT") { |v| options[:description] = v }
 end.parse!
 
 %i[raw out name date location year].each do |k|
@@ -242,13 +251,27 @@ File.readlines(options[:raw], chomp: true).each_with_index do |line, idx|
 
   expected = DIVISIONS.find { |d, _, _| d == current }&.last || 1
 
-  if laps.zero?
+  # Totals-only exports: a multi-lap row carries one time (the total), and a
+  # DNF that completed laps may carry none. Either way the lap slots stay nil.
+  totals_only_row = options[:totals_only] && laps.positive? &&
+                    (times.size == 1 || (status == "DNF" && times.empty?))
+
+  if totals_only_row && times.empty?
+    report[:dnf_no_time] << "#{current} p#{place} #{first} #{last}: #{laps} lap(s), no time"
+    total = '""'
+    slots = [ "nil" ] * 4
+    lap_strs = []
+  elsif laps.zero?
     total = '""'
     slots = case expected
     when 1 then [ '""', "nil", "nil", "nil" ]
     when 2 then [ '""', '""', "nil", "nil" ]
     else        [ '""', '""', '""', "nil" ]
     end
+    lap_strs = []
+  elsif totals_only_row
+    total = "\"#{fmt_time(times[0])}\""
+    slots = [ "nil" ] * 4
     lap_strs = []
   else
     if times.size != laps + 1
@@ -272,7 +295,7 @@ File.readlines(options[:raw], chomp: true).each_with_index do |line, idx|
       parts = [ place, plate, source_full, team_src, id, laps ]
       parts << "DNF" if status == "DNF"
       parts << penalty_text if penalty_text
-      unless laps.zero?
+      unless laps.zero? || times.empty?
         parts << unfmt_time(fmt_time(times[0]))
         lap_strs.each { |t| parts << unfmt_time(t) }
       end
@@ -299,8 +322,10 @@ end
 # never drop divisions that an earlier drop already populated.
 
 existing = {}
+prev_description = nil
 if File.exist?(options[:out])
   prev = File.read(options[:out])
+  prev_description = prev[/^race\.update!\(description: (".*")\)$/, 1]
   prev_name = prev[/name: "([^"]+)"/, 1]
   if prev_name && prev_name != options[:name]
     fatal << "#{options[:out]} already holds #{prev_name.inspect} but --name is #{options[:name].inspect}"
@@ -329,6 +354,14 @@ end
 
 # ---------------------------------------------------------------- write
 
+description_line = if options[:description]
+                     "race.update!(description: #{options[:description].inspect})\n\n"
+elsif prev_description
+                     "race.update!(description: #{prev_description})\n\n"
+else
+                     ""
+end
+
 out = +<<~RUBY
   require_relative '../../lib/race_data/race_seed_helpers'
 
@@ -350,7 +383,7 @@ out = +<<~RUBY
     race.year = #{options[:year]}
   end
 
-  puts "✓ Race: \#{race.name} (\#{race.race_date})"
+  #{description_line}puts "✓ Race: \#{race.name} (\#{race.race_date})"
 
   # ===============================================================================
   # RACE RESULTS DATA
@@ -420,6 +453,7 @@ sections = [
   [ :casing_kept, "REVIEW - kept source casing, differs from prior races" ],
   [ :penalty,     "Penalties recorded" ],
   [ :comment,     "Comments recorded" ],
+  [ :dnf_no_time, "REVIEW - DNF with laps but no time (totals-only)" ],
   [ :name_change, "REVIEW - name differs from last race for this rider id" ],
   [ :team_change, "REVIEW - team differs from last race for this rider id" ],
   [ :new_racer,   "Riders new to the dataset" ]
