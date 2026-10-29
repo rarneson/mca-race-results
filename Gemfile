@@ -66,6 +66,6 @@ group :test do
 end
 
 gem "tailwindcss-ruby", "~> 4.3"
-gem "tailwindcss-rails", "~> 4.6"
+gem "tailwindcss-rails", "~> 4.7"
 
 gem "dockerfile-rails", ">= 1.7", group: :development
